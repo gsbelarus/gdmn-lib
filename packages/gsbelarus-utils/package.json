@@ -1,6 +1,6 @@
 {
   "name": "@gsbelarus/utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,13 +16,13 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@gsbelarus/tsconfig": "workspace:*",
-    "eslint": "^8.57.0",
     "@gsbelarus/eslint-config": "workspace:*",
+    "@gsbelarus/tsconfig": "workspace:*",
+    "@types/node": "^20.11.24",
+    "eslint": "^8.57.0",
     "tsup": "^8.0.2",
     "typescript": "5.5.4"
   },
-  "dependencies": {},
   "publishConfig": {
     "access": "public"
   },
