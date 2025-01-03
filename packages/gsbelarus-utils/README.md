@@ -6,8 +6,6 @@ A collection of utility functions.
 
 ### 1. `uint8ArrayToBase64`
 
-**Signature:**
-
 ```typescript
 function uint8ArrayToBase64(uint8Array: Uint8Array): string
 ```
@@ -39,8 +37,6 @@ console.log(base64String); // Outputs: 'SGVsbG8='
 - Throws an error if the environment does not support Base64 encoding.
 
 ### 2. `base64ToUint8Array`
-
-**Signature:**
 
 ```typescript
 function base64ToUint8Array(base64String: string): Uint8Array
@@ -74,8 +70,6 @@ console.log(data); // Outputs: Uint8Array(5) [72, 101, 108, 108, 111]
 
 ### 3. `uint8ArrayToUtf8String`
 
-**Signature:**
-
 ```typescript
 function uint8ArrayToUtf8String(uint8Array: Uint8Array): string
 ```
@@ -105,8 +99,6 @@ console.log(utf8String); // Outputs: 'Hello'
 - Relies on the `TextDecoder` API, which is widely supported in modern environments.
 
 ### 4. `numberToUint8Array32`
-
-**Signature:**
 
 ```typescript
 function numberToUint8Array32(number: number): Uint8Array
@@ -138,8 +130,6 @@ console.log(byteArray); // Outputs: Uint8Array(4) [...]
 - Assumes little-endian byte order for encoding.
 
 ### 5. `uint8ArrayToNumber32`
-
-**Signature:**
 
 ```typescript
 function uint8ArrayToNumber32(uint8Array: Uint8Array): number
