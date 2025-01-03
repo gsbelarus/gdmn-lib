@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules"],
-  "extends": "@gdmn-lib/tsconfig/nextjs.json",
+  "extends": "@gsbelarus/tsconfig/nextjs.json",
   "compilerOptions": {
     "outDir": "dist",
     "incremental": true,

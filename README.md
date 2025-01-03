@@ -17,10 +17,10 @@ This Turborepo includes the following:
 ### Apps and Packages
 
 - `docs`: A placeholder documentation site powered by [Next.js](https://nextjs.org/)
-- `@gdmn-lib/core`: core React components
-- `@gdmn-lib/utils`: shared React utilities
-- `@gdmn-lib/tsconfig`: shared `tsconfig.json`s used throughout the monorepo
-- `@gdmn-lib/eslint-config`: ESLint preset
+- `@gsbelarus/core`: core React components
+- `@gsbelarus/utils`: shared React utilities
+- `@gsbelarus/tsconfig`: shared `tsconfig.json`s used throughout the monorepo
+- `@gsbelarus/eslint-config`: ESLint preset
 
 Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -42,10 +42,10 @@ This Turborepo has some additional tools already setup for you:
 
 ### Changing the npm organization scope
 
-The npm organization scope for this design system starter is `@gdmn-lib`. To change this, it's a bit manual at the moment, but you'll need to do the following:
+The npm organization scope for this design system starter is `@gsbelarus`. To change this, it's a bit manual at the moment, but you'll need to do the following:
 
-- Rename folders in `packages/*` to replace `gdmn-lib` with your desired scope
-- Search and replace `gdmn-lib` with your desired scope
+- Rename folders in `packages/*` to replace `gsbelarus` with your desired scope
+- Search and replace `gsbelarus` with your desired scope
 - Re-run `yarn install`
 
 ## Versioning and Publishing packages

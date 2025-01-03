@@ -7,5 +7,5 @@
   "linked": [],
   "access": "public",
   "updateInternalDependencies": "patch",
-  "ignore": ["@gdmn-lib/docs", "@gdmn-lib/core"]
+  "ignore": ["@gsbelarus/docs", "@gsbelarus/core"]
 }

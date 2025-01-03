@@ -33,12 +33,12 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
-      '@gdmn-lib/eslint-config':
+      '@gsbelarus/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@gdmn-lib/tsconfig':
+      '@gsbelarus/tsconfig':
         specifier: workspace:*
-        version: link:../../packages/gdmn-lib-tsconfig
+        version: link:../../packages/gsbelarus-tsconfig
       '@next/eslint-plugin-next':
         specifier: ^14.1.1
         version: 14.1.4
@@ -82,18 +82,18 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
 
-  packages/gdmn-lib-core:
+  packages/gsbelarus-core:
     dependencies:
       react:
         specifier: ^18.2.0
         version: 18.2.0
     devDependencies:
-      '@gdmn-lib/eslint-config':
+      '@gsbelarus/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@gdmn-lib/tsconfig':
+      '@gsbelarus/tsconfig':
         specifier: workspace:*
-        version: link:../gdmn-lib-tsconfig
+        version: link:../gsbelarus-tsconfig
       '@types/react':
         specifier: ^18.2.61
         version: 18.2.61
@@ -110,16 +110,16 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
 
-  packages/gdmn-lib-tsconfig: {}
+  packages/gsbelarus-tsconfig: {}
 
-  packages/gdmn-lib-utils:
+  packages/gsbelarus-utils:
     devDependencies:
-      '@gdmn-lib/eslint-config':
+      '@gsbelarus/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@gdmn-lib/tsconfig':
+      '@gsbelarus/tsconfig':
         specifier: workspace:*
-        version: link:../gdmn-lib-tsconfig
+        version: link:../gsbelarus-tsconfig
       eslint:
         specifier: ^8.57.0
         version: 8.57.0

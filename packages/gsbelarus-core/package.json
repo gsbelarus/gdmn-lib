@@ -1,6 +1,7 @@
 {
-  "name": "@gdmn-lib/utils",
-  "version": "0.0.1",
+  "name": "@gsbelarus/core",
+  "version": "0.0.0",
+  "private": true,
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,13 +17,16 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@gdmn-lib/tsconfig": "workspace:*",
+    "@gsbelarus/tsconfig": "workspace:*",
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
     "eslint": "^8.57.0",
-    "@gdmn-lib/eslint-config": "workspace:*",
+    "@gsbelarus/eslint-config": "workspace:*",
     "tsup": "^8.0.2",
     "typescript": "5.5.4"
   },
   "dependencies": {
+    "react": "^18.2.0"
   },
   "publishConfig": {
     "access": "public"

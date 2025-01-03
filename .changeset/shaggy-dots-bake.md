@@ -1,5 +1,5 @@
 ---
-"@gdmn-lib/utils": minor
+"@gsbelarus/utils": minor
 ---
 
 first version
