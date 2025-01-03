@@ -2,4 +2,4 @@
 "@gsbelarus/utils": minor
 ---
 
-convert bytes function added
+added semaphore class
