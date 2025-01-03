@@ -76,6 +76,27 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
 
+  packages/gsbelarus-er:
+    devDependencies:
+      '@gsbelarus/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@gsbelarus/tsconfig':
+        specifier: workspace:*
+        version: link:../gsbelarus-tsconfig
+      '@types/node':
+        specifier: ^20.11.24
+        version: 20.11.24
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      tsup:
+        specifier: ^8.0.2
+        version: 8.0.2(typescript@5.5.4)
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
+
   packages/gsbelarus-tsconfig: {}
 
   packages/gsbelarus-utils:
@@ -4694,6 +4715,7 @@ packages:
   /typescript@5.5.4:
     resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
     engines: {node: '>=14.17'}
+    hasBin: true
     dev: true
 
   /unbox-primitive@1.0.2:
