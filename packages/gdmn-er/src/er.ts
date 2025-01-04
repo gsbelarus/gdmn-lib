@@ -51,6 +51,7 @@ export type EntityAttributes = {
 };
 
 export interface Entity {
+  namespace?: string;
   name: string;
   /**
    * Label for use in the user interface

@@ -15,3 +15,12 @@ export function convertBytes(bytes: number): string {
 
   return (bytes / Math.pow(1024, i)).toFixed(1).replace('.0', '') + sizes[i];
 };
+
+/**
+ * Remove undefined values from object
+ * @param obj
+ * @returns
+ */
+export function slim(obj: any) {
+  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined));
+};
