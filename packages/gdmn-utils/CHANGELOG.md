@@ -1,5 +1,11 @@
 # gdmn-utils
 
+## 0.4.1
+
+### Patch Changes
+
+- 63063dd: added slim() function
+
 ## 0.3.0
 
 ### Minor Changes
