@@ -44,9 +44,7 @@ export const entityDef = registerEntity({
       },
     }],
     entitySchema: {
-      type: {
-        entity: {}
-      }
+      type: "string"
     },
   }
 });

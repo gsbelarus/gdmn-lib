@@ -12,9 +12,7 @@ export const ZodEntityDefShape = {
       disabled: z.boolean().optional(),
     })
   ).optional(),
-  entitySchema: z.object({
-    entity: z.object({}).passthrough(),
-  }).optional(),
+  entitySchema: z.string().optional(),
 };
 
 const ZodEntityDef = z.object(ZodEntityDefShape);
