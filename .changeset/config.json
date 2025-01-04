@@ -6,6 +6,5 @@
   "fixed": [],
   "linked": [],
   "access": "public",
-  "updateInternalDependencies": "patch",
-  "ignore": ["@gsbelarus/core"]
+  "updateInternalDependencies": "patch"
 }
