@@ -128,11 +128,11 @@ export function getAttrType(attrType: AttrType): AttrTypeToGet {
   return { type: "string", isArray: false };
 };
 
-if (!global.hasOwnProperty("entityregistry")) {
-  (global as any)["entityregistry"] = {};
+if (!globalThis.hasOwnProperty("entityregistry")) {
+  (globalThis as any)["entityregistry"] = {};
 };
 
-const entityregistry = (global as any)["entityregistry"] as Record<
+const entityregistry = (globalThis as any)["entityregistry"] as Record<
   string,
   Entity
 >;
