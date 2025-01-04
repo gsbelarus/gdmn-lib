@@ -1,6 +1,6 @@
 {
-  "name": "@gsbelarus/er",
-  "version": "0.0.1",
+  "name": "gdmn-utils",
+  "version": "0.3.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,8 +16,8 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@gsbelarus/eslint-config": "workspace:*",
-    "@gsbelarus/tsconfig": "workspace:*",
+    "gdmn-eslint-config": "workspace:*",
+    "gdmn-tsconfig": "workspace:*",
     "@types/node": "^20.11.24",
     "eslint": "^8.57.0",
     "tsup": "^8.0.2",

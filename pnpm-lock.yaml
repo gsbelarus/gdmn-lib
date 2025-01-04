@@ -48,27 +48,20 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
 
-  packages/gsbelarus-core:
-    dependencies:
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
+  packages/gdmn-er:
     devDependencies:
-      '@gsbelarus/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@gsbelarus/tsconfig':
-        specifier: workspace:*
-        version: link:../gsbelarus-tsconfig
-      '@types/react':
-        specifier: ^18.2.61
-        version: 18.2.61
-      '@types/react-dom':
-        specifier: ^18.2.19
-        version: 18.2.19
+      '@types/node':
+        specifier: ^20.11.24
+        version: 20.11.24
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      gdmn-eslint-config:
+        specifier: workspace:*
+        version: link:../eslint-config
+      gdmn-tsconfig:
+        specifier: workspace:*
+        version: link:../gdmn-tsconfig
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(typescript@5.5.4)
@@ -76,43 +69,22 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
 
-  packages/gsbelarus-er:
+  packages/gdmn-tsconfig: {}
+
+  packages/gdmn-utils:
     devDependencies:
-      '@gsbelarus/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@gsbelarus/tsconfig':
-        specifier: workspace:*
-        version: link:../gsbelarus-tsconfig
       '@types/node':
         specifier: ^20.11.24
         version: 20.11.24
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
-      tsup:
-        specifier: ^8.0.2
-        version: 8.0.2(typescript@5.5.4)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
-
-  packages/gsbelarus-tsconfig: {}
-
-  packages/gsbelarus-utils:
-    devDependencies:
-      '@gsbelarus/eslint-config':
+      gdmn-eslint-config:
         specifier: workspace:*
         version: link:../eslint-config
-      '@gsbelarus/tsconfig':
+      gdmn-tsconfig:
         specifier: workspace:*
-        version: link:../gsbelarus-tsconfig
-      '@types/node':
-        specifier: ^20.11.24
-        version: 20.11.24
-      eslint:
-        specifier: ^8.57.0
-        version: 8.57.0
+        version: link:../gdmn-tsconfig
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(typescript@5.5.4)
@@ -1036,28 +1008,6 @@ packages:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
 
-  /@types/prop-types@15.7.5:
-    resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
-    dev: true
-
-  /@types/react-dom@18.2.19:
-    resolution: {integrity: sha512-aZvQL6uUbIJpjZk4U8JZGbau9KDeAwMfmhyWorxgBkqDIEf6ROjRozcmPIicqsUwPUjbkDfHKgGee1Lq65APcA==}
-    dependencies:
-      '@types/react': 18.2.61
-    dev: true
-
-  /@types/react@18.2.61:
-    resolution: {integrity: sha512-NURTN0qNnJa7O/k4XUkEW2yfygA+NxS0V5h1+kp9jPwhzZy95q3ADoGMP0+JypMhrZBTTgjKAUlTctde1zzeQA==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.1
-    dev: true
-
-  /@types/scheduler@0.16.2:
-    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
-    dev: true
-
   /@types/semver@7.5.6:
     resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
     dev: true
@@ -1856,10 +1806,6 @@ packages:
       which: 2.0.2
     dev: true
 
-  /csstype@3.1.1:
-    resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
-    dev: true
-
   /csv-generate@3.4.3:
     resolution: {integrity: sha512-w/T+rqR0vwvHqWs/1ZyMDWtHHSJaN06klRqJXBEpDJaM/+dZkso0OKh1VcuuYvK3XM53KysVNq8Ko/epCK8wOw==}
     dev: true
@@ -2130,6 +2076,7 @@ packages:
   /esbuild@0.19.7:
     resolution: {integrity: sha512-6brbTZVqxhqgbpqBR5MzErImcpA0SQdoKOkcWK/U30HtQxnokIpG3TX2r0IJqbFUzqLjhU/zC1S5ndgakObVCQ==}
     engines: {node: '>=12'}
+    hasBin: true
     requiresBuild: true
     optionalDependencies:
       '@esbuild/android-arm': 0.19.7
@@ -2844,6 +2791,7 @@ packages:
 
   /glob@7.1.6:
     resolution: {integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -3298,6 +3246,7 @@ packages:
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+    dev: true
 
   /js-yaml@3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
@@ -3462,6 +3411,7 @@ packages:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     dependencies:
       js-tokens: 4.0.0
+    dev: true
 
   /lru-cache@10.2.0:
     resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
@@ -3942,13 +3892,6 @@ packages:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: true
 
-  /react@18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-    dev: false
-
   /read-pkg-up@7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
     engines: {node: '>=8'}
@@ -4088,6 +4031,7 @@ packages:
   /rollup@4.5.1:
     resolution: {integrity: sha512-0EQribZoPKpb5z1NW/QYm3XSR//Xr8BeEXU49Lc/mQmpmVVG5jPUVrpc2iptup/0WMrY9mzas0fxH+TjYvG2CA==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
+    hasBin: true
     optionalDependencies:
       '@rollup/rollup-android-arm-eabi': 4.5.1
       '@rollup/rollup-android-arm64': 4.5.1
@@ -4390,6 +4334,7 @@ packages:
   /sucrase@3.34.0:
     resolution: {integrity: sha512-70/LQEZ07TEcxiU2dz51FKaE6hCTWC6vr7FOk3Gr0U60C3shtAN+H+BFr9XlYe5xqf3RA8nrc+VIwzCfnxuXJw==}
     engines: {node: '>=8'}
+    hasBin: true
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
       commander: 4.1.1
@@ -4488,6 +4433,7 @@ packages:
 
   /tree-kill@1.2.2:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
     dev: true
 
   /trim-newlines@3.0.1:

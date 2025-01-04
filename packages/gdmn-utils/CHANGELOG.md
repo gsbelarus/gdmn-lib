@@ -1,4 +1,4 @@
-# @gsbelarus/utils
+# gdmn-utils
 
 ## 0.3.0
 

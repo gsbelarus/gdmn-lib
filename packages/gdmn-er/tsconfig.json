@@ -1,5 +1,5 @@
 {
-  "extends": "@gsbelarus/tsconfig/base.json",
+  "extends": "gdmn-tsconfig/base.json",
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {

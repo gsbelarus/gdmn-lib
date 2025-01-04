@@ -1,4 +1,4 @@
-# @gsbelarus/utils
+# gdmn-utils
 
 A collection of utility functions.
 
