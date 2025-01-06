@@ -1,4 +1,4 @@
-import { registerEntity } from '../er';
+import { registerEntity } from '../registry';
 
 export const entityDef = registerEntity({
   namespace: "sys",

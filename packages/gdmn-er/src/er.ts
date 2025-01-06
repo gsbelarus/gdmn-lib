@@ -132,30 +132,3 @@ if (!globalThis.hasOwnProperty("entityregistry")) {
   (globalThis as any)["entityregistry"] = {};
 };
 
-const entityregistry = (globalThis as any)["entityregistry"] as Record<
-  string,
-  Entity
->;
-
-export function registerEntity(entity: Entity) {
-  // we can't have there checking for duplicate name
-  // because in Next.js the code runs every time the page is loaded
-
-  // if (entityregistry[entity.name]) {
-  //   throw new Error(`Entity already registered: ${entity.name}`);
-  // }
-  entityregistry[entity.name] = entity;
-  return entity;
-};
-
-export function getEntity(name: string): Entity {
-  const entity = entityregistry[name];
-  if (!entity) {
-    throw new Error(`Entity not found: ${name}`);
-  }
-  return entity;
-};
-
-export function getEntities(): Entity[] {
-  return Object.values(entityregistry);
-};
