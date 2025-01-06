@@ -1,5 +1,11 @@
 # gdmn-utils
 
+## 0.5.0
+
+### Minor Changes
+
+- added functions for generating/checking MongoDB ids
+
 ## 0.4.1
 
 ### Patch Changes
