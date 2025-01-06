@@ -1,5 +1,11 @@
 # gdmn-utils
 
+## 0.6.0
+
+### Minor Changes
+
+- some useful constants added
+
 ## 0.5.0
 
 ### Minor Changes
