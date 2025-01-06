@@ -45,7 +45,7 @@ export async function getEntity(name: string): Promise<Entity> {
   return entity;
 };
 
-export async function getEntityGetter(name: string): Promise<EntityGetter> {
+export function getEntityGetter(name: string): EntityGetter {
   const entity = entityRegistry[name];
 
   if (!entity) {
