@@ -45,4 +45,18 @@ export async function getEntity(name: string): Promise<Entity> {
   return entity;
 };
 
+export async function getEntityGetter(name: string): Promise<EntityGetter> {
+  const entity = entityRegistry[name];
+
+  if (!entity) {
+    throw new Error(`Entity ${name} not found`);
+  }
+
+  if (typeof entity === "function") {
+    return entity;
+  }
+
+  return () => Promise.resolve(entity);
+};
+
 
