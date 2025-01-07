@@ -23,7 +23,7 @@
     "gdmn-tsconfig": "workspace:*",
     "gdmn-utils": "workspace:*",
     "tsup": "^8.0.2",
-    "typescript": "5.5.4"
+    "typescript": "^5.5.4"
   },
   "publishConfig": {
     "access": "public"

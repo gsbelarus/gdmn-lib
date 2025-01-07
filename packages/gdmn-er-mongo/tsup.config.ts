@@ -4,6 +4,6 @@ export default defineConfig({
     ".": "src/index.ts",
   },
   format: ["cjs", "esm"],
-  external: ["mongoose", "mongodb"],
+  external: ["mongoose", "mongodb", "zod"],
   dts: true,
 });
