@@ -93,6 +93,7 @@ export function isEntityAttributes(
 export function isSimpleAttrType(
   attrType: AttrType,
 ): attrType is SimpleAttrType {
+  //FIXME: not done yet
   return typeof attrType === "string";
 };
 
@@ -125,6 +126,7 @@ export function getAttrType(attrType: AttrType): AttrTypeToGet {
     }
   }
 
+  //FIXME: not done yet
   return { type: "string", isArray: false };
 };
 
