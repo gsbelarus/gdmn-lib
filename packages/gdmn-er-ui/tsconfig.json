@@ -1,0 +1,10 @@
+{
+  "extends": "gdmn-tsconfig/react-library.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "lib": ["dom", "ES2015"],
+    "module": "NodeNext",
+    "target": "es6"
+  }    
+}
