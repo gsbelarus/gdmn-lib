@@ -37,6 +37,7 @@ export type AttrTypeDef = {
    * An object to group values into smaller group. Similar on values merging.
    * */
   highLevelGroupingObject?: Record<any, any>;
+  filterable?: boolean;
 };
 export type Options = { _id: boolean; };
 export type EntitySchema = { entity: Entity; options?: Options; };
