@@ -1,10 +1,16 @@
+import Tooltip from '@mui/material/Tooltip/Tooltip';
 import React from 'react';
 
 export type GdmnToolbarItem = {
   type: 'button';
   id: string;
-  title: string;
-  icon: string | React.ReactNode;
+  label: string;
+  tooltip?: string;
+  icon?: string | React.ReactNode;
+  group?: string;
+  disabled?: boolean;
+  attention?: boolean;
+  loading?: boolean;
   onClick: () => void;
 } | {
   type: 'separator';
@@ -23,10 +29,19 @@ export function GdmnToolbar({ items }: GdmnToolbarProps) {
         items.map((item, index) => {
           if (item.type === 'button') {
             return (
-              <button key={index} onClick={item.onClick}>
-                {item.icon}
-                {item.title}
-              </button>
+              item.tooltip
+                ?
+                <Tooltip key={index} title={item.tooltip}>
+                  <button key={index} onClick={item.onClick}>
+                    {item.icon}
+                    {item.label}
+                  </button>
+                </Tooltip>
+                :
+                <button key={index} onClick={item.onClick}>
+                  {item.icon}
+                  {item.label}
+                </button>
             );
           } else if (item.type === 'separator') {
             return (
