@@ -3,5 +3,6 @@
     {
       "mode": "auto"
     }
-  ]
+  ],
+  "window.title": "${rootName}${separator}${dirty}${activeEditorShort}${separator}${appName}",
 }
