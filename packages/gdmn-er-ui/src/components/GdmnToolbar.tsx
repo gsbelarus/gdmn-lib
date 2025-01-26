@@ -16,7 +16,7 @@ export type GdmnToolbarItem = {
   type: 'separator';
 };
 
-type GdmnToolbarItems = GdmnToolbarItem[];
+export type GdmnToolbarItems = GdmnToolbarItem[];
 
 type GdmnToolbarProps = {
   items: GdmnToolbarItems;
