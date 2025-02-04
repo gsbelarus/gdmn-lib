@@ -75,7 +75,7 @@ export function GdmnToolbar({ items, showLabels }: GdmnToolbarProps) {
                 ? "bg-zinc-700 fill-zinc-50 text-zinc-50"
                 : "bg-primary fill-white text-white hover:bg-primary/80 hover:fill-white hover:text-white"
               : item.disabled
-                ? "fill-zinc-600 text-zinc-600 opacity-40 grayscale"
+                ? "fill-zinc-600 text-zinc-600 stroke-zinc-600 opacity-40 grayscale"
                 : "fill-zinc-600 text-zinc-600 hover:bg-primaryHover/20 hover:fill-primary hover:text-primary";
 
         if (index === pressed) {
