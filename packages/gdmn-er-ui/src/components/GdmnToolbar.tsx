@@ -100,7 +100,6 @@ export function GdmnToolbar({ items, showLabels }: GdmnToolbarProps) {
           >
             {item.tooltip && index !== pressed ? (
               <Tooltip
-                key={index}
                 title={item.tooltip}
                 enterDelay={700}
               >
