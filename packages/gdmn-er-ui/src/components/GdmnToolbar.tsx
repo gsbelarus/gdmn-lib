@@ -18,7 +18,7 @@ export type GdmnToolbarItem =
      * If true, the animation will be played until the onClick function is completed.
      */
     autoLoading?: boolean;
-    onClick?: () => Promise<void>;
+    onClick?: () => void | Promise<void>;
   }
   | {
     type: "separator";
@@ -94,7 +94,7 @@ export function GdmnToolbar({ items, showLabels }: GdmnToolbarProps) {
             key={index}
             className={`w-8 h-8 p-1 flex justify-center items-center border border-solid border-zinc-600 rounded ${st}`}
             onClick={
-              item.disabled || item.loading
+              item.disabled || item.loading || !item.onClick
                 ? undefined
                 : async () => {
                   setPressed(index);
