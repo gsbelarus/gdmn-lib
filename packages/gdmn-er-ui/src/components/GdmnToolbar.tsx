@@ -14,7 +14,11 @@ export type GdmnToolbarItem =
     attention?: boolean;
     loading?: boolean;
     animated?: boolean;
-    onClick?: () => void;
+    /**
+     * If true, the animation will be played until the onClick function is completed.
+     */
+    autoLoading?: boolean;
+    onClick?: () => Promise<void>;
   }
   | {
     type: "separator";
@@ -30,6 +34,7 @@ type GdmnToolbarProps = {
 export function GdmnToolbar({ items, showLabels }: GdmnToolbarProps) {
   const [pressed, setPressed] = useState<string | number | undefined>();
   const [animated, setAnimated] = useState<string | number | undefined>();
+  const [internalLoading, setInternalLoading] = useState<string | number | undefined>();
 
   useEffect(() => {
     if (pressed) {
@@ -57,7 +62,7 @@ export function GdmnToolbar({ items, showLabels }: GdmnToolbarProps) {
               <div
                 className={
                   "flex flex-col justify-center items-center" +
-                  (item.loading ? " animate-spin" : "") +
+                  ((item.loading || internalLoading === index) ? " animate-spin" : "") +
                   (item.animated && animated === index ? " animate-ping" : "")
                 }
               >
@@ -91,10 +96,15 @@ export function GdmnToolbar({ items, showLabels }: GdmnToolbarProps) {
             onClick={
               item.disabled || item.loading
                 ? undefined
-                : () => {
+                : async () => {
                   setPressed(index);
                   if (item.animated) setAnimated(index);
-                  item.onClick?.();
+                  if (item.autoLoading) setInternalLoading(index);
+                  try {
+                    await item.onClick?.();
+                  } finally {
+                    if (item.autoLoading) setInternalLoading(undefined);
+                  }
                 }
             }
           >
