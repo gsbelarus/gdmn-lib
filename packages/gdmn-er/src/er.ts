@@ -38,6 +38,8 @@ export type AttrTypeDef = {
    * */
   highLevelGroupingObject?: Record<any, any>;
   filterable?: boolean;
+  displayedAttribute?: string;
+  autoDisplayOrder?: number;
 };
 export type Options = { _id: boolean; };
 export type EntitySchema = { entity: Entity; options?: Options; };
