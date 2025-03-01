@@ -48,6 +48,13 @@ export const entityDef = registerEntity({
       type: "string"
     },
     attributes: [{
+      name: {
+        type: "string",
+        required: true,
+        trim: true,
+        minlength: 2,
+        maxlength: 60,
+      },
       type: {
         type: "string",
         required: true,
