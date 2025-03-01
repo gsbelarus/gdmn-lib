@@ -1,13 +1,27 @@
-export type SimpleAttrType =
-  | "array"
-  | "objectid"
-  | "boolean"
-  | "number"
-  | "string"
-  | "timestamp"
-  | "entity"
-  | "enum"
-  | "map";
+const simpleAttrTypes = [
+  "array",
+  "objectid",
+  "boolean",
+  "number",
+  "string",
+  "timestamp",
+  "entity",
+  "enum",
+  "map",
+] as const;
+
+export type SimpleAttrType = (typeof simpleAttrTypes)[number];
+
+// export type SimpleAttrType =
+//   | "array"
+//   | "objectid"
+//   | "boolean"
+//   | "number"
+//   | "string"
+//   | "timestamp"
+//   | "entity"
+//   | "enum"
+//   | "map";
 
 export type AttrTypeDef = {
   type: AttrType;
