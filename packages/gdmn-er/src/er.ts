@@ -1,4 +1,4 @@
-const simpleAttrTypes = [
+export const simpleAttrTypes = [
   "array",
   "objectid",
   "boolean",

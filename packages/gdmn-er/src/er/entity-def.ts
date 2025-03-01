@@ -1,3 +1,4 @@
+import { simpleAttrTypes } from '../er';
 import { registerEntity } from '../registry';
 
 export const entityDef = registerEntity({
@@ -46,6 +47,105 @@ export const entityDef = registerEntity({
     entitySchema: {
       type: "string"
     },
+    attributes: [{
+      type: {
+        type: "string",
+        required: true,
+        enum: simpleAttrTypes,
+      },
+      required: {
+        type: "boolean",
+        required: false,
+      },
+      nullable: {
+        type: "boolean",
+        required: false,
+      },
+      /**
+       * The default value of the attribute. If the attribute is required and no default value is specified, the default value is set to null. If the attribute is not required and no default value is specified, the default value is set to undefined.
+       * Stored as a string. Non-string values are converted to strings before being stored.
+       */
+      default: {
+        type: "string",
+        required: false,
+      },
+      enum: {
+        type: "array",
+        required: false,
+      },
+      min: {
+        type: "number",
+        required: false,
+      },
+      max: {
+        type: "number",
+        required: false,
+      },
+      minlength: {
+        type: "number",
+        required: false,
+      },
+      maxlength: {
+        type: "number",
+        required: false,
+      },
+      trim: {
+        type: "boolean",
+        required: false,
+      },
+      lowercase: {
+        type: "boolean",
+        required: false,
+      },
+      uppercase: {
+        type: "boolean",
+        required: false,
+      },
+      match: {
+        type: "string",
+        required: false,
+      },
+      validate: {
+        type: "string",
+        required: false,
+      },
+      index: {
+        type: "boolean",
+        required: false,
+      },
+      unique: {
+        type: "boolean",
+        required: false,
+      },
+      sparse: {
+        type: "boolean",
+        required: false,
+      },
+      ref: {
+        type: "string",
+        required: false,
+      },
+      label: {
+        type: "string",
+        required: false,
+      },
+      placeholder: {
+        type: "string",
+        required: false,
+      },
+      tooltip: {
+        type: "string",
+        required: false,
+      },
+      //of?: SimpleAttrType;
+      /**
+       * An object to group values into smaller group. Similar on values merging.
+       * */
+      // highLevelGroupingObject?: Record<any, any>;
+      // filterable?: boolean;
+      // displayedAttribute?: string;
+      // autoDisplayOrder?: number;
+    }]
   }
 });
 
