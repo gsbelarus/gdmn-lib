@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,10 +16,10 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "gdmn-eslint-config": "workspace:*",
-    "gdmn-tsconfig": "workspace:*",
     "@types/node": "^20.11.24",
     "eslint": "^8.57.0",
+    "gdmn-eslint-config": "workspace:*",
+    "gdmn-tsconfig": "workspace:*",
     "tsup": "^8.0.2",
     "typescript": "^5.5.4"
   },
@@ -29,5 +29,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/gsbelarus/gdmn-lib"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
   }
 }
