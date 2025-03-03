@@ -27,7 +27,11 @@ export type RefFieldProps = {
   entityName: string; // name of the Entity we are referencing
   fieldName: string; //name of the reference field in the current Entity
   displayedFieldName: string; //name of the field to display from the referenced Entity
-  editable: boolean;
+}
+
+export type displayedField = {
+  field: string;
+  readonly?: boolean;
 }
 
 export type AttrTypeDef = {
@@ -60,7 +64,7 @@ export type AttrTypeDef = {
   highLevelGroupingObject?: Record<any, any>;
   filterable?: boolean;
   readonly?: boolean;
-  displayedFields?: string[];
+  displayedFields?: displayedField[];
   fieldProps?: RefFieldProps;
 };
 export type Options = { _id: boolean; };
