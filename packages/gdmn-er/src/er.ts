@@ -23,6 +23,13 @@ export type SimpleAttrType = (typeof simpleAttrTypes)[number];
 //   | "enum"
 //   | "map";
 
+export type RefFieldProps = {
+  entityName: string; // название Entity на которое ссылаемся
+  fieldName: string; //название поля-ссылки текущего Entity
+  displayedFieldName: string; //название поля, кототорое отображаем из Entity на которое ссылаемся
+  editable: boolean;
+}
+
 export type AttrTypeDef = {
   type: AttrType;
   required?: boolean;
@@ -52,8 +59,9 @@ export type AttrTypeDef = {
    * */
   highLevelGroupingObject?: Record<any, any>;
   filterable?: boolean;
-  displayedAttribute?: string;
-  autoDisplayOrder?: number;
+  readonly?: boolean;
+  displayedFields?: string[];
+  fieldProps?: RefFieldProps;
 };
 export type Options = { _id: boolean; };
 export type EntitySchema = { entity: Entity; options?: Options; };
