@@ -24,9 +24,9 @@ export type SimpleAttrType = (typeof simpleAttrTypes)[number];
 //   | "map";
 
 export type RefFieldProps = {
-  entityName: string; // название Entity на которое ссылаемся
-  fieldName: string; //название поля-ссылки текущего Entity
-  displayedFieldName: string; //название поля, кототорое отображаем из Entity на которое ссылаемся
+  entityName: string; // name of the Entity we are referencing
+  fieldName: string; //name of the reference field in the current Entity
+  displayedFieldName: string; //name of the field to display from the referenced Entity
   editable: boolean;
 }
 
