@@ -13,6 +13,32 @@ export const ZodEntityDefShape = {
     })
   ).optional(),
   entitySchema: z.string().optional(),
+  attributes: z.array(
+    z.object({
+      name: z.string().trim().min(2).max(60),
+      type: z.string(),
+      required: z.boolean().optional(),
+      nullable: z.boolean().optional(),
+      default: z.string().optional(),
+      enum: z.array(z.string()).optional(),
+      min: z.number().optional(),
+      max: z.number().optional(),
+      minlength: z.number().optional(),
+      maxlength: z.number().optional(),
+      trim: z.boolean().optional(),
+      lowercase: z.boolean().optional(),
+      uppercase: z.boolean().optional(),
+      match: z.string().optional(),
+      validate: z.string().optional(),
+      index: z.boolean().optional(),
+      unique: z.boolean().optional(),
+      sparse: z.boolean().optional(),
+      ref: z.string().optional(),
+      label: z.string().optional(),
+      placeholder: z.string().optional(),
+      tooltip: z.string().optional(),
+    })
+  ).optional(),
 };
 
 const ZodEntityDef = z.object(ZodEntityDefShape);
