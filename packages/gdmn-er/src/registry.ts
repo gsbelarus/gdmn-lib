@@ -7,15 +7,19 @@ const entityRegistry = (globalThis as any)["entityregistry"] as Record<
   Entity | EntityGetter
 >;
 
-export function registerEntity(entity: Entity) {
-
+export function registerEntity(entity: Entity, replace = false) {
   const existingEntity = entityRegistry[entity.name];
+
+  if (existingEntity && !replace) {
+    return existingEntity;
+  }
 
   if (existingEntity) {
     console.log(`Entity ${entity.name} already registered...`);
   }
 
   entityRegistry[entity.name] = entity;
+
   return entity;
 };
 
