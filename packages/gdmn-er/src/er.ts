@@ -1,3 +1,28 @@
+export type MethodParam = {
+  name: string;
+  type: string;
+  required?: boolean;
+  nullable?: boolean;
+  default?: any;
+};
+
+export type MethodEnvironment = 'server' | 'client' | 'both';
+
+export type MethodCode = {
+  lang: string;
+  code: string;
+};
+
+export type Method = {
+  name: string;
+  environment: MethodEnvironment;
+  description?: string;
+  params?: MethodParam[];
+  returnType?: string;
+  returnDescription?: string;
+  code?: MethodCode;
+};
+
 export const simpleAttrTypes = [
   "array",
   "objectid",
@@ -11,6 +36,12 @@ export const simpleAttrTypes = [
 ] as const;
 
 export type SimpleAttrType = (typeof simpleAttrTypes)[number];
+
+export function str2simpleAttrType(
+  str: string,
+): SimpleAttrType | undefined {
+  return simpleAttrTypes.find((t) => t === str);
+};
 
 // export type SimpleAttrType =
 //   | "array"
@@ -27,12 +58,12 @@ export type RefFieldProps = {
   entityName: string; // name of the Entity we are referencing
   fieldName: string; //name of the reference field in the current Entity
   displayedFieldName: string; //name of the field to display from the referenced Entity
-}
+};
 
 export type displayedField = {
   field: string;
   readonly?: boolean;
-}
+};
 
 export type AttrTypeDef = {
   type: AttrType;
@@ -88,6 +119,10 @@ export interface Entity {
    * */
   label?: string;
   /**
+   * Detailed description of the entity.
+   */
+  description?: string;
+  /**
    * Object title template
    * Example: 'name' -- use 'name' attribute as object title
    * Example: ['$specialization', ' [', $language, ']'] -- this will generate
@@ -98,6 +133,7 @@ export interface Entity {
   objectTitle?: string | string[];
   attributes: EntityAttributes;
   options?: Record<string, boolean>;
+  methods?: Method[];
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
