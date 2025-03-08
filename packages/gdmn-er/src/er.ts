@@ -203,3 +203,7 @@ if (!globalThis.hasOwnProperty("entityregistry")) {
   (globalThis as any)["entityregistry"] = {};
 };
 
+if (!globalThis.hasOwnProperty("entitygetters")) {
+  (globalThis as any)["entitygetters"] = {};
+};
+

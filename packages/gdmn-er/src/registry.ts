@@ -4,17 +4,16 @@ export type EntityGetter = () => Promise<Entity>;
 
 const entityRegistry = (globalThis as any)["entityregistry"] as Record<
   string,
-  Entity | EntityGetter
+  Entity
+>;
+
+const entityGetters = (globalThis as any)["entitygetters"] as Record<
+  string,
+  EntityGetter
 >;
 
 export function registerEntity(entity: Entity, replace = false): Entity {
   const existingEntity = entityRegistry[entity.name];
-
-  if (typeof existingEntity === "function") {
-    console.log(`Entity ${entity.name} already registered as a getter...`);
-    entityRegistry[entity.name] = entity;
-    return entity;
-  }
 
   if (existingEntity && !replace) {
     return existingEntity;
@@ -30,43 +29,52 @@ export function registerEntity(entity: Entity, replace = false): Entity {
 };
 
 export function registerEntityGetter(name: string, getter: EntityGetter) {
-  entityRegistry[name] = getter;
+  entityGetters[name] = getter;
+
+  if (entityRegistry[name]) {
+    delete entityRegistry[name];
+  }
 };
 
 export function getEntities(): string[] {
-  return Object.keys(entityRegistry);
+  const s = new Set<string>([...Object.keys(entityRegistry), ...Object.keys(entityGetters)]);
+  return Array.from(s);
 };
 
 export function isEntityRegistered(name: string): boolean {
-  return entityRegistry.hasOwnProperty(name);
+  return entityRegistry.hasOwnProperty(name) || entityGetters.hasOwnProperty(name);
 };
 
 export async function getEntity(name: string): Promise<Entity> {
   const entity = entityRegistry[name];
 
-  if (!entity) {
-    throw new Error(`Entity ${name} not found`);
+  if (entity) {
+    return entity;
   }
 
-  if (typeof entity === "function") {
-    return entity();
+  const getter = entityGetters[name];
+
+  if (getter) {
+    return getter();
   }
 
-  return entity;
+  throw new Error(`Entity ${name} not found`);
 };
 
 export function getEntityGetter(name: string): EntityGetter {
+  if (entityGetters[name]) {
+    return entityGetters[name];
+  }
+
   const entity = entityRegistry[name];
 
   if (!entity) {
     throw new Error(`Entity ${name} not found`);
   }
 
-  if (typeof entity === "function") {
-    return entity;
-  }
+  entityGetters[name] = () => Promise.resolve(entity);
 
-  return () => Promise.resolve(entity);
+  return entityGetters[name];
 };
 
 
