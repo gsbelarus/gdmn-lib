@@ -1,6 +1,6 @@
 import { Model as SrcModel } from 'mongoose';
 
-type Model = SrcModel<any>;
+type Model<T = any> = SrcModel<T>;
 
 export type ModelGetter = () => Promise<Model>;
 
@@ -18,11 +18,17 @@ if (!globalThis.hasOwnProperty(modelGettersKey)) {
 const modelRegistry = (globalThis as any)[modelRegistryKey] as Record<string, Model>;
 const modelGetters = (globalThis as any)[modelGettersKey] as Record<string, ModelGetter>;
 
-export function registerModel(model: Model, replace = false): Model {
+export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
   const existingModel = modelRegistry[model.modelName];
 
   if (existingModel && !replace) {
     return existingModel;
+  }
+
+  const modelGetter = modelGetters[model.modelName];
+
+  if (!!modelGetter) {
+    delete modelGetters[model.modelName];
   }
 
   if (existingModel) {

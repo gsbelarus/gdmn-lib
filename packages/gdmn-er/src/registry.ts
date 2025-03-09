@@ -30,6 +30,12 @@ export function registerEntity(entity: Entity, replace = false): Entity {
     return existingEntity;
   }
 
+  const entityGetter = entityGetters[entity.name];
+
+  if (!!entityGetter) {
+    delete entityGetters[entity.name];
+  }
+
   if (existingEntity) {
     console.log(`Entity ${entity.name} already registered...`);
   }
