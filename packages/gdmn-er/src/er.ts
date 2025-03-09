@@ -199,11 +199,4 @@ export function getAttrType(attrType: AttrType): AttrTypeToGet {
   return { type: "string", isArray: false };
 };
 
-if (!globalThis.hasOwnProperty("entityregistry")) {
-  (globalThis as any)["entityregistry"] = {};
-};
-
-if (!globalThis.hasOwnProperty("entitygetters")) {
-  (globalThis as any)["entitygetters"] = {};
-};
 

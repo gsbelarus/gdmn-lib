@@ -2,6 +2,14 @@ import { Entity } from './er';
 
 export type EntityGetter = () => Promise<Entity>;
 
+if (!globalThis.hasOwnProperty("entityregistry")) {
+  (globalThis as any)["entityregistry"] = {};
+};
+
+if (!globalThis.hasOwnProperty("entitygetters")) {
+  (globalThis as any)["entitygetters"] = {};
+};
+
 const entityRegistry = (globalThis as any)["entityregistry"] as Record<
   string,
   Entity
