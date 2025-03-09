@@ -52,7 +52,6 @@ export const entityDef = registerEntity({
         type: "string",
         required: true,
         trim: true,
-        enum: simpleAttrTypes
       },
       type: {
         type: "string",
