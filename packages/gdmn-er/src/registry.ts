@@ -2,20 +2,23 @@ import { Entity } from './er';
 
 export type EntityGetter = () => Promise<Entity>;
 
-if (!globalThis.hasOwnProperty("entityregistry")) {
-  (globalThis as any)["entityregistry"] = {};
+const entityRegistryKey = "entityregistry";
+const entityGettersKey = "entitygetters";
+
+if (!globalThis.hasOwnProperty(entityRegistryKey)) {
+  (globalThis as any)[entityRegistryKey] = {};
 };
 
-if (!globalThis.hasOwnProperty("entitygetters")) {
-  (globalThis as any)["entitygetters"] = {};
+if (!globalThis.hasOwnProperty(entityGettersKey)) {
+  (globalThis as any)[entityGettersKey] = {};
 };
 
-const entityRegistry = (globalThis as any)["entityregistry"] as Record<
+const entityRegistry = (globalThis as any)[entityRegistryKey] as Record<
   string,
   Entity
 >;
 
-const entityGetters = (globalThis as any)["entitygetters"] as Record<
+const entityGetters = (globalThis as any)[entityGettersKey] as Record<
   string,
   EntityGetter
 >;
@@ -39,6 +42,10 @@ export function registerEntity(entity: Entity, replace = false): Entity {
 export function registerEntityGetter(name: string, getter: EntityGetter) {
   entityGetters[name] = getter;
 
+  /**
+   * Either the getter is registered or the entity is registered.
+   * If the entity is registered, we need to remove it from the registry
+   */
   if (entityRegistry[name]) {
     delete entityRegistry[name];
   }
@@ -81,6 +88,7 @@ export function getEntityGetter(name: string): EntityGetter {
   }
 
   entityGetters[name] = () => Promise.resolve(entity);
+  delete entityRegistry[name];
 
   return entityGetters[name];
 };
