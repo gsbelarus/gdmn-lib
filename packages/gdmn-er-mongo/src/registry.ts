@@ -2,7 +2,7 @@ import { Model as SrcModel } from 'mongoose';
 
 type Model<T = any> = SrcModel<T>;
 
-export type ModelGetter = () => Promise<Model>;
+export type ModelGetter<T = any> = () => Promise<Model<T>>;
 
 const modelRegistryKey = "modelRegistry";
 const modelGettersKey = "modelGetters";
@@ -59,7 +59,7 @@ export function isModelRegistered(name: string): boolean {
     Object.prototype.hasOwnProperty.call(modelGetters, name);
 }
 
-export async function getModel(name: string): Promise<Model> {
+export async function getModel<T = any>(name: string): Promise<Model<T>> {
   const model = modelRegistry[name];
 
   if (model) {
@@ -74,7 +74,7 @@ export async function getModel(name: string): Promise<Model> {
   throw new Error(`Model ${name} not found`);
 }
 
-export function getModelGetter(name: string): ModelGetter {
+export function getModelGetter<T = any>(name: string): ModelGetter<T> {
   if (modelGetters[name]) {
     return modelGetters[name];
   }
