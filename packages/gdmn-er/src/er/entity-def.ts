@@ -110,7 +110,7 @@ export const entityDef = registerEntity({
         type: "string",
         required: false,
       },
-      validate: {
+      validator: {
         type: "string",
         required: false,
       },

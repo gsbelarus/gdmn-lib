@@ -29,7 +29,7 @@ export const ZodEntityDefShape = {
       lowercase: z.boolean().optional(),
       uppercase: z.boolean().optional(),
       match: z.string().optional(),
-      validate: z.string().optional(),
+      validator: z.string().optional(),
       index: z.boolean().optional(),
       unique: z.boolean().optional(),
       sparse: z.boolean().optional(),

@@ -116,8 +116,8 @@ function makeZodSchemaFromAttrDef(def: AttrTypeDef): ZodTypeAny {
     schema = numSchema;
   }
 
-  // If you want to handle `validate` (as string or RegExp), you can add that logic here:
-  // e.g., if (def.validate instanceof RegExp) { schema = (schema as z.ZodString).regex(def.validate); }
+  // If you want to handle `validator` (as string or RegExp), you can add that logic here:
+  // e.g., if (def.validator instanceof RegExp) { schema = (schema as z.ZodString).regex(def.validator); }
 
   // Handle optional/nullable
   if (!def.required) {
