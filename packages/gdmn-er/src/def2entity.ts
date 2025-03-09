@@ -16,7 +16,7 @@ type EntityDefAttribute = {
 
 type EntityDefDocument = {
   _id: string;
-  namespace?: string;
+  namespace?: string | undefined;
   name: string;
   description?: string;
   attributes: EntityDefAttribute[];
