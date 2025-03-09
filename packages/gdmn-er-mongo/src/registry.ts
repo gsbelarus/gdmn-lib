@@ -19,6 +19,10 @@ const modelRegistry = (globalThis as any)[modelRegistryKey] as Record<string, Mo
 const modelGetters = (globalThis as any)[modelGettersKey] as Record<string, ModelGetter>;
 
 export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
+  if (typeof window !== 'undefined') {
+    console.warn('registerModel is not supported in the browser!');
+  }
+
   const existingModel = modelRegistry[model.modelName];
 
   if (existingModel && !replace) {
@@ -40,13 +44,19 @@ export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
   return model;
 }
 
-export function registerModelGetter(name: string, getter: ModelGetter): void {
+export function registerModelGetter(name: string, getter: ModelGetter) {
+  if (typeof window !== 'undefined') {
+    console.warn('registerModelGetter is not supported in the browser!');
+  }
+
   modelGetters[name] = getter;
 
   // If the model is already registered, remove it from the registry.
   if (modelRegistry[name]) {
     delete modelRegistry[name];
   }
+
+  return getter;
 }
 
 export function getModels(): string[] {
