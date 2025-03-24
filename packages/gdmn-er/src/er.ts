@@ -1,3 +1,9 @@
+export type EntityRecord<T = undefined> = T extends object ? T : Record<string, any>;
+export type EntityRecordSet<T = EntityRecord> = T[];
+
+export type EntityEvent<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<void>;
+export type EntityEvent2<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<EntityRecord<T>>;
+
 export type MethodParam = {
   name: string;
   type: string;
@@ -21,6 +27,7 @@ export type Method = {
   returnType?: string;
   returnDescription?: string;
   code?: MethodCode;
+  fn?: (params: any) => Promise<any>;
 };
 
 export const simpleAttrTypes = [
@@ -111,6 +118,10 @@ export type EntityAttributes = {
 };
 
 export interface Entity {
+  /**
+   *  Entity we inherit from
+   */
+  parent?: Entity;
   namespace?: string;
   name: string;
   /**
