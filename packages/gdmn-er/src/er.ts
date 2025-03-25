@@ -146,6 +146,7 @@ export interface Entity {
   attributes: EntityAttributes;
   options?: Record<string, boolean>;
   methods?: Method[];
+  abc?: boolean;
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {

@@ -1,7 +1,9 @@
 import { simpleAttrTypes } from '../er';
 import { registerEntity } from '../registry';
+import { baseEntity } from './base-entity';
 
 export const entityDef = registerEntity({
+  parent: baseEntity,
   namespace: "sys",
   name: "EntityDef",
   attributes: {
