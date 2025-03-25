@@ -28,6 +28,7 @@ export type Method = {
   returnDescription?: string;
   code?: MethodCode;
   fn?: (params: any) => Promise<any>;
+  order?: number;
 };
 
 export const simpleAttrTypes = [
