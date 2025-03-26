@@ -21,7 +21,7 @@ export type MethodCode = {
 
 export type Method = {
   name: string;
-  namespace?: string;
+  namespace: string;
   environment: MethodEnvironment;
   description?: string;
   params?: MethodParam[];
@@ -29,7 +29,7 @@ export type Method = {
   returnDescription?: string;
   code?: MethodCode;
   fn?: (params: any) => Promise<any>;
-  order?: number;
+  order: number;
 };
 
 export const simpleAttrTypes = [
