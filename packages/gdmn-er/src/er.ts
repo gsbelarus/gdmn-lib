@@ -145,7 +145,7 @@ export interface Entity {
   objectTitle?: string | string[];
   attributes: EntityAttributes;
   options?: Record<string, boolean>;
-  methods?: Method[];
+  methods?: Record<string, Method[]>;
   abc?: boolean;
 };
 
