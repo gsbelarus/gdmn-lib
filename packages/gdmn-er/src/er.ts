@@ -21,6 +21,7 @@ export type MethodCode = {
 
 export type Method = {
   name: string;
+  namespace?: string;
   environment: MethodEnvironment;
   description?: string;
   params?: MethodParam[];
