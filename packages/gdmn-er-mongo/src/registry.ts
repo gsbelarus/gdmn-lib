@@ -46,7 +46,7 @@ export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
 
 export function registerModelGetter(name: string, getter: ModelGetter) {
   if (typeof window !== 'undefined') {
-    console.warn('registerModelGetter is not supported in the browser!');
+    console.trace('registerModelGetter is not supported in the browser!');
   }
 
   modelGetters[name] = getter;

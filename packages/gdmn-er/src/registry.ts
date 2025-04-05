@@ -25,7 +25,7 @@ const entityGetters = (globalThis as any)[entityGettersKey] as Record<
 
 export function registerEntity(entity: Entity, replace = false): Entity {
   if (typeof window !== 'undefined') {
-    console.warn('registerEntity is not supported in the browser!');
+    console.trace('registerEntity is not supported in the browser!');
   }
 
   const existingEntity = entityRegistry[entity.name];
@@ -51,7 +51,7 @@ export function registerEntity(entity: Entity, replace = false): Entity {
 
 export function registerEntityGetter(name: string, getter: EntityGetter) {
   if (typeof window !== 'undefined') {
-    console.warn('registerEntityGetter is not supported in the browser!');
+    console.trace('registerEntityGetter is not supported in the browser!');
   }
 
   entityGetters[name] = getter;
