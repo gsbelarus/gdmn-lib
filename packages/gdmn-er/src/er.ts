@@ -4,6 +4,8 @@ export type EntityRecordSet<T = EntityRecord> = T[];
 export type EntityEvent<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<void>;
 export type EntityEvent2<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<EntityRecord<T>>;
 
+export type EntityMethodFn<E, T extends EntityRecord<any>> = (e: E, r: EntityRecord<T>, ...args: any[]) => Promise<EntityRecord<T> | void>;
+
 export type MethodParam = {
   name: string;
   type: string;
@@ -19,7 +21,7 @@ export type MethodCode = {
   code: string;
 };
 
-export type Method = {
+export type Method<E = Entity, T = EntityRecord<any>> = {
   name: string;
   namespace: string;
   environment: MethodEnvironment;
@@ -28,7 +30,7 @@ export type Method = {
   returnType?: string;
   returnDescription?: string;
   code?: MethodCode;
-  fn?: (params: any) => Promise<any>;
+  fn?: EntityMethodFn<E, T>;
   order: number;
 };
 
@@ -211,6 +213,52 @@ export function getAttrType(attrType: AttrType): AttrTypeToGet {
 
   //FIXME: not done yet
   return { type: "string", isArray: false };
+};
+
+export async function execServerMethod(
+  e: Entity,
+  r: EntityRecord,
+  methodName: string,
+  ...args: any[]
+): Promise<EntityRecord | void> {
+  const methods = e.methods?.[methodName]?.filter((m) => m.environment === "server" || m.environment === "both").sort((a, b) => a.order - b.order);
+
+  if (methods) {
+    let result = r;
+    for (const method of methods) {
+      const provisional = await method.fn!(e, result, ...args);
+
+      if (provisional) {
+        result = provisional;
+      }
+    }
+    return result;
+  }
+
+  return Promise.resolve(undefined);
+};
+
+export async function execClientMethod(
+  e: Entity,
+  r: EntityRecord,
+  methodName: string,
+  ...args: any[]
+): Promise<EntityRecord | void> {
+  const methods = e.methods?.[methodName]?.filter((m) => m.environment === "client" || m.environment === "both").sort((a, b) => a.order - b.order);
+
+  if (methods) {
+    let result = r;
+    for (const method of methods) {
+      const provisional = await method.fn!(e, result, ...args);
+
+      if (provisional) {
+        result = provisional;
+      }
+    }
+    return result;
+  }
+
+  return Promise.resolve(undefined);
 };
 
 
