@@ -1,8 +1,8 @@
-import { registerEntity } from '../registry';
+import { Entity } from '../er';
 
-export const baseEntity = registerEntity({
+export const baseEntity: Entity = {
   namespace: "sys",
   name: "BaseEntity",
   attributes: {},
   abc: true,
-});
+};

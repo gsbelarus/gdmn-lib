@@ -1,8 +1,7 @@
-import { simpleAttrTypes } from '../er';
-import { registerEntity } from '../registry';
+import { Entity, simpleAttrTypes } from '../er';
 import { baseEntity } from './base-entity';
 
-export const entityDef = registerEntity({
+export const entityDef: Entity = {
   parent: baseEntity,
   namespace: "sys",
   name: "EntityDef",
@@ -154,5 +153,5 @@ export const entityDef = registerEntity({
       // autoDisplayOrder?: number;
     }]
   }
-});
+};
 
