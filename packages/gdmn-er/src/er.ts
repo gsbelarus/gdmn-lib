@@ -172,7 +172,7 @@ export function isEntityAttributes(
 };
 
 export function isEntity(obj: any): obj is Entity {
-  return typeof obj === 'object' && typeof obj.attributes === 'object' && typeof obj.name === 'string';
+  return !!obj && typeof obj === 'object' && typeof obj.attributes === 'object' && typeof obj.name === 'string';
 };
 
 export function isSimpleAttrType(
