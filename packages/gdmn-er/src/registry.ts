@@ -28,6 +28,8 @@ export function registerEntity(entity: Entity, replace = false): Entity {
     console.trace('registerEntity is not supported in the browser!');
   }
 
+  console.trace(`Registering entity ${entity.name}...`);
+
   const existingEntity = entityRegistry[entity.name];
 
   if (existingEntity && !replace) {
