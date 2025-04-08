@@ -221,6 +221,8 @@ export async function execServerMethod(
   methodName: string,
   ...args: any[]
 ): Promise<EntityRecord | void> {
+  console.log("execServerMethod", e, r, methodName, args);
+
   const methods = e.methods?.[methodName]?.filter((m) => m.environment === "server" || m.environment === "both").sort((a, b) => a.order - b.order);
 
   if (methods) {
