@@ -20,7 +20,7 @@ const modelGetters = (globalThis as any)[modelGettersKey] as Record<string, Mode
 
 export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
   if (typeof window !== 'undefined') {
-    console.warn('registerModel is not supported in the browser!');
+    console.trace(`registerModel is not supported in the browser! model: ${model.modelName}`);
   }
 
   const existingModel = modelRegistry[model.modelName];
@@ -36,7 +36,7 @@ export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
   }
 
   if (existingModel) {
-    console.log(`Model ${model.modelName} already registered...`);
+    console.warn(`Model ${model.modelName} already registered...`);
   }
 
   modelRegistry[model.modelName] = model;
@@ -46,7 +46,7 @@ export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
 
 export function registerModelGetter(name: string, getter: ModelGetter) {
   if (typeof window !== 'undefined') {
-    console.trace('registerModelGetter is not supported in the browser!');
+    console.trace('registerModelGetter is not supported in the browser! name: ' + name);
   }
 
   modelGetters[name] = getter;
