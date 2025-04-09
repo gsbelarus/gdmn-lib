@@ -3,7 +3,7 @@
  * This file contains the code to convert these definitions (i.e. documents of entitydefs) into entities.
  */
 
-import { Entity, str2simpleAttrType } from './er';
+import { Entity, EntityMethods, str2simpleAttrType } from './er';
 
 type EntityDefAttribute = {
   name: string;
@@ -21,16 +21,27 @@ type EntityDefDocument = {
   description?: string;
   attributes: EntityDefAttribute[];
   prompts?: any[];
+  methods?: EntityMethods;
+  parent?: Entity;
 };
 
 export function def2entity(def: EntityDefDocument): Entity {
-  const { namespace, name, description, attributes } = def;
+  const { 
+    namespace, 
+    name, 
+    description, 
+    attributes, 
+    methods,
+    parent
+  } = def;
 
   const entity: Entity = {
     namespace,
     name,
     description,
     attributes: {},
+    methods,
+    parent
   };
 
   for (const attr of attributes) {

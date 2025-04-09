@@ -121,6 +121,14 @@ export type EntityAttributes = {
   [attrName: string]: AttrType;
 };
 
+export const METHOD_TYPES = [
+  "beforePost", 
+  "afterPost"
+] as const;
+type MethodType = typeof METHOD_TYPES[number];
+
+export type EntityMethods = Record<MethodType, Method[]>;
+
 export interface Entity {
   /**
    *  Entity we inherit from
@@ -148,7 +156,7 @@ export interface Entity {
   objectTitle?: string | string[];
   attributes: EntityAttributes;
   options?: Record<string, boolean>;
-  methods?: Record<string, Method[]>;
+  methods?: EntityMethods;
   abc?: boolean;
 };
 
@@ -218,7 +226,7 @@ export function getAttrType(attrType: AttrType): AttrTypeToGet {
 export async function execServerMethod(
   e: Entity,
   r: EntityRecord,
-  methodName: string,
+  methodName: MethodType,
   ...args: any[]
 ): Promise<EntityRecord | void> {
   const methods = e.methods?.[methodName]?.filter((m) => m.environment === "server" || m.environment === "both").sort((a, b) => a.order - b.order);
@@ -241,7 +249,7 @@ export async function execServerMethod(
 export async function execClientMethod(
   e: Entity,
   r: EntityRecord,
-  methodName: string,
+  methodName: MethodType,
   ...args: any[]
 ): Promise<EntityRecord | void> {
   const methods = e.methods?.[methodName]?.filter((m) => m.environment === "client" || m.environment === "both").sort((a, b) => a.order - b.order);
