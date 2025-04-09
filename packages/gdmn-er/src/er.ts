@@ -125,7 +125,7 @@ export const METHOD_TYPES = [
   "beforePost", 
   "afterPost"
 ] as const;
-type MethodType = typeof METHOD_TYPES[number];
+export type MethodType = typeof METHOD_TYPES[number];
 
 export type EntityMethods = Record<MethodType, Method[]>;
 
