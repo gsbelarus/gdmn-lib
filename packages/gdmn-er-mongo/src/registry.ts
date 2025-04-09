@@ -37,6 +37,9 @@ export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
 
   if (existingModel) {
     console.warn(`Model ${model.modelName} already registered...`);
+    if (replace) {
+      delete modelRegistry[model.modelName];
+    }
   }
 
   modelRegistry[model.modelName] = model;
@@ -98,4 +101,12 @@ export function getModelGetter<T = any>(name: string): ModelGetter<T> {
   delete modelRegistry[name];
 
   return modelGetters[name];
+}
+
+export function removeModel(name: string): boolean {
+  if (modelRegistry[name]) {
+    delete modelRegistry[name];
+    return true;
+  }
+  return false;
 }
