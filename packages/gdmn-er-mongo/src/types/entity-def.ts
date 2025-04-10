@@ -1,6 +1,29 @@
 import { Types } from "mongoose";
 import { z } from "zod";
 
+const methodParamSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  description: z.string().optional(),
+  required: z.boolean().optional(),
+});
+
+const methodSchema = z.object({
+  name: z.string(),
+  namespace: z.string(),
+  environment: z.enum(['server', 'client', 'both']),
+  description: z.string().optional(),
+  params: z.array(methodParamSchema).optional(),
+  returnType: z.string().optional(),
+  returnDescription: z.string().optional(),
+  code: z.object({ lang: z.string(), code: z.string() }).optional(),
+  fn: z.function().optional(),
+  order: z.number(),
+});
+
+const methodTypeSchema = z.enum(["beforePost", "afterPost"]);
+const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
+
 export const ZodEntityDefShape = {
   namespace: z.string().trim().min(2).max(60).optional(),
   name: z.string().trim().min(2).max(60),
@@ -39,6 +62,7 @@ export const ZodEntityDefShape = {
       tooltip: z.string().optional(),
     })
   ).optional(),
+  methods: entityMethodsSchema.optional(),
 };
 
 const ZodEntityDef = z.object(ZodEntityDefShape);
