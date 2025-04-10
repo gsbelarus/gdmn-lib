@@ -4,6 +4,7 @@
  */
 
 import { Entity, EntityMethods, str2simpleAttrType } from './er';
+import { slim } from 'gdmn-utils';
 
 type EntityDefAttribute = {
   name: string;
@@ -26,11 +27,11 @@ type EntityDefDocument = {
 };
 
 export function def2entity(def: EntityDefDocument): Entity {
-  const { 
-    namespace, 
-    name, 
-    description, 
-    attributes, 
+  const {
+    namespace,
+    name,
+    description,
+    attributes,
     methods,
     parent
   } = def;
@@ -57,13 +58,15 @@ export function def2entity(def: EntityDefDocument): Entity {
       throw new Error(`Unknown attribute type: ${type}`);
     }
 
-    entity.attributes[name] = {
+    entity.attributes[name] = slim({
       type: attrType,
       required,
       enum: enumValues,
       default: defaultValue,
-    };
+    });
   }
 
   return entity;
 };
+
+

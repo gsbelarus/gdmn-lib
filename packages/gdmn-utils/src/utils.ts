@@ -21,8 +21,8 @@ export function convertBytes(bytes: number): string {
  * @param obj
  * @returns
  */
-export function slim(obj: any) {
-  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined));
+export function slim<T extends {}>(obj: T): T {
+  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined)) as T;
 };
 
 /**
