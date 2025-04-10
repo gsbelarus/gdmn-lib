@@ -78,6 +78,7 @@ export const entityDef: Entity = {
       enum: {
         type: "array",
         required: false,
+        default: undefined
       },
       min: {
         type: "number",
