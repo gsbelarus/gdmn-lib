@@ -1,17 +1,17 @@
-import { z, ZodTypeAny, ZodSchema } from "zod";
+import { z, ZodSchema, ZodTypeAny } from "zod";
 import {
-  Entity,
-  EntityAttributes,
   AttrType,
   AttrTypeDef,
-  SimpleAttrType,
-  isEntitySchema,
+  Entity,
+  EntityAttributes,
+  getAttrType,
   isAttrTypeDef,
   isEntityAttributes,
+  isEntitySchema,
+  isNumberAttr,
   isSimpleAttrType,
   isStringAttr,
-  isNumberAttr,
-  getAttrType,
+  SimpleAttrType,
 } from "./er";
 
 /**
@@ -130,6 +130,11 @@ function makeZodSchemaFromAttrDef(def: AttrTypeDef): ZodTypeAny {
   // Apply default if provided
   if (def.default !== undefined) {
     schema = schema.default(def.default);
+  }
+
+  // Apply default if provided
+  if (def.default === undefined && def.type === "array") {
+    schema = schema.default(undefined);
   }
 
   // If the attribute itself indicates an array type, wrap in z.array(...)
