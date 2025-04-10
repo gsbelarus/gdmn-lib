@@ -65,7 +65,7 @@ export const ZodEntityDefShape = {
   methods: entityMethodsSchema.optional(),
 };
 
-const ZodEntityDef = z.object(ZodEntityDefShape);
+export const ZodEntityDef = z.object(ZodEntityDefShape);
 
 const ZodEntityDefWithId = z.object({
   _id: z.instanceof(Types.ObjectId),

@@ -1,10 +1,13 @@
 import { entityDef } from 'gdmn-er';
-import { entity2schema } from '../er2mongo';
-import { TEntityDefWithId } from '../types/entity-def';
+import { coreEntity2Schema } from '../er2mongo';
+import { TEntityDefWithId, ZodEntityDef } from '../types/entity-def';
 import mongoose, { Model } from 'mongoose';
 import { registerModel } from '../registry';
+import { createSchema } from "@mirite/zod-to-mongoose";
 
-const entityDefSchema = entity2schema<TEntityDefWithId>(entityDef);
+// const entityDefSchema = coreEntity2Schema<TEntityDefWithId>(entityDef);
+
+const entityDefSchema = createSchema(ZodEntityDef);
 
 export const EntityDef = registerModel<TEntityDefWithId>(
   mongoose.models[entityDef.name] || mongoose.model(entityDef.name, entityDefSchema)
