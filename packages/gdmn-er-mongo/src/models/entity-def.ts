@@ -1,5 +1,4 @@
 import { entityDef } from 'gdmn-er';
-import { coreEntity2Schema } from '../er2mongo';
 import { TEntityDefWithId, ZodEntityDef } from '../types/entity-def';
 import mongoose, { Model } from 'mongoose';
 import { registerModel } from '../registry';
