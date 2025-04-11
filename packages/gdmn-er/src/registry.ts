@@ -71,8 +71,8 @@ export function isEntityRegistered(name: string): boolean {
 /**
  * For entities from the "sys" namespace just entity name can be used.
  * For other entities full name should be used consisting of namespace and name, divided by colon.
- * @param name 
- * @returns 
+ * @param name
+ * @returns
  */
 export function parseEntityName(fullName: string) {
   const parts = fullName.split(':');
@@ -96,7 +96,7 @@ export function parseEntityName(fullName: string) {
 
 /**
  * Retrieves the name of the entity.
- * @param entity 
+ * @param entity
  * @returns The full name of the entity, including namespace if applicable.
  */
 export function getEntityName(entity: Entity): string {
@@ -138,6 +138,14 @@ export function getEntityGetter(name: string): EntityGetter {
   delete entityRegistry[name];
 
   return entityGetters[name];
+};
+
+export function removeEntity(name: string): boolean {
+  if (entityRegistry[name]) {
+    delete entityRegistry[name];
+    return true;
+  }
+  return false;
 };
 
 

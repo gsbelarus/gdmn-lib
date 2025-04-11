@@ -122,8 +122,12 @@ export type EntityAttributes = {
 };
 
 export const METHOD_TYPES = [
-  "beforePost", 
-  "afterPost"
+  "beforePost",
+  "afterPost",
+  "beforeUpdate",
+  "afterUpdate",
+  "beforeDelete",
+  "afterDelete",
 ] as const;
 export type MethodType = typeof METHOD_TYPES[number];
 
