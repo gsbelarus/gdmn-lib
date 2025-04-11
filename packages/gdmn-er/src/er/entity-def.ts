@@ -156,6 +156,10 @@ export const entityDef: Entity = {
     methods: {
       type: "map",
       required: false
+    },
+    parent: {
+      type: "objectid",
+      required: false
     }
   }
 };
