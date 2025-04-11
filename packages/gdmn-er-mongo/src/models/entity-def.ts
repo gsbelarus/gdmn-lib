@@ -2,15 +2,83 @@ import { entityDef } from 'gdmn-er';
 import { TEntityDefWithId, ZodEntityDef } from '../types/entity-def';
 import mongoose, { Model, Schema, Types } from 'mongoose';
 import { registerModel } from '../registry';
-import { createSchema } from "@mirite/zod-to-mongoose";
 import { entity2schema } from '../er2mongo';
 import z from 'zod';
 
+const methodParamSchema = new Schema({
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  description: { type: String },
+  required: { type: Boolean },
+});
+
+const methodSchema = new Schema({
+  name: { type: String, required: true },
+  namespace: { type: String, required: true },
+  environment: { type: String, enum: ['server', 'client', 'both'], required: true },
+  description: { type: String },
+  params: [methodParamSchema],
+  returnType: { type: String },
+  returnDescription: { type: String },
+  code: {
+    lang: { type: String },
+    code: { type: String },
+  },
+  fn: { type: Schema.Types.Mixed }, // Functions are not directly supported
+  order: { type: Number, required: true },
+});
+
+const entityMethodsSchema = new Schema({
+  beforePost: [methodSchema],
+  afterPost: [methodSchema],
+});
+
+const attributeSchema = new mongoose.Schema({
+  name: { type: String, required: true, minlength: 2, maxlength: 60, trim: true },
+  type: { type: String, required: true },
+  required: { type: Boolean },
+  nullable: { type: Boolean },
+  default: { type: String, trim: true },
+  enum: [{ type: String, trim: true }],
+  min: { type: Number },
+  max: { type: Number },
+  minlength: { type: Number },
+  maxlength: { type: Number },
+  trim: { type: Boolean },
+  lowercase: { type: Boolean },
+  uppercase: { type: Boolean },
+  match: { type: String },
+  validator: { type: String },
+  index: { type: Boolean },
+  unique: { type: Boolean },
+  sparse: { type: Boolean },
+  ref: { type: String },
+  label: { type: String, trim: true },
+  placeholder: { type: String, trim: true },
+  tooltip: { type: String, trim: true },
+});
+
+const promptSchema = new Schema({
+  namespace: { type: String, minlength: 2, maxlength: 60 },
+  prompt: { type: String, required: true, maxlength: 32767 },
+  disabled: { type: Boolean },
+});
+
+const entitySchema = new Schema({
+  namespace: { type: String, minlength: 2, maxlength: 60, trim: true },
+  name: { type: String, required: true, minlength: 2, maxlength: 60, trim: true },
+  description: { type: String, maxlength: 255, trim: true },
+  prompts: [promptSchema],
+  entitySchema: { type: String },
+  attributes: [attributeSchema],
+  methods: entityMethodsSchema,
+});
+
 const entityDefSchema = entity2schema<TEntityDefWithId>(entityDef);
 
-const entityDefSchema_test = convertZodToMongoose(ZodEntityDef);
+// const entityDefSchema_test = convertZodToMongoose(ZodEntityDef);
 
-console.log('entityDefSchema', { schema_1: entityDefSchema.obj, schema_2: entityDefSchema_test.obj });
+// console.log('entityDefSchema', { schema_1: entityDefSchema.obj, schema_2: entityDefSchema_test.obj, schema_3: entitySchema.obj });
 
 export const EntityDef = registerModel<TEntityDefWithId>(
   mongoose.models[entityDef.name] || mongoose.model(entityDef.name, entityDefSchema)

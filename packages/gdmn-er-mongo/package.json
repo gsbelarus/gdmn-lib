@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-mongo",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -33,7 +33,6 @@
     "url": "https://github.com/gsbelarus/gdmn-lib"
   },
   "dependencies": {
-    "@mirite/zod-to-mongoose": "^0.0.7",
     "mongoose": "^8.9.3",
     "zod": "^3.24.1"
   }
