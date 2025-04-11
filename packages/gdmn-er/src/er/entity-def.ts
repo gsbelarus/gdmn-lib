@@ -1,4 +1,4 @@
-import { Entity, simpleAttrTypes } from '../er';
+import { Entity, simpleAttrTypes, EntityMethods } from '../er';
 import { baseEntity } from './base-entity';
 
 export const entityDef: Entity = {
@@ -152,7 +152,11 @@ export const entityDef: Entity = {
       // filterable?: boolean;
       // displayedAttribute?: string;
       // autoDisplayOrder?: number;
-    }]
+    }],
+    methods: {
+      type: "map",
+      required: false
+    }
   }
 };
 
