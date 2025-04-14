@@ -159,7 +159,8 @@ export const entityDef: Entity = {
     },
     parent: {
       type: "objectid",
-      required: false
+      required: false,
+      ref: "EntityDef",
     }
   }
 };
