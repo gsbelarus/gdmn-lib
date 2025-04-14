@@ -18,6 +18,8 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
       return Date;
     case "map":
       return Map;
+    case "enum":
+      return String;
     default:
       throw new Error(
         `mapSimpleAttrType2MongoType: Unknown attribute type: ${attrType}`,

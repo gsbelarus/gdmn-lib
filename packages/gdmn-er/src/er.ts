@@ -109,7 +109,7 @@ export type AttrTypeDef = {
   displayedFields?: displayedField[];
   fieldProps?: RefFieldProps;
 };
-export type Options = { _id: boolean; collection: string; };
+export type Options = { _id?: boolean; collection?: string; };
 export type EntitySchema = { entity: Entity; options?: Options; };
 export type AttrType =
   | SimpleAttrType
