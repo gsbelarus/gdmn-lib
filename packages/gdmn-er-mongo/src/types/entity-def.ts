@@ -1,3 +1,4 @@
+import { METHOD_TYPES, MethodEnvironment, MethodCode } from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -11,17 +12,17 @@ const methodParamSchema = z.object({
 const methodSchema = z.object({
   name: z.string(),
   namespace: z.string(),
-  environment: z.enum(['server', 'client', 'both']),
+  environment: z.enum(MethodEnvironment),
   description: z.string().optional(),
   params: z.array(methodParamSchema).optional(),
   returnType: z.string().optional(),
   returnDescription: z.string().optional(),
-  code: z.object({ lang: z.string(), code: z.string() }).optional(),
+  code: z.object(MethodCode).optional(),
   fn: z.function().optional(),
   order: z.number(),
 });
 
-const methodTypeSchema = z.enum(["beforePost", "afterPost"]);
+const methodTypeSchema = z.enum(METHOD_TYPES);
 const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
 
 export const ZodEntityDefShape = {
