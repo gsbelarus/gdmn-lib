@@ -1,4 +1,4 @@
-import { METHOD_TYPES, MethodEnvironment, MethodCode } from 'gdmn-er';
+import { METHOD_TYPES } from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -12,12 +12,12 @@ const methodParamSchema = z.object({
 const methodSchema = z.object({
   name: z.string(),
   namespace: z.string(),
-  environment: z.enum(MethodEnvironment),
+  environment: z.enum(['server', 'client', 'both']),
   description: z.string().optional(),
   params: z.array(methodParamSchema).optional(),
   returnType: z.string().optional(),
   returnDescription: z.string().optional(),
-  code: z.object(MethodCode).optional(),
+  code: z.object({ lang: z.string(), code: z.string() }).optional(),
   fn: z.function().optional(),
   order: z.number(),
 });
