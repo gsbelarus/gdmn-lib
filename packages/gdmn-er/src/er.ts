@@ -4,7 +4,7 @@ export type EntityRecordSet<T = EntityRecord> = T[];
 export type EntityEvent<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<void>;
 export type EntityEvent2<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<EntityRecord<T>>;
 
-export type EntityMethodFn<E, T extends EntityRecord<any>> = (e: E, r: EntityRecord<T>, ...args: any[]) => Promise<EntityRecord<T> | void>;
+export type EntityMethodFn<E, T extends EntityRecord<any>> = (e: E, args?: Record<string, any>) => Promise<EntityRecord<T> | boolean>;
 
 export type MethodParam = {
   name: string;
@@ -238,7 +238,7 @@ export async function execServerMethod(
   if (methods) {
     let result = r;
     for (const method of methods) {
-      const provisional = await method.fn!(e, result, ...args);
+      const provisional = await method.fn!(e, args);
 
       if (provisional) {
         result = provisional;
@@ -261,7 +261,7 @@ export async function execClientMethod(
   if (methods) {
     let result = r;
     for (const method of methods) {
-      const provisional = await method.fn!(e, result, ...args);
+      const provisional = await method.fn!(e, args);
 
       if (provisional) {
         result = provisional;
