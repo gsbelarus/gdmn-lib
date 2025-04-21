@@ -22,6 +22,7 @@ export type MethodCode = {
 };
 
 export type Method<E = Entity, T = EntityRecord<any>> = {
+  id: string;
   name: string;
   namespace: string;
   environment: MethodEnvironment;
@@ -32,6 +33,7 @@ export type Method<E = Entity, T = EntityRecord<any>> = {
   code?: MethodCode;
   fn?: EntityMethodFn<E, T>;
   order: number;
+  disabled?: boolean;
 };
 
 export const simpleAttrTypes = [

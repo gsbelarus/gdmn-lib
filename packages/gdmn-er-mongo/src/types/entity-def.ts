@@ -10,6 +10,7 @@ const methodParamSchema = z.object({
 });
 
 const methodSchema = z.object({
+  id: z.string(),
   name: z.string(),
   namespace: z.string(),
   environment: z.enum(['server', 'client', 'both']),
@@ -20,6 +21,7 @@ const methodSchema = z.object({
   code: z.object({ lang: z.string(), code: z.string() }).optional(),
   fn: z.function().optional(),
   order: z.number(),
+  disabled: z.boolean().optional(),
 });
 
 const methodTypeSchema = z.enum(METHOD_TYPES);
