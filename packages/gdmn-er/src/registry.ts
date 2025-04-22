@@ -4,6 +4,7 @@ export type EntityGetter = () => Promise<Entity>;
 
 const entityRegistryKey = "entityregistry";
 const entityGettersKey = "entitygetters";
+const entityVersionKey = "entityversion";
 
 if (!globalThis.hasOwnProperty(entityRegistryKey)) {
   (globalThis as any)[entityRegistryKey] = {};
@@ -12,6 +13,10 @@ if (!globalThis.hasOwnProperty(entityRegistryKey)) {
 if (!globalThis.hasOwnProperty(entityGettersKey)) {
   (globalThis as any)[entityGettersKey] = {};
 };
+
+if (!globalThis.hasOwnProperty(entityVersionKey)) {
+  (globalThis as any)[entityVersionKey] = 1;
+}
 
 const entityRegistry = (globalThis as any)[entityRegistryKey] as Record<
   string,
@@ -41,6 +46,8 @@ export function registerEntity(entity: Entity, replace = false): Entity {
   }
 
   entityRegistry[entity.name] = entity;
+
+  incrementEntityVersion();
 
   return entity;
 };
@@ -148,4 +155,10 @@ export function removeEntity(name: string): boolean {
   return false;
 };
 
+export function getEntityVersion(): number {
+  return (globalThis as any)[entityVersionKey];
+}
 
+export function incrementEntityVersion(): void {
+  (globalThis as any)[entityVersionKey]++;
+}
