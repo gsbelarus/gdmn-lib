@@ -15,7 +15,7 @@ if (!globalThis.hasOwnProperty(entityGettersKey)) {
 };
 
 if (!globalThis.hasOwnProperty(entityVersionKey)) {
-  (globalThis as any)[entityVersionKey] = 1;
+  (globalThis as any)[entityVersionKey] = Date.now();
 }
 
 const entityRegistry = (globalThis as any)[entityRegistryKey] as Record<
@@ -47,7 +47,7 @@ export function registerEntity(entity: Entity, replace = false): Entity {
 
   entityRegistry[entity.name] = entity;
 
-  incrementEntityVersion();
+  updateEntityVersion();
 
   return entity;
 };
@@ -159,6 +159,6 @@ export function getEntityVersion(): number {
   return (globalThis as any)[entityVersionKey];
 }
 
-export function incrementEntityVersion(): void {
-  (globalThis as any)[entityVersionKey]++;
+export function updateEntityVersion(): void {
+  (globalThis as any)[entityVersionKey] = Date.now();
 }
