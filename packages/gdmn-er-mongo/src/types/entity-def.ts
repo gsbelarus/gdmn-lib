@@ -10,7 +10,6 @@ const methodParamSchema = z.object({
 });
 
 const methodSchema = z.object({
-  id: z.string(),
   name: z.string(),
   namespace: z.string(),
   environment: z.enum(['server', 'client', 'both']),
