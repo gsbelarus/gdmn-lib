@@ -3,8 +3,8 @@
  * This file contains the code to convert these definitions (i.e. documents of entitydefs) into entities.
  */
 
-import { Entity, EntityMethods, str2simpleAttrType } from './er';
 import { slim } from 'gdmn-utils';
+import { AttrType, Entity, EntityMethods, str2simpleAttrType } from './er';
 
 type EntityDefAttribute = {
   name: string;
@@ -13,6 +13,9 @@ type EntityDefAttribute = {
   enum?: string[];
   default?: any;
   description?: string;
+  ref?: string;
+  of?: string;
+  displayedFields?: string[];
 };
 
 type EntityDefDocument = {
@@ -46,7 +49,7 @@ export function def2entity(def: EntityDefDocument): Entity {
   };
 
   for (const attr of attributes) {
-    const { name, type, required, enum: enumValues, default: defaultValue } = attr;
+    const { name, type, required, enum: enumValues, default: defaultValue, ref, of, displayedFields } = attr;
 
     if (!name) {
       throw new Error(`Attribute name is required`);
@@ -63,7 +66,10 @@ export function def2entity(def: EntityDefDocument): Entity {
       required,
       enum: enumValues,
       default: defaultValue,
-    });
+      ref,
+      of,
+      displayedFields
+    } as AttrType);
   }
 
   return entity;

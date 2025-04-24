@@ -62,7 +62,51 @@ export const ZodEntityDefShape = {
       label: z.string().optional(),
       placeholder: z.string().optional(),
       tooltip: z.string().optional(),
+      of: z.string().optional(),
+      displayedFields: z.array(z.string()).optional(),
     })
+      .superRefine((data, ctx) => {
+        if ((data.type === 'objectid' || data.type === 'entity') && !data.ref) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "'ref' is required when type is 'objectid' or 'entity'",
+            path: ['ref'],
+          });
+        }
+
+        if (data.type === 'array' && !data.of) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "'of' is required when type is 'array'",
+            path: ['of'],
+          });
+        }
+
+        if (data.type === 'enum' && !data.enum) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "'enum' is required when type is 'enum'",
+            path: ['enum'],
+          });
+        }
+
+        if (data.match && data.type !== 'string') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "'match' can only be used with type 'string'",
+            path: ['match'],
+          });
+        }
+
+        if (data.match && data.type !== 'string') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "'match' can only be used with type 'string'",
+            path: ['match'],
+          });
+        }
+
+      })
   ).optional(),
   methods: entityMethodsSchema.optional(),
   parent: z.instanceof(Types.ObjectId).optional(),

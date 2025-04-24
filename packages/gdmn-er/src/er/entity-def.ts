@@ -1,4 +1,4 @@
-import { Entity, simpleAttrTypes, EntityMethods } from '../er';
+import { Entity, simpleAttrTypes } from '../er';
 import { baseEntity } from './base-entity';
 
 export const entityDef: Entity = {
@@ -77,6 +77,7 @@ export const entityDef: Entity = {
       },
       enum: {
         type: "array",
+        of: "string",
         required: false,
         default: undefined
       },
@@ -144,14 +145,21 @@ export const entityDef: Entity = {
         type: "string",
         required: false,
       },
-      //of?: SimpleAttrType;
+      of: {
+        type: "string",
+        required: false,
+        enum: simpleAttrTypes,
+      },
+      displayedFields: {
+        type: "array",
+        of: 'string',
+        required: false,
+      }
       /**
        * An object to group values into smaller group. Similar on values merging.
        * */
       // highLevelGroupingObject?: Record<any, any>;
       // filterable?: boolean;
-      // displayedAttribute?: string;
-      // autoDisplayOrder?: number;
     }],
     methods: {
       type: "map",
