@@ -132,7 +132,7 @@ export const METHOD_TYPES = [
 ] as const;
 export type MethodType = typeof METHOD_TYPES[number];
 
-export type EntityMethods = Partial<Record<MethodType, Method[]>>;
+export type EntityMethods = Map<string, Method[]>; //Partial<Record<MethodType, Method[]>>;
 
 export interface Entity {
   /**
@@ -228,50 +228,50 @@ export function getAttrType(attrType: AttrType): AttrTypeToGet {
   return { type: "string", isArray: false };
 };
 
-export async function execServerMethod(
-  e: Entity,
-  r: EntityRecord,
-  methodName: MethodType,
-  ...args: any[]
-): Promise<EntityRecord | void> {
-  const methods = e.methods?.[methodName]?.filter((m) => m.environment === "server" || m.environment === "both").sort((a, b) => a.order - b.order);
+// export async function execServerMethod(
+//   e: Entity,
+//   r: EntityRecord,
+//   methodName: MethodType,
+//   ...args: any[]
+// ): Promise<EntityRecord | void> {
+//   const methods = e.methods?.[methodName]?.filter((m) => m.environment === "server" || m.environment === "both").sort((a, b) => a.order - b.order);
 
-  if (methods) {
-    let result = r;
-    for (const method of methods) {
-      const provisional = await method.fn!(e, args);
+//   if (methods) {
+//     let result = r;
+//     for (const method of methods) {
+//       const provisional = await method.fn!(e, args);
 
-      if (provisional) {
-        result = provisional;
-      }
-    }
-    return result;
-  }
+//       if (provisional) {
+//         result = provisional;
+//       }
+//     }
+//     return result;
+//   }
 
-  return Promise.resolve(undefined);
-};
+//   return Promise.resolve(undefined);
+// };
 
-export async function execClientMethod(
-  e: Entity,
-  r: EntityRecord,
-  methodName: MethodType,
-  ...args: any[]
-): Promise<EntityRecord | void> {
-  const methods = e.methods?.[methodName]?.filter((m) => m.environment === "client" || m.environment === "both").sort((a, b) => a.order - b.order);
+// export async function execClientMethod(
+//   e: Entity,
+//   r: EntityRecord,
+//   methodName: MethodType,
+//   ...args: any[]
+// ): Promise<EntityRecord | void> {
+//   const methods = e.methods?.[methodName]?.filter((m) => m.environment === "client" || m.environment === "both").sort((a, b) => a.order - b.order);
 
-  if (methods) {
-    let result = r;
-    for (const method of methods) {
-      const provisional = await method.fn!(e, args);
+//   if (methods) {
+//     let result = r;
+//     for (const method of methods) {
+//       const provisional = await method.fn!(e, args);
 
-      if (provisional) {
-        result = provisional;
-      }
-    }
-    return result;
-  }
+//       if (provisional) {
+//         result = provisional;
+//       }
+//     }
+//     return result;
+//   }
 
-  return Promise.resolve(undefined);
-};
+//   return Promise.resolve(undefined);
+// };
 
 
