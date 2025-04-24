@@ -132,7 +132,7 @@ export const METHOD_TYPES = [
 ] as const;
 export type MethodType = typeof METHOD_TYPES[number];
 
-export type EntityMethods = Map<string, Method[]>; //Partial<Record<MethodType, Method[]>>;
+export type EntityMethods = Partial<Record<MethodType, Method[]>>;
 
 export interface Entity {
   /**
