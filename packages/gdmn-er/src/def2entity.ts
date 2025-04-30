@@ -16,6 +16,9 @@ type EntityDefAttribute = {
   ref?: string;
   of?: string;
   displayedFields?: string[];
+  label?: string;
+  placeholder?: string;
+  tooltip?: string;
 };
 
 type EntityDefDocument = {
@@ -36,7 +39,7 @@ export function def2entity(def: EntityDefDocument): Entity {
     description,
     attributes,
     methods,
-    parent
+    parent,
   } = def;
 
   const entity: Entity = {
@@ -45,11 +48,12 @@ export function def2entity(def: EntityDefDocument): Entity {
     description,
     attributes: {},
     methods,
-    parent
+    parent,
   };
 
   for (const attr of attributes) {
-    const { name, type, required, enum: enumValues, default: defaultValue, ref, of, displayedFields } = attr;
+    const { name, type, required, enum: enumValues, default: defaultValue,
+      ref, of, displayedFields, label, placeholder, tooltip } = attr;
 
     if (!name) {
       throw new Error(`Attribute name is required`);
@@ -68,7 +72,10 @@ export function def2entity(def: EntityDefDocument): Entity {
       default: defaultValue,
       ref,
       of,
-      displayedFields
+      label,
+      placeholder,
+      tooltip,
+      displayedFields,
     } as AttrType);
   }
 

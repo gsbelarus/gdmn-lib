@@ -42,6 +42,7 @@ export const ZodEntityDefShape = {
     z.object({
       name: z.string().trim().min(2).max(60),
       type: z.string(),
+      description: z.string().trim().max(255).optional(),
       required: z.boolean().optional(),
       nullable: z.boolean().optional(),
       default: z.string().optional(),
@@ -80,6 +81,14 @@ export const ZodEntityDefShape = {
             message: "'of' is required when type is 'array'",
             path: ['of'],
           });
+        }
+
+        if (data.type === 'array' && data.of === 'objectid' || data.of === 'entity' && !data.ref) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "'ref' is required when type is 'array' and of is 'objectid' or 'entity'",
+            path: ['ref'],
+          })
         }
 
         if (data.type === 'enum' && !data.enum) {
