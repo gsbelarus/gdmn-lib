@@ -26,6 +26,95 @@ const methodSchema = z.object({
 const methodTypeSchema = z.enum(METHOD_TYPES);
 const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
 
+const attributesSchema = z.array(
+  z.object({
+    name: z.string().trim().min(2).max(60),
+    type: z.string(),
+    description: z.string().trim().max(255).optional(),
+    required: z.boolean().optional(),
+    nullable: z.boolean().optional(),
+    default: z.string().optional(),
+    enum: z.array(z.string()).optional(),
+    min: z.number().optional(),
+    max: z.number().optional(),
+    minlength: z.number().optional(),
+    maxlength: z.number().optional(),
+    trim: z.boolean().optional(),
+    lowercase: z.boolean().optional(),
+    uppercase: z.boolean().optional(),
+    match: z.string().optional(),
+    validator: z.string().optional(),
+    index: z.boolean().optional(),
+    unique: z.boolean().optional(),
+    sparse: z.boolean().optional(),
+    ref: z.string().optional(),
+    label: z.string().optional(),
+    placeholder: z.string().optional(),
+    tooltip: z.string().optional(),
+    of: z.string().optional(),
+    displayedFields: z.array(z.string()).optional(),
+    nestedAttributes: z.lazy((): z.ZodTypeAny => attributesSchema).optional(),
+  })
+    .superRefine((data, ctx) => {
+      if ((data.type === 'objectid' || data.type === 'entity') && !data.ref) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "'ref' is required when type is 'objectid' or 'entity'",
+          path: ['ref'],
+        });
+      }
+
+      if (data.type === 'array' && !data.of) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "'of' is required when type is 'array'",
+          path: ['of'],
+        });
+      }
+
+      if (data.type === 'array' && data.of === 'objectid' || data.of === 'entity' && !data.ref) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "'ref' is required when type is 'array' and of is 'objectid' or 'entity'",
+          path: ['ref'],
+        })
+      }
+
+      if (data.type === 'enum' && !data.enum) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "'enum' is required when type is 'enum'",
+          path: ['enum'],
+        });
+      }
+
+      if (data.match && data.type !== 'string') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "'match' can only be used with type 'string'",
+          path: ['match'],
+        });
+      }
+
+      if (data.match && data.type !== 'string') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "'match' can only be used with type 'string'",
+          path: ['match'],
+        });
+      }
+
+      if (data.type === 'array' && data.of === 'object' && !data.nestedAttributes) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "'nestedAttributes' is required when type is 'array' and of is 'object'",
+          path: ['nestedAttributes'],
+        });
+      }
+
+    })
+).optional();
+
 export const ZodEntityDefShape = {
   namespace: z.string().trim().min(2).max(60).optional(),
   name: z.string().trim().min(2).max(60),
@@ -38,85 +127,7 @@ export const ZodEntityDefShape = {
     })
   ).optional(),
   entitySchema: z.string().optional(),
-  attributes: z.array(
-    z.object({
-      name: z.string().trim().min(2).max(60),
-      type: z.string(),
-      description: z.string().trim().max(255).optional(),
-      required: z.boolean().optional(),
-      nullable: z.boolean().optional(),
-      default: z.string().optional(),
-      enum: z.array(z.string()).optional(),
-      min: z.number().optional(),
-      max: z.number().optional(),
-      minlength: z.number().optional(),
-      maxlength: z.number().optional(),
-      trim: z.boolean().optional(),
-      lowercase: z.boolean().optional(),
-      uppercase: z.boolean().optional(),
-      match: z.string().optional(),
-      validator: z.string().optional(),
-      index: z.boolean().optional(),
-      unique: z.boolean().optional(),
-      sparse: z.boolean().optional(),
-      ref: z.string().optional(),
-      label: z.string().optional(),
-      placeholder: z.string().optional(),
-      tooltip: z.string().optional(),
-      of: z.string().optional(),
-      displayedFields: z.array(z.string()).optional(),
-    })
-      .superRefine((data, ctx) => {
-        if ((data.type === 'objectid' || data.type === 'entity') && !data.ref) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "'ref' is required when type is 'objectid' or 'entity'",
-            path: ['ref'],
-          });
-        }
-
-        if (data.type === 'array' && !data.of) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "'of' is required when type is 'array'",
-            path: ['of'],
-          });
-        }
-
-        if (data.type === 'array' && data.of === 'objectid' || data.of === 'entity' && !data.ref) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "'ref' is required when type is 'array' and of is 'objectid' or 'entity'",
-            path: ['ref'],
-          })
-        }
-
-        if (data.type === 'enum' && !data.enum) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "'enum' is required when type is 'enum'",
-            path: ['enum'],
-          });
-        }
-
-        if (data.match && data.type !== 'string') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "'match' can only be used with type 'string'",
-            path: ['match'],
-          });
-        }
-
-        if (data.match && data.type !== 'string') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "'match' can only be used with type 'string'",
-            path: ['match'],
-          });
-        }
-
-      })
-  ).optional(),
+  attributes: attributesSchema,
   methods: entityMethodsSchema.optional(),
   parent: z.instanceof(Types.ObjectId).optional(),
 };

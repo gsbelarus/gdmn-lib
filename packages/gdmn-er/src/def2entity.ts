@@ -4,7 +4,7 @@
  */
 
 import { slim } from 'gdmn-utils';
-import { AttrType, Entity, EntityMethods, str2simpleAttrType } from './er';
+import { AttrTypeDef, Entity, EntityAttributes, EntityMethods, OfType, str2OfTypes, str2simpleAttrType } from './er';
 
 type EntityDefAttribute = {
   name: string;
@@ -19,6 +19,7 @@ type EntityDefAttribute = {
   label?: string;
   placeholder?: string;
   tooltip?: string;
+  nestedAttributes?: EntityDefAttribute[];
 };
 
 type EntityDefDocument = {
@@ -51,35 +52,117 @@ export function def2entity(def: EntityDefDocument): Entity {
     parent,
   };
 
-  for (const attr of attributes) {
-    const { name, type, required, enum: enumValues, default: defaultValue,
-      ref, of, displayedFields, label, placeholder, tooltip } = attr;
+  entity.attributes = buildAttributes(attributes);
+
+  return entity;
+}
+
+function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
+  const result: EntityAttributes = {};
+
+  for (const attr of attrs) {
+    const {
+      name,
+      type,
+      required,
+      enum: enumValues,
+      default: defaultValue,
+      ref,
+      of,
+      displayedFields,
+      label,
+      placeholder,
+      tooltip,
+      nestedAttributes,
+    } = attr;
 
     if (!name) {
       throw new Error(`Attribute name is required`);
     }
 
     const attrType = str2simpleAttrType(type);
-
     if (!attrType) {
       throw new Error(`Unknown attribute type: ${type}`);
     }
 
-    entity.attributes[name] = slim({
+    const ofType = of && str2OfTypes(of);
+
+    const displayedFieldsEntity = displayedFields?.map((field) => {
+      return { field, readonly: true };
+    });
+
+    const attrObject: AttrTypeDef = slim({
       type: attrType,
       required,
       enum: enumValues,
       default: defaultValue,
       ref,
-      of,
+      of: ofType as OfType | undefined,
       label,
       placeholder,
       tooltip,
-      displayedFields,
-    } as AttrType);
+      displayedFields: displayedFieldsEntity,
+    });
+
+    if (nestedAttributes && nestedAttributes.length > 0) {
+      const nested = buildAttributes(nestedAttributes);
+      attrObject.nestedAttributes = [nested];
+    }
+
+    result[name] = attrObject;
   }
 
-  return entity;
-};
+  return result;
+}
+
+// export function def2entity(def: EntityDefDocument): Entity {
+//   const {
+//     namespace,
+//     name,
+//     description,
+//     attributes,
+//     methods,
+//     parent,
+//   } = def;
+
+//   const entity: Entity = {
+//     namespace,
+//     name,
+//     description,
+//     attributes: {},
+//     methods,
+//     parent,
+//   };
+
+//   for (const attr of attributes) {
+//     const { name, type, required, enum: enumValues, default: defaultValue,
+//       ref, of, displayedFields, label, placeholder, tooltip, nestedAttributes } = attr;
+
+//     if (!name) {
+//       throw new Error(`Attribute name is required`);
+//     }
+
+//     const attrType = str2simpleAttrType(type);
+
+//     if (!attrType) {
+//       throw new Error(`Unknown attribute type: ${type}`);
+//     }
+
+//     entity.attributes[name] = slim({
+//       type: attrType,
+//       required,
+//       enum: enumValues,
+//       default: defaultValue,
+//       ref,
+//       of,
+//       label,
+//       placeholder,
+//       tooltip,
+//       displayedFields,
+//     } as AttrType);
+//   }
+
+//   return entity;
+// };
 
 

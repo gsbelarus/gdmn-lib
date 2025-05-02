@@ -55,6 +55,24 @@ export function str2simpleAttrType(
   return simpleAttrTypes.find((t) => t === str);
 };
 
+export const ofTypes = [
+  "string",
+  "number",
+  "boolean",
+  "timestamp",
+  "objectid",
+  "entity",
+  "object",
+] as const;
+
+export type OfType = (typeof ofTypes)[number];
+
+export function str2OfTypes(
+  str: string,
+): OfType | undefined {
+  return ofTypes.find((t) => t === str);
+};
+
 // export type SimpleAttrType =
 //   | "array"
 //   | "objectid"
@@ -72,7 +90,7 @@ export type RefFieldProps = {
   displayedFieldName: string; //name of the field to display from the referenced Entity
 };
 
-export type displayedField = {
+export type DisplayedField = {
   field: string;
   readonly?: boolean;
 };
@@ -100,15 +118,16 @@ export type AttrTypeDef = {
   label?: string;
   placeholder?: string;
   tooltip?: string;
-  of?: SimpleAttrType;
+  of?: OfType;
   /**
    * An object to group values into smaller group. Similar on values merging.
    * */
   highLevelGroupingObject?: Record<any, any>;
   filterable?: boolean;
   readonly?: boolean;
-  displayedFields?: displayedField[];
+  displayedFields?: DisplayedField[];
   fieldProps?: RefFieldProps;
+  nestedAttributes?: EntityAttributes[];
 };
 export type Options = { _id?: boolean; collection?: string; };
 export type EntitySchema = { entity: Entity; options?: Options; };
