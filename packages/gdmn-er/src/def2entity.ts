@@ -4,14 +4,26 @@
  */
 
 import { slim } from 'gdmn-utils';
-import { AttrTypeDef, Entity, EntityAttributes, EntityMethods, OfType, str2OfTypes, str2simpleAttrType } from './er';
+import { AttrType, Entity, EntityAttributes, EntityMethods, str2simpleAttrType } from './er';
 
-type EntityDefAttribute = {
+export type EntityDefAttribute = {
   name: string;
   type: string;
   required?: boolean;
   enum?: string[];
   default?: any;
+  min?: number,
+  max?: number,
+  minlength?: number,
+  maxlength?: number,
+  trim?: boolean,
+  lowercase?: boolean,
+  uppercase?: boolean,
+  match?: string,
+  validator?: string,
+  index?: boolean,
+  unique?: boolean,
+  sparse?: boolean,
   description?: string;
   ref?: string;
   of?: string;
@@ -85,29 +97,39 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
       throw new Error(`Unknown attribute type: ${type}`);
     }
 
-    const ofType = of && str2OfTypes(of);
+    let finalType: AttrType;
+
+    // Обработка массивов объектов с вложенными атрибутами
+    if (attrType === 'array' && of === 'object' && nestedAttributes?.length) {
+      const nestedAttrs = buildAttributes(nestedAttributes);
+
+      finalType = {
+        type: [nestedAttrs], // вложенные поля внутри массива
+        required,
+        default: defaultValue,
+      };
+    } else {
+      // Простой тип или массив простых типов
+      finalType = slim({
+        type: attrType,
+        required,
+        enum: enumValues,
+        default: defaultValue,
+        ref,
+      });
+    }
 
     const displayedFieldsEntity = displayedFields?.map((field) => {
       return { field, readonly: true };
     });
 
-    const attrObject: AttrTypeDef = slim({
-      type: attrType,
-      required,
-      enum: enumValues,
-      default: defaultValue,
-      ref,
-      of: ofType as OfType | undefined,
+    const attrObject: AttrType = slim({
+      ...finalType,
       label,
       placeholder,
       tooltip,
       displayedFields: displayedFieldsEntity,
     });
-
-    if (nestedAttributes && nestedAttributes.length > 0) {
-      const nested = buildAttributes(nestedAttributes);
-      attrObject.nestedAttributes = [nested];
-    }
 
     result[name] = attrObject;
   }

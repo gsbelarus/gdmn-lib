@@ -1,4 +1,4 @@
-import { METHOD_TYPES } from 'gdmn-er';
+import { EntityDefAttribute, METHOD_TYPES } from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -26,14 +26,29 @@ const methodSchema = z.object({
 const methodTypeSchema = z.enum(METHOD_TYPES);
 const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
 
-const attributesSchema = z.array(
-  z.object({
+const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
+  const requireField = (
+    condition: boolean,
+    path: (string | number)[],
+    message: string,
+    ctx: z.RefinementCtx
+  ) => {
+    if (condition) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message,
+        path,
+      });
+    }
+  };
+
+  return z.object({
     name: z.string().trim().min(2).max(60),
     type: z.string(),
     description: z.string().trim().max(255).optional(),
     required: z.boolean().optional(),
     nullable: z.boolean().optional(),
-    default: z.string().optional(),
+    default: z.any().optional(),
     enum: z.array(z.string()).optional(),
     min: z.number().optional(),
     max: z.number().optional(),
@@ -53,67 +68,54 @@ const attributesSchema = z.array(
     tooltip: z.string().optional(),
     of: z.string().optional(),
     displayedFields: z.array(z.string()).optional(),
-    nestedAttributes: z.lazy((): z.ZodTypeAny => attributesSchema).optional(),
-  })
-    .superRefine((data, ctx) => {
-      if ((data.type === 'objectid' || data.type === 'entity') && !data.ref) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "'ref' is required when type is 'objectid' or 'entity'",
-          path: ['ref'],
-        });
-      }
+    nestedAttributes: z.array(attributeDefSchema).optional(),
+  }).superRefine((data, ctx) => {
+    requireField(
+      (data.type === 'objectid' || data.type === 'entity') && !data.ref,
+      ['ref'],
+      "'ref' is required when type is 'objectid' or 'entity'",
+      ctx
+    );
 
-      if (data.type === 'array' && !data.of) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "'of' is required when type is 'array'",
-          path: ['of'],
-        });
-      }
+    requireField(
+      data.type === 'array' && !data.of,
+      ['of'],
+      "'of' is required when type is 'array'",
+      ctx
+    );
 
-      if (data.type === 'array' && data.of === 'objectid' || data.of === 'entity' && !data.ref) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "'ref' is required when type is 'array' and of is 'objectid' or 'entity'",
-          path: ['ref'],
-        })
-      }
+    requireField(
+      data.type === 'array' &&
+      (data.of === 'objectid' || data.of === 'entity') &&
+      !data.ref,
+      ['ref'],
+      "'ref' is required when type is 'array' and of is 'objectid' or 'entity'",
+      ctx
+    );
 
-      if (data.type === 'enum' && !data.enum) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "'enum' is required when type is 'enum'",
-          path: ['enum'],
-        });
-      }
+    requireField(
+      data.type === 'array' && data.of === 'object' && !data.nestedAttributes,
+      ['nestedAttributes'],
+      "'nestedAttributes' is required when type is 'array' and of is 'object'",
+      ctx
+    );
 
-      if (data.match && data.type !== 'string') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "'match' can only be used with type 'string'",
-          path: ['match'],
-        });
-      }
+    requireField(
+      data.type === 'enum' && !data.enum,
+      ['enum'],
+      "'enum' is required when type is 'enum'",
+      ctx
+    );
 
-      if (data.match && data.type !== 'string') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "'match' can only be used with type 'string'",
-          path: ['match'],
-        });
-      }
+    requireField(
+      data.match !== undefined && data.type !== 'string',
+      ['match'],
+      "'match' can only be used with type 'string'",
+      ctx
+    );
 
-      if (data.type === 'array' && data.of === 'object' && !data.nestedAttributes) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "'nestedAttributes' is required when type is 'array' and of is 'object'",
-          path: ['nestedAttributes'],
-        });
-      }
-
-    })
-).optional();
+  });
+});
 
 export const ZodEntityDefShape = {
   namespace: z.string().trim().min(2).max(60).optional(),
@@ -127,7 +129,7 @@ export const ZodEntityDefShape = {
     })
   ).optional(),
   entitySchema: z.string().optional(),
-  attributes: attributesSchema,
+  attributes: z.array(attributeDefSchema),
   methods: entityMethodsSchema.optional(),
   parent: z.instanceof(Types.ObjectId).optional(),
 };
