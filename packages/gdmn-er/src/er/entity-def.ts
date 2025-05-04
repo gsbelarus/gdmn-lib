@@ -1,10 +1,8 @@
 import { Entity, ofTypes, simpleAttrTypes } from '../er';
 import { baseEntity } from './base-entity';
 
-let attributeDef: any = {};
-
-function createAttributeDef(): any {
-  return {
+function createAttributeDef(): Record<string, any> {
+  const attributeDef: Record<string, any> = {
     name: {
       type: "string",
       required: true,
@@ -111,15 +109,25 @@ function createAttributeDef(): any {
       of: 'string',
       required: false,
     },
-    nestedAttributes: () => [createAttributeDef()],
+    nestedAttributes: {
+      type: 'array',
+      required: false,
+    },
   };
+
+  attributeDef.nestedAttributes.of = attributeDef;
+
+  return attributeDef;
 }
+
 
 /**
  * An object to group values into smaller group. Similar on values merging.
  * */
 // highLevelGroupingObject?: Record<any, any>;
 // filterable?: boolean;
+
+const attributeDef = createAttributeDef();
 
 export const entityDef: Entity = {
   parent: baseEntity,
@@ -168,7 +176,7 @@ export const entityDef: Entity = {
     entitySchema: {
       type: "string"
     },
-    attributes: [createAttributeDef()],
+    attributes: [attributeDef],
     methods: {
       type: "map",
       required: false
