@@ -1,7 +1,10 @@
 import { Entity, ofTypes, simpleAttrTypes } from '../er';
 import { baseEntity } from './base-entity';
 
-function createAttributeDef(): Record<string, any> {
+function createAttributeDef(depth: number = 3): Record<string, any> {
+  if (depth <= 0) {
+    return {};
+  }
   const attributeDef: Record<string, any> = {
     name: {
       type: "string",
@@ -112,10 +115,11 @@ function createAttributeDef(): Record<string, any> {
     nestedAttributes: {
       type: 'array',
       required: false,
+      get of() {
+        return createAttributeDef(depth - 1);
+      }
     },
   };
-
-  attributeDef.nestedAttributes.of = attributeDef;
 
   return attributeDef;
 }
