@@ -24,11 +24,11 @@ export type EntityDefAttribute = {
   index?: boolean,
   unique?: boolean,
   sparse?: boolean,
-  description?: string;
   ref?: string;
   of?: string;
   displayedFields?: string[];
   label?: string;
+  description?: string;
   placeholder?: string;
   tooltip?: string;
   nestedAttributes?: EntityDefAttribute[];
@@ -136,55 +136,3 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
   return result;
 }
-
-// export function def2entity(def: EntityDefDocument): Entity {
-//   const {
-//     namespace,
-//     name,
-//     description,
-//     attributes,
-//     methods,
-//     parent,
-//   } = def;
-
-//   const entity: Entity = {
-//     namespace,
-//     name,
-//     description,
-//     attributes: {},
-//     methods,
-//     parent,
-//   };
-
-//   for (const attr of attributes) {
-//     const { name, type, required, enum: enumValues, default: defaultValue,
-//       ref, of, displayedFields, label, placeholder, tooltip, nestedAttributes } = attr;
-
-//     if (!name) {
-//       throw new Error(`Attribute name is required`);
-//     }
-
-//     const attrType = str2simpleAttrType(type);
-
-//     if (!attrType) {
-//       throw new Error(`Unknown attribute type: ${type}`);
-//     }
-
-//     entity.attributes[name] = slim({
-//       type: attrType,
-//       required,
-//       enum: enumValues,
-//       default: defaultValue,
-//       ref,
-//       of,
-//       label,
-//       placeholder,
-//       tooltip,
-//       displayedFields,
-//     } as AttrType);
-//   }
-
-//   return entity;
-// };
-
-

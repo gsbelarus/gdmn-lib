@@ -94,6 +94,12 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       type: "string",
       required: false,
     },
+    description: {
+      type: "string",
+      trim: true,
+      maxlength: 255,
+      required: false,
+    },
     placeholder: {
       type: "string",
       required: false,
