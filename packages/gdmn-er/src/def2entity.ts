@@ -83,6 +83,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
       of,
       displayedFields,
       label,
+      description,
       placeholder,
       tooltip,
       nestedAttributes,
@@ -99,17 +100,15 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
     let finalType: AttrType;
 
-    // Обработка массивов объектов с вложенными атрибутами
     if (attrType === 'array' && of === 'object' && nestedAttributes?.length) {
       const nestedAttrs = buildAttributes(nestedAttributes);
 
       finalType = {
-        type: [nestedAttrs], // вложенные поля внутри массива
+        type: [nestedAttrs],
         required,
         default: defaultValue,
       };
     } else {
-      // Простой тип или массив простых типов
       finalType = slim({
         type: attrType,
         required,
@@ -126,9 +125,10 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
     const attrObject: AttrType = slim({
       ...finalType,
       label,
+      description,
       placeholder,
       tooltip,
-      displayedFields: displayedFieldsEntity,
+      ...(displayedFieldsEntity && { displayedFields: displayedFieldsEntity }),
     });
 
     result[name] = attrObject;
