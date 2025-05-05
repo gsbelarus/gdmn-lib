@@ -131,14 +131,27 @@ export type EntityAttributes = {
   [attrName: string]: AttrType;
 };
 
-export const METHOD_TYPES = [
-  "beforePost",
-  "afterPost",
-  "beforeUpdate",
-  "afterUpdate",
-  "beforeDelete",
-  "afterDelete",
+export const METHOD_TYPES_SERVER = [
+  "beforePost", 
+  "afterPost", 
+  "beforeUpdate", 
+  "afterUpdate", 
+  "beforeDelete", 
+  "afterDelete"
 ] as const;
+
+export const METHOD_TYPES_CLIENT = [
+  "beforeSubmit", 
+  "afterSubmit", 
+  "beforeFormOpen", 
+  "afterFormOpen"
+] as const;
+
+export const METHOD_TYPES = [
+  ...METHOD_TYPES_SERVER,
+  ...METHOD_TYPES_CLIENT
+] as const;
+
 export type MethodType = typeof METHOD_TYPES[number];
 
 export type EntityMethods = Partial<Record<MethodType, Method[]>>;
