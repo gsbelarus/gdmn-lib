@@ -73,17 +73,6 @@ export function str2OfTypes(
   return ofTypes.find((t) => t === str);
 };
 
-// export type SimpleAttrType =
-//   | "array"
-//   | "objectid"
-//   | "boolean"
-//   | "number"
-//   | "string"
-//   | "timestamp"
-//   | "entity"
-//   | "enum"
-//   | "map";
-
 export type RefFieldProps = {
   entityName: string; // name of the Entity we are referencing
   fieldName: string; //name of the reference field in the current Entity
@@ -116,6 +105,7 @@ export type AttrTypeDef = {
   ref?: string;
   //FIXME: rename to caption? because we use caption in the ui components
   label?: string;
+  description?: string;
   placeholder?: string;
   tooltip?: string;
   of?: OfType;
@@ -246,51 +236,4 @@ export function getAttrType(attrType: AttrType): AttrTypeToGet {
   //FIXME: not done yet
   return { type: "string", isArray: false };
 };
-
-// export async function execServerMethod(
-//   e: Entity,
-//   r: EntityRecord,
-//   methodName: MethodType,
-//   ...args: any[]
-// ): Promise<EntityRecord | void> {
-//   const methods = e.methods?.[methodName]?.filter((m) => m.environment === "server" || m.environment === "both").sort((a, b) => a.order - b.order);
-
-//   if (methods) {
-//     let result = r;
-//     for (const method of methods) {
-//       const provisional = await method.fn!(e, args);
-
-//       if (provisional) {
-//         result = provisional;
-//       }
-//     }
-//     return result;
-//   }
-
-//   return Promise.resolve(undefined);
-// };
-
-// export async function execClientMethod(
-//   e: Entity,
-//   r: EntityRecord,
-//   methodName: MethodType,
-//   ...args: any[]
-// ): Promise<EntityRecord | void> {
-//   const methods = e.methods?.[methodName]?.filter((m) => m.environment === "client" || m.environment === "both").sort((a, b) => a.order - b.order);
-
-//   if (methods) {
-//     let result = r;
-//     for (const method of methods) {
-//       const provisional = await method.fn!(e, args);
-
-//       if (provisional) {
-//         result = provisional;
-//       }
-//     }
-//     return result;
-//   }
-
-//   return Promise.resolve(undefined);
-// };
-
 
