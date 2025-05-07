@@ -102,14 +102,13 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
   }
 
   if (entity.options) {
-    schema['options'] = { type: Map, of: Boolean, default: entity.options };
+    schema['options'] = { type: Map, of: Boolean };
   }
 
   if (entity.methods) {
     schema['methods'] = {
       type: Map,
-      of: methodSchema(),
-      default: entity.methods,
+      of: [methodSchema()]
     };
   }
 
