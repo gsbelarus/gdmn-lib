@@ -4,7 +4,7 @@
  */
 
 import { slim } from 'gdmn-utils';
-import { AttrType, Entity, EntityAttributes, EntityMethods, str2simpleAttrType } from './er';
+import { AttrType, Entity, EntityAttributes, EntityDefMethods, EntityMethods, str2simpleAttrType } from './er';
 
 export type EntityDefAttribute = {
   name: string;
@@ -41,15 +41,21 @@ type EntityDefDocument = {
   description?: string;
   attributes: EntityDefAttribute[];
   prompts?: any[];
-  methods?: EntityMethods;
+  methods?: EntityDefMethods;
   parent?: Entity;
 };
 
-function convertMethodsToObject(methods: EntityMethods): { [key: string]: any[] } {
-  const result: { [key: string]: any[] } = {};
+function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any[] } {
+  const result: EntityMethods = {};
 
-  Object.entries(methods).forEach(([key, value]) => {
-    result[key] = value;
+  methods.forEach((methods, methodType) => {
+    console.log(`Method Type: ${methodType}`);
+    methods.forEach((method) => {
+      if (!result[methodType]) {
+        result[methodType] = [];
+      }
+      result[methodType].push(method);
+    });
   });
 
   return result;
