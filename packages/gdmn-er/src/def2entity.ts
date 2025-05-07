@@ -45,6 +45,16 @@ type EntityDefDocument = {
   parent?: Entity;
 };
 
+function convertMethodsToObject(methods: EntityMethods): { [key: string]: any[] } {
+  const result: { [key: string]: any[] } = {};
+
+  Object.entries(methods).forEach(([key, value]) => {
+    result[key] = value;
+  });
+
+  return result;
+}
+
 export function def2entity(def: EntityDefDocument): Entity {
   const {
     namespace,
@@ -60,7 +70,7 @@ export function def2entity(def: EntityDefDocument): Entity {
     name,
     description,
     attributes: {},
-    methods,
+    methods: methods ? convertMethodsToObject(methods) : {},
     parent,
   };
 
