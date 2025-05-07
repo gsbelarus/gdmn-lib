@@ -98,7 +98,7 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
   );
 
   if (entity.parent) {
-    schema['parent'] = { type: mongoose.Schema.Types.ObjectId, ref: entity.parent.name };
+    schema['parent'] = { type: mongoose.Schema.Types.ObjectId, ref: "EntityDef" };
   }
 
   if (entity.options) {
