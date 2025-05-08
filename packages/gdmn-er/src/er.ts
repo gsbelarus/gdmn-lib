@@ -65,7 +65,7 @@ export const ofTypes = [
   "object",
 ] as const;
 
-export type OfType = (typeof ofTypes)[number];
+export type OfType = (typeof ofTypes)[number] | EntityAttributes;
 
 export function str2OfTypes(
   str: string,
