@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type EntityRecord<T = undefined> = T extends object ? T : Record<string, any>;
 export type EntityRecordSet<T = EntityRecord> = T[];
 
@@ -6,34 +8,42 @@ export type EntityEvent2<T extends EntityRecord> = (E: Entity, Record: EntityRec
 
 export type EntityMethodFn<E, T extends EntityRecord<any>> = (e: E, args?: Record<string, any>) => Promise<EntityRecord<T> | boolean>;
 
-export type MethodParam = {
-  name: string;
-  type: string;
-  required?: boolean;
-  nullable?: boolean;
-  default?: any;
-};
+export const ZodMethodParam = z.object({
+  name: z.string(),
+  type: z.string(),
+  required: z.boolean().optional(),
+  nullable: z.boolean().optional(),
+  default: z.any().optional(),
+});
+export type MethodParam = z.infer<typeof ZodMethodParam>;
 
-export type MethodEnvironment = 'server' | 'client' | 'both';
+export const ZodMethodEnvironment = z.enum(['server', 'client', 'both']);
+export type MethodEnvironment = z.infer<typeof ZodMethodEnvironment>;
 
-export type MethodCode = {
-  lang: string;
-  code: string;
-};
+export const ZodMethodCode = z.object({
+  lang: z.string(),
+  code: z.string(),
+});
+export type MethodCode = z.infer<typeof ZodMethodCode>;
 
-export type Method<E = Entity, T = EntityRecord<any>> = {
-  name: string;
-  namespace: string;
-  environment: MethodEnvironment;
-  description?: string;
-  params?: MethodParam[];
-  returnType?: string;
-  returnDescription?: string;
-  code?: MethodCode;
-  fn?: EntityMethodFn<E, T>;
-  order: number;
-  disabled?: boolean;
-};
+export const ZodMethod = z.object({
+  name: z.string(),
+  namespace: z.string(),
+  environment: ZodMethodEnvironment,
+  description: z.string().optional(),
+  params: z.array(ZodMethodParam).optional(),
+  returnType: z.string().optional(),
+  returnDescription: z.string().optional(),
+  code: ZodMethodCode.optional(),
+  fn: z
+    .function()
+    .args(z.any(), z.record(z.string(), z.any()).optional())
+    .returns(z.promise(z.union([z.record(z.string(), z.any()), z.boolean()])))
+    .optional(),
+  order: z.number(),
+  disabled: z.boolean().optional(),
+});
+export type Method = z.infer<typeof ZodMethod>;
 
 export const simpleAttrTypes = [
   "array",
@@ -47,7 +57,8 @@ export const simpleAttrTypes = [
   "map",
 ] as const;
 
-export type SimpleAttrType = (typeof simpleAttrTypes)[number];
+export const ZodSimpleAttrTypes = z.enum(simpleAttrTypes);
+export type SimpleAttrType = z.infer<typeof ZodSimpleAttrTypes>;
 
 export function str2simpleAttrType(
   str: string,
@@ -158,36 +169,35 @@ export type EntityDefMethods = Map<MethodType, Method[]>;
 
 export type EntityMethods = Partial<Record<MethodType, Method[]>>;
 
+/** Type you can reuse elsewhere in your codebase */
 export interface Entity {
-  /**
-   *  Entity we inherit from
-   */
-  parent?: Entity;
+  parent?: Entity;                                              // recursive
   namespace?: string;
   name: string;
-  /**
-   * Label for use in the user interface
-   * If not specified, the name attribute will be used as the label
-   * */
   label?: string;
-  /**
-   * Detailed description of the entity.
-   */
   description?: string;
-  /**
-   * Object title template
-   * Example: 'name' -- use 'name' attribute as object title
-   * Example: ['$specialization', ' [', $language, ']'] -- this will generate
-   * object title from 'specialization' and 'language' attributes. The array
-   * provided will be used in the $concat aggregation operator.
-   * If not specified, object title will be generated from the _id attribute
-   * */
   objectTitle?: string | string[];
-  attributes: EntityAttributes;
+  attributes: Record<string, unknown>;                          // safer than any
   options?: Record<string, boolean>;
-  methods?: EntityMethods;
+  methods?: Record<string, z.infer<typeof ZodMethod>[]>;     // leverage MethodSchema
   abc?: boolean;
-};
+}
+
+/** Zod schema that validates the Entity structure */
+export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
+  z.object({
+    parent: z.lazy(() => ZodEntity).optional(),
+    namespace: z.string().optional(),
+    name: z.string(),
+    label: z.string().optional(),
+    description: z.string().optional(),
+    objectTitle: z.union([z.string(), z.array(z.string())]).optional(),
+    attributes: z.record(z.string(), z.unknown()),
+    options: z.record(z.string(), z.boolean()).optional(),
+    methods: z.record(z.string(), z.array(ZodMethod)).optional(),
+    abc: z.boolean().optional(),
+  })
+);
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
   return typeof attrType === "object" && attrType.hasOwnProperty("entity");
