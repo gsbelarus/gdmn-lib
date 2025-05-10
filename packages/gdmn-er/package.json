@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er",
-  "version": "0.1.72",
+  "version": "0.1.73",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -21,7 +21,7 @@
     "gdmn-eslint-config": "workspace:*",
     "gdmn-tsconfig": "workspace:*",
     "tsup": "^8.0.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.8.3"
   },
   "publishConfig": {
     "access": "public"

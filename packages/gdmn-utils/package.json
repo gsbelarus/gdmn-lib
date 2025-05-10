@@ -1,6 +1,6 @@
 {
   "name": "gdmn-utils",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -21,7 +21,7 @@
     "@types/node": "^20.11.24",
     "eslint": "^8.57.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.8.3"
   },
   "publishConfig": {
     "access": "public"

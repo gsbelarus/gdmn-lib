@@ -7,12 +7,12 @@
     "declarationMap": false,
     "incremental": true,
     "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "ES2024"],
     "module": "esnext",
     "moduleResolution": "Bundler",
     "noEmit": true,
     "resolveJsonModule": true,
-    "target": "es5"
+    "target": "ES2024"
   },
   "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules"]

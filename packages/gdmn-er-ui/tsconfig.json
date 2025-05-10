@@ -3,8 +3,8 @@
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "lib": ["dom", "ES2015"],
+    "lib": ["dom", "ES2024"],
     "module": "NodeNext",
-    "target": "es6"
+    "target": "ES2024"
   }    
 }
