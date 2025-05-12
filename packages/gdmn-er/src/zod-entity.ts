@@ -140,6 +140,8 @@ export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
     options: z.record(z.string(), z.boolean()).optional(),
     methods: ZodEntityMethods.optional(),
     abc: z.boolean().optional(),
+    viewForm: z.string().optional(),
+    dlgForm: z.string().optional(),
   })
 );
 
