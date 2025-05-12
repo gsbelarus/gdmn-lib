@@ -187,6 +187,14 @@ export interface Entity {
   options?: Record<string, boolean>;
   methods?: EntityMethods;
   abc?: boolean;
+  /**
+   * Custom page for viewing the entity's records
+   * */
+  viewForm?: string;
+  /**
+   * Custom page for creating/editing/viewing single record of the entity
+   * */
+  dlgForm?: string;
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
