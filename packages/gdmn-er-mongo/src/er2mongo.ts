@@ -28,13 +28,30 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 }
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  const { type, default: d, match, ...rest } = attrTypeDef;
+  const { type, default: def, match, ...rest } = attrTypeDef;
+
+  const mappedDefault =
+    def === undefined
+      ? undefined
+      : type === 'timestamp'
+        ? def === 'now'
+          ? Date.now
+          : new Date(def)
+        : type === 'number'
+          ? Number(def)
+          : def;
+
+  const mappedMatch = match instanceof RegExp
+    ? match.source
+    : typeof match === 'string'
+      ? match
+      : undefined;
 
   return slim({
     type: mapAttrType2MongoType(type),
     ...rest,
-    match: match ? match instanceof RegExp ? match.source : match : undefined,
-    default: type === "timestamp" && d === "now" ? Date.now : d,
+    match: mappedMatch,
+    default: mappedDefault,
   });
 }
 
