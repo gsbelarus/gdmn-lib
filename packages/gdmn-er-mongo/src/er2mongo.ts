@@ -31,7 +31,7 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   const { type, default: def, match, ...rest } = attrTypeDef;
 
   const mappedDefault =
-    def === undefined
+    def === undefined || def === null
       ? undefined
       : type === 'timestamp'
         ? def === 'now'
