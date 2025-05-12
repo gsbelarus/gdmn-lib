@@ -90,19 +90,9 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
   for (const attr of attrs) {
     const {
-      name,
-      type,
-      required,
-      enum: enumValues,
-      default: defaultValue,
-      ref,
-      of,
-      displayedFields,
-      label,
-      description,
-      placeholder,
-      tooltip,
-      nestedAttributes,
+      name, type, required, enum: enumValues, default: defaultValue, ref, of,
+      displayedFields, label, description, placeholder, tooltip, nestedAttributes,
+      min, max, minlength, maxlength, trim, lowercase, uppercase, match, validator
     } = attr;
 
     if (!name) {
@@ -125,26 +115,27 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         default: defaultValue,
       };
     } else {
+      const regExp = (v?: string) => v ? new RegExp(v) : undefined;
+
       finalType = slim({
         type: attrType,
         required,
         enum: enumValues,
         default: defaultValue,
         ref,
+        min, max, minlength, maxlength,
+        trim, lowercase, uppercase,
+        match: regExp(match),
+        validator: regExp(validator)
       });
     }
 
-    const displayedFieldsEntity = displayedFields?.map((field) => {
-      return { field, readonly: true };
-    });
-
     const attrObject: AttrType = slim({
       ...finalType,
-      label,
-      description,
-      placeholder,
-      tooltip,
-      ...(displayedFieldsEntity && { displayedFields: displayedFieldsEntity }),
+      label, description, placeholder, tooltip,
+      ...(displayedFields && displayedFields.length && {
+        displayedFields: displayedFields.map(field => ({ field, readonly: true }))
+      }),
     });
 
     result[name] = attrObject;
