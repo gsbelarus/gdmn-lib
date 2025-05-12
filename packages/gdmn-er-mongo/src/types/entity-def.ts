@@ -27,7 +27,7 @@ const methodTypeSchema = z.enum(METHOD_TYPES);
 const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
 
 const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
-  const requireField = (
+  const checkField = (
     condition: boolean,
     path: (string | number)[],
     message: string,
@@ -70,21 +70,21 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     displayedFields: z.array(z.string()).optional(),
     nestedAttributes: z.array(attributeDefSchema).optional(),
   }).superRefine((data, ctx) => {
-    requireField(
+    checkField(
       (data.type === 'objectid' || data.type === 'entity') && !data.ref,
       ['ref'],
       "'ref' is required when type is 'objectid' or 'entity'",
       ctx
     );
 
-    requireField(
+    checkField(
       data.type === 'array' && !data.of,
       ['of'],
       "'of' is required when type is 'array'",
       ctx
     );
 
-    requireField(
+    checkField(
       data.type === 'array' &&
       (data.of === 'objectid' || data.of === 'entity') &&
       !data.ref,
@@ -93,27 +93,26 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
       ctx
     );
 
-    requireField(
+    checkField(
       data.type === 'array' && data.of === 'object' && !data.nestedAttributes,
       ['nestedAttributes'],
       "'nestedAttributes' is required when type is 'array' and of is 'object'",
       ctx
     );
 
-    requireField(
+    checkField(
       data.type === 'enum' && !data.enum,
       ['enum'],
       "'enum' is required when type is 'enum'",
       ctx
     );
 
-    requireField(
+    checkField(
       data.match !== undefined && data.type !== 'string',
       ['match'],
       "'match' can only be used with type 'string'",
       ctx
     );
-
   });
 });
 
