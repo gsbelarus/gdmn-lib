@@ -121,7 +121,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         type: attrType,
         required,
         enum: enumValues,
-        default: defaultValue,
+        default: attrType === 'number' ? Number(defaultValue) : attrType === 'timestamp' ? new Date(defaultValue) : defaultValue,
         ref,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,
