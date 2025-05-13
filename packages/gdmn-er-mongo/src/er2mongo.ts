@@ -1,4 +1,4 @@
-import { AttrType, AttrTypeDef, Entity, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
+import { AttrType, AttrTypeDef, convertDefaultValueByType, Entity, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
 import { slim } from 'gdmn-utils';
 import mongoose from 'mongoose';
 
@@ -30,16 +30,7 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   const { type, default: def, match, ...rest } = attrTypeDef;
 
-  const mappedDefault =
-    def === undefined || def === null
-      ? undefined
-      : type === 'timestamp'
-        ? def === 'now'
-          ? Date.now
-          : new Date(def)
-        : type === 'number'
-          ? Number(def)
-          : def;
+  const mappedDefault = convertDefaultValueByType(type, def);
 
   const mappedMatch = match instanceof RegExp
     ? match.source

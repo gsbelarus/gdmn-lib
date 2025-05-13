@@ -61,6 +61,32 @@ function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any
   return result;
 }
 
+export function convertDefaultValueByType(type: AttrType, def: any): any {
+  if (def == null) return undefined;
+
+  switch (type) {
+    case 'timestamp':
+      if (def === 'now') return Date.now;
+      const date = new Date(def);
+      if (Number.isNaN(date.getTime())) {
+        console.warn(`Invalid date default value: ${def}`);
+        return undefined;
+      }
+      return date;
+
+    case 'number':
+      const num = Number(def);
+      if (Number.isNaN(num)) {
+        console.warn(`Invalid number default value: ${def}`);
+        return undefined;
+      }
+      return num;
+
+    default:
+      return def;
+  }
+}
+
 export function def2entity(def: EntityDefDocument): Entity {
   const {
     namespace,
@@ -116,16 +142,8 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
       };
     } else {
       const regExp = (v?: string) => v ? new RegExp(v) : undefined;
-      const mappedDefault =
-        def === undefined || def === null
-          ? undefined
-          : type === 'timestamp'
-            ? def === 'now'
-              ? Date.now
-              : new Date(def)
-            : type === 'number'
-              ? Number(def)
-              : def;
+
+      const mappedDefault = convertDefaultValueByType(attrType, def);
 
       finalType = slim({
         type: attrType,
