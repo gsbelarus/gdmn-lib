@@ -28,20 +28,13 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 }
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, match, ...rest } = attrTypeDef;
+  const { type, default: def, ...rest } = attrTypeDef;
 
   const mappedDefault = convertDefaultValueByType(type, def);
-
-  const mappedMatch = match instanceof RegExp
-    ? match.source
-    : typeof match === 'string'
-      ? match
-      : undefined;
 
   return slim({
     type: mapAttrType2MongoType(type),
     ...rest,
-    match: mappedMatch,
     default: mappedDefault,
   });
 }
