@@ -97,7 +97,7 @@ export type AttrTypeDef = {
   trim?: boolean;
   lowercase?: boolean;
   uppercase?: boolean;
-  match?: RegExp;
+  match?: string;
   validator?: string | RegExp;
   index?: boolean;
   unique?: boolean;

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import {
-  simpleAttrTypes,
-  ofTypes,
-  METHOD_TYPES,
   AttrType,
+  Entity,
   EntityAttributes,
   EntityMethods,
-  Entity
+  METHOD_TYPES,
+  ofTypes,
+  simpleAttrTypes
 } from './er';
 
 // primitive/enums
@@ -72,7 +72,7 @@ export const ZodAttrTypeDef = z.object({
   trim: z.boolean().optional(),
   lowercase: z.boolean().optional(),
   uppercase: z.boolean().optional(),
-  match: z.instanceof(RegExp).optional(),
+  match: z.string().optional(),
   validator: z.union([z.string(), z.instanceof(RegExp)]).optional(),
   index: z.boolean().optional(),
   unique: z.boolean().optional(),

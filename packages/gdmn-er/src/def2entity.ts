@@ -141,8 +141,6 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         default: def,
       };
     } else {
-      const regExp = (v?: string) => v ? new RegExp(v) : undefined;
-
       const mappedDefault = convertDefaultValueByType(attrType, def);
 
       finalType = slim({
@@ -153,8 +151,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         ref,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,
-        match: regExp(match),
-        validator: regExp(validator)
+        match, validator
       });
     }
 
