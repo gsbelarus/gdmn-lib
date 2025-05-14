@@ -42,7 +42,7 @@ export interface GdmnToolbarThemeProps extends GdmnToolbarThemeOptions {
   };
 }
 
-type GdmnToolbarProps = {
+export type GdmnToolbarProps = {
   items: GdmnToolbarItems;
   showLabels?: boolean;
   theme?: GdmnToolbarThemeProps;
@@ -128,11 +128,11 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
               color: options?.color,
               background: options?.background,
             };
-          }
+          };
 
           if (toggled) {
             if (disabled) {
-              return stylesFromObject(theme.toggled?.disabled)
+              return stylesFromObject(theme.toggled?.disabled);
             }
             return {
               ...stylesFromObject(theme.toggled),
@@ -142,7 +142,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
             };
           }
           if (disabled) {
-            return stylesFromObject(theme.disabled)
+            return stylesFromObject(theme.disabled);
           }
           return {
             ...stylesFromObject(theme),
