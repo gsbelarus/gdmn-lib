@@ -45,6 +45,7 @@ export const simpleAttrTypes = [
   "entity",
   "enum",
   "map",
+  'file'
 ] as const;
 
 export type SimpleAttrType = (typeof simpleAttrTypes)[number];
