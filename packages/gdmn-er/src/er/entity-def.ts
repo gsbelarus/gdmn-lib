@@ -163,26 +163,30 @@ export const entityDef: Entity = {
       trim: true,
       maxlength: 255,
     },
-    prompts: [{
-      namespace: {
-        type: "string",
-        required: true,
-        trim: true,
-        minlength: 2,
-        maxlength: 60,
+    prompts: {
+      type: "array",
+      required: false,
+      of: {
+        namespace: {
+          type: "string",
+          required: true,
+          trim: true,
+          minlength: 2,
+          maxlength: 60,
+        },
+        prompt: {
+          type: "string",
+          required: true,
+          trim: true,
+          minlength: 2,
+          maxlength: 32767,
+        },
+        disabled: {
+          type: "boolean",
+          required: false,
+        },
       },
-      prompt: {
-        type: "string",
-        required: true,
-        trim: true,
-        minlength: 2,
-        maxlength: 32767,
-      },
-      disabled: {
-        type: "boolean",
-        required: false,
-      },
-    }],
+    },
     entitySchema: {
       type: "string"
     },
