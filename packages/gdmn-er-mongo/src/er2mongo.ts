@@ -20,7 +20,7 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
       return Map;
     case "enum":
       return String;
-    case "file":
+    case "buffer":
       return mongoose.Schema.Types.Buffer;
     default:
       throw new Error(
