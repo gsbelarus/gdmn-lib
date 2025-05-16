@@ -43,7 +43,7 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
   };
 
   return z.object({
-    name: z.string().trim().min(2).max(60).regex(/^[a-z][a-zA-Z0-9]*$/),
+    name: z.string().trim().min(2).max(60),
     type: z.string(),
     description: z.string().trim().max(255).optional(),
     required: z.boolean().optional(),
