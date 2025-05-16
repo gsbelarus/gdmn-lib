@@ -10,6 +10,9 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       type: "string",
       required: true,
       trim: true,
+      minlength: 2,
+      maxlength: 60,
+      match: '/^[a-z][a-zA-Z0-9]*$/'
     },
     type: {
       type: "string",
@@ -150,6 +153,7 @@ export const entityDef: Entity = {
       trim: true,
       minlength: 2,
       maxlength: 60,
+      match: '/^[a-z][a-zA-Z0-9]*$/'
     },
     name: {
       type: "string",
@@ -157,6 +161,7 @@ export const entityDef: Entity = {
       trim: true,
       minlength: 2,
       maxlength: 60,
+      match: '/^[a-z][a-zA-Z0-9]*$/'
     },
     description: {
       type: "string",
@@ -173,6 +178,7 @@ export const entityDef: Entity = {
           trim: true,
           minlength: 2,
           maxlength: 60,
+          match: '/^[a-z][a-zA-Z0-9]*$/'
         },
         prompt: {
           type: "string",
