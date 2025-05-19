@@ -8,7 +8,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo build && changeset publish"
+    "release": "turbo build && changeset publish",
+    "version:patch": "npm --prefix packages/gdmn-er version patch && npm --prefix packages/gdmn-er-mongo version patch && npm --prefix packages/gdmn-er-ui version patch && npm --prefix packages/gdmn-utils version patch",
+    "version:minor": "npm --prefix packages/gdmn-er version minor && npm --prefix packages/gdmn-er-mongo version minor && npm --prefix packages/gdmn-er-ui version minor && npm --prefix packages/gdmn-utils version minor",
+    "version:major": "npm --prefix packages/gdmn-er version major && npm --prefix packages/gdmn-er-mongo version major && npm --prefix packages/gdmn-er-ui version major && npm --prefix packages/gdmn-utils version major"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
