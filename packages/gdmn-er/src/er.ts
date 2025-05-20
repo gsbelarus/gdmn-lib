@@ -99,7 +99,6 @@ export type AttrTypeDef = {
   lowercase?: boolean;
   uppercase?: boolean;
   match?: string;
-  refine: (value: any) => undefined | string,
   validator?: string | RegExp;
   index?: boolean;
   unique?: boolean;
