@@ -4,7 +4,7 @@
  */
 
 import { slim } from 'gdmn-utils';
-import { AttrType, Entity, EntityAttributes, EntityDefMethods, EntityMethods, str2simpleAttrType } from './er';
+import { AttrType, Entity, EntityAttributes, EntityDefMethods, EntityMethods, OfType, str2simpleAttrType } from './er';
 
 export type EntityDefAttribute = {
   name: string;
@@ -148,7 +148,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         required,
         enum: enumValues,
         default: mappedDefault,
-        ref,
+        ref, of: of as OfType | undefined,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,
         match, validator
