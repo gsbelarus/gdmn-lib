@@ -9,15 +9,15 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
     case "objectid":
       return mongoose.Schema.Types.ObjectId;
     case "boolean":
-      return mongoose.Schema.Types.Boolean;
+      return Boolean;
     case "number":
-      return mongoose.Schema.Types.Number;
+      return Number;
     case "string":
-      return mongoose.Schema.Types.String;
+      return String;
     case "timestamp":
-      return mongoose.Schema.Types.Date;
+      return Date;
     case "map":
-      return { type: Map, of: mongoose.Schema.Types.Mixed };
+      return Map;
     case "enum":
       return String;
     case "buffer":
