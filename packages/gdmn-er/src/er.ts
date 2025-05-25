@@ -120,7 +120,7 @@ export type AttrTypeDef = {
   fieldProps?: RefFieldProps;
   nestedAttributes?: EntityAttributes[];
   system?: boolean,
-  hideInGrid?: boolean
+  hideInGrid?: boolean;
 };
 export type Options = { _id?: boolean; collection?: string; };
 export type EntitySchema = { entity: Entity; options?: Options; };
@@ -221,6 +221,29 @@ export function isEntityAttributes(
 
 export function isEntity(obj: any): obj is Entity {
   return !!obj && typeof obj === 'object' && typeof obj.attributes === 'object' && typeof obj.name === 'string';
+};
+
+export function compareEntityNames(
+  a: Entity | string,
+  b: Entity | string | undefined
+): boolean {
+  if (!b) {
+    return false;
+  }
+
+  const nameA = typeof a === "string"
+    ? a
+    : a.namespace
+      ? `${a.namespace}:${a.name}`
+      : a.name;
+
+  const nameB = typeof b === "string"
+    ? b
+    : b.namespace
+      ? `${b.namespace}:${b.name}`
+      : b.name;
+
+  return nameA === nameB;
 };
 
 export function isSimpleAttrType(
