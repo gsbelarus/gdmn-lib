@@ -1,3 +1,5 @@
+import { get } from 'http';
+
 export type EntityRecord<T = undefined> = T extends object ? T : Record<string, any>;
 export type EntityRecordSet<T = EntityRecord> = T[];
 
@@ -223,25 +225,34 @@ export function isEntity(obj: any): obj is Entity {
   return !!obj && typeof obj === 'object' && typeof obj.attributes === 'object' && typeof obj.name === 'string';
 };
 
-export function compareEntityNames(
-  a: Entity | string,
-  b: Entity | string | undefined
-): boolean {
-  if (!b) {
-    return false;
+/**
+ * Retrieves the name of the entity.
+ * @param entity
+ * @returns The full name of the entity, including namespace if applicable.
+ */
+export function getEntityName(entity: Entity): string {
+  if (entity.namespace === 'sys') {
+    return entity.name;
   }
 
+  return `${entity.namespace}:${entity.name}`;
+};
+
+export function compareEntityNames(
+  a: Entity | string | undefined,
+  b: Entity | string | undefined
+): boolean {
   const nameA = typeof a === "string"
-    ? a
-    : a.namespace
-      ? `${a.namespace}:${a.name}`
-      : a.name;
+    ? a.replace('sys:', '')
+    : isEntity(a)
+      ? getEntityName(a)
+      : '';
 
   const nameB = typeof b === "string"
-    ? b
-    : b.namespace
-      ? `${b.namespace}:${b.name}`
-      : b.name;
+    ? b.replace('sys:', '')
+    : isEntity(b)
+      ? getEntityName(b)
+      : '';
 
   return nameA === nameB;
 };

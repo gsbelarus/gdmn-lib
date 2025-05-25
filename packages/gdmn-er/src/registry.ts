@@ -101,19 +101,6 @@ export function parseEntityName(fullName: string) {
   throw new Error(`Invalid entity name: ${fullName}`);
 };
 
-/**
- * Retrieves the name of the entity.
- * @param entity
- * @returns The full name of the entity, including namespace if applicable.
- */
-export function getEntityName(entity: Entity): string {
-  if (entity.namespace === 'sys') {
-    return entity.name;
-  }
-
-  return `${entity.namespace}:${entity.name}`;
-};
-
 export async function getEntity(name: string): Promise<Entity> {
   const entity = entityRegistry[name];
 
