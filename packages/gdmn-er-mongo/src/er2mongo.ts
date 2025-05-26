@@ -30,15 +30,57 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 }
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, ...rest } = attrTypeDef;
+  const { type, of, ref, default: def, match, ...rest } = attrTypeDef;
 
   const mappedDefault = convertDefaultValueByType(type, def);
 
-  return slim({
+  let mongoMatch: RegExp | undefined;
+  if (typeof match === 'string') {
+    mongoMatch = new RegExp(match);
+  }
+
+  if (type === 'array') {
+    if (!of) {
+      throw new Error(`AttrTypeDef with type 'array' must include 'of'`);
+    }
+
+    const innerType = mapAttrType2MongoType(of as AttrType);
+
+    let itemSchema: any;
+
+    if (
+      (typeof of === 'string' && of === 'objectid') ||
+      (typeof of === 'object' && 'type' in of && of.type === 'objectid')
+    ) {
+      itemSchema = { type: innerType };
+      if (ref) itemSchema.ref = ref;
+    } else {
+      itemSchema = innerType;
+    }
+
+    return slim({
+      type: mapAttrType2MongoType(type),
+      ...rest,
+      ...(mongoMatch && { match: mongoMatch }),
+      ...(mappedDefault !== undefined && { default: mappedDefault }),
+    });
+  }
+
+  const schema: any = slim({
     type: mapAttrType2MongoType(type),
     ...rest,
-    default: mappedDefault,
+    ...(mongoMatch && { match: mongoMatch }),
+    ...(mappedDefault !== undefined && { default: mappedDefault }),
   });
+
+  if (type === 'objectid' && ref) {
+    schema.ref = ref;
+  }
+  if (type === 'map' && of) {
+    schema.of = mapAttrType2MongoType(of as AttrType);
+  }
+
+  return schema;
 }
 
 function mapAttrType2MongoType(attrType: AttrType): any {
@@ -100,6 +142,8 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
       mapAttrType2MongoType(attrType),
     ])
   );
+
+  console.log('entity2schema', entity.name, schema);
 
   if (entity.parent) {
     schema['parent'] = { type: mongoose.Schema.Types.ObjectId, ref: "EntityDef" };
