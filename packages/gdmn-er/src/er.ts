@@ -122,7 +122,7 @@ export type AttrTypeDef = {
   fieldProps?: RefFieldProps;
   nestedAttributes?: EntityAttributes[];
   system?: boolean,
-  hideInGrid?: boolean;
+  visible?: boolean;
 };
 export type Options = { _id?: boolean; collection?: string; };
 export type EntitySchema = { entity: Entity; options?: Options; };
