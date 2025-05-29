@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 import React, { useEffect, useState } from 'react';
-import Switch from '@mui/material/Switch';
+import GdmnSwitcher from './GdmnSwitcher';
 
 export type GdmnToolbarItem =
   | {
@@ -136,16 +136,12 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
             >
               <div className="flex flex-col justify-center items-center">
                 {item.icon}
-                <Switch
+                <GdmnSwitcher
                   checked={item.checked}
                   disabled={item.disabled}
                   onChange={e => item.onChange?.(e.target.checked)}
                   size="small"
-                  sx={{ 
-                    '& .Mui-checked': {
-                      color: theme.toggled?.background
-                    }
-                  }}
+                  primaryColor={theme.toggled?.background}
                 />
               </div>
               {showLabels && item.label}
@@ -246,7 +242,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
               <Box
                 key={index}
                 sx={getStyles(toggled, disabled)}
-                className={`w-8 h-8 flex justify-center items-center rounded`}
+                className="h-8 w-14 flex justify-center items-center rounded-2xl"
               >
                 {item.tooltip && index !== pressed ? (
                   <Tooltip
