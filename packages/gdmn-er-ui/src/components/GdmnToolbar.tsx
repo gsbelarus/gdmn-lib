@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 import React, { useEffect, useState } from 'react';
+import Switch from '@mui/material/Switch';
 
 export type GdmnToolbarItem =
   | {
@@ -20,6 +21,16 @@ export type GdmnToolbarItem =
      */
     autoLoading?: boolean;
     onClick?: () => void | Promise<void>;
+  }
+  | {
+    type: "switcher";
+    id: string;
+    label: string;
+    tooltip?: string;
+    icon?: string | React.ReactNode;
+    checked: boolean;
+    disabled?: boolean;
+    onChange?: (checked: boolean) => void;
   }
   | {
     type: "separator";
@@ -99,9 +110,9 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
   }, [animated]);
 
   return (
-    <div className="flex flex-row items-center gap-2 p-2">
+    <div aria-label="toolbar" className="flex flex-row items-center gap-2 p-2">
       {items.map((item, index) => {
-        const B =
+        const component =
           item.type === "button" ? (
             <div
               className="w-full h-full flex flex-col justify-center items-center gap-1 cursor-pointer"
@@ -115,6 +126,27 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
                 }
               >
                 {item.icon}
+              </div>
+              {showLabels && item.label}
+            </div>
+          ) : item.type === "switcher" ? (
+            <div
+              className="w-full h-full flex flex-col justify-center items-center gap-1"
+              key={index}
+            >
+              <div className="flex flex-col justify-center items-center">
+                {item.icon}
+                <Switch
+                  checked={item.checked}
+                  disabled={item.disabled}
+                  onChange={e => item.onChange?.(e.target.checked)}
+                  size="small"
+                  sx={{ 
+                    '& .Mui-checked': {
+                      color: theme.toggled?.background
+                    }
+                  }}
+                />
               </div>
               {showLabels && item.label}
             </div>
@@ -152,44 +184,92 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
           };
         };
 
-        return B && item.type === "button" ? (
-          <Box
-            key={index}
-            sx={getStyles(!!item.toggled, !!item.disabled)}
-            className={`w-8 h-8 flex justify-center items-center border
-              border-solid rounded ${index === pressed ? 'relative top-[1px] left-[1px]' : 'shadow'}`}
-            onClick={
-              item.disabled || item.loading || !item.onClick
-                ? undefined
-                : async () => {
-                  setPressed(index);
-                  if (item.animated) setAnimated(index);
-                  if (item.autoLoading) setInternalLoading(index);
-                  try {
-                    await item.onClick?.();
-                  } finally {
-                    if (item.autoLoading) setInternalLoading(undefined);
-                  }
+        let toggled = false;
+        let disabled = false;
+        if (item.type === 'button') {
+          toggled = !!item.toggled;
+          disabled = !!item.disabled;
+        } else if (item.type === 'switcher') {
+          disabled = !!item.disabled;
+        }
+
+        if (!component) {
+          return (
+            <div
+              key={index}
+              className="h-full border-0 border-l border-solid border-zinc-500"
+            />
+          );
+        }
+
+        switch (item.type) {
+          case "button": {
+            return (
+              <Box
+                key={index}
+                sx={getStyles(toggled, disabled)}
+                className={`w-8 h-8 flex justify-center items-center border
+                  border-solid rounded ${index === pressed ? 'relative top-[1px] left-[1px]' : 'shadow'}`}
+                onClick={
+                  item.type === "button"
+                    ? (item.disabled || item.loading || !item.onClick
+                      ? undefined
+                      : async () => {
+                        setPressed(index);
+                        if (item.animated) setAnimated(index);
+                        if (item.autoLoading) setInternalLoading(index);
+                        try {
+                          await item.onClick?.();
+                        } finally {
+                          if (item.autoLoading) setInternalLoading(undefined);
+                        }
+                      })
+                    : undefined
                 }
-            }
-          >
-            {item.tooltip && index !== pressed ? (
-              <Tooltip
-                title={item.tooltip}
-                enterDelay={700}
               >
-                {B}
-              </Tooltip>
-            ) : (
-              B
-            )}
-          </Box>
-        ) : (
-          <div
-            key={index}
-            className="h-full border-0 border-l border-solid border-zinc-500"
-          />
-        );
+                {item.tooltip && index !== pressed ? (
+                  <Tooltip
+                    title={item.tooltip}
+                    enterDelay={700}
+                  >
+                    {component}
+                  </Tooltip>
+                ) : (
+                  component
+                )}
+              </Box>
+            );
+          }
+
+          case "switcher": {
+            return (
+              <Box
+                key={index}
+                sx={getStyles(toggled, disabled)}
+                className={`w-8 h-8 flex justify-center items-center rounded`}
+              >
+                {item.tooltip && index !== pressed ? (
+                  <Tooltip
+                    title={item.tooltip}
+                    enterDelay={700}
+                  >
+                    {component}
+                  </Tooltip>
+                ) : (
+                  component
+                )}
+              </Box>
+            );
+          }
+
+          default:
+            return (
+              <div
+                key={index}
+                className="h-full border-0 border-l border-solid border-zinc-500"
+              />
+            );                  
+        }
       })}
     </div>
   );
