@@ -137,10 +137,19 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
   const attributes = Object.entries(entity.attributes);
 
   const schema = Object.fromEntries(
-    attributes.map(([attrName, attrType]) => [
-      attrName,
-      mapAttrType2MongoType(attrType),
-    ])
+    attributes.map(([attrName, attrType]) => {
+      try {
+        const res = [
+          attrName,
+          mapAttrType2MongoType(attrType),
+        ];
+
+        return res;
+      } catch (error) {
+        console.error(`Error mapping attribute '${entity.name}.${attrName}':`, error);
+        throw error;
+      }
+    })
   );
 
   if (entity.parent) {

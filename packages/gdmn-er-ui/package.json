@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-ui",
-  "version": "0.14.32",
+  "version": "0.14.35",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -13,20 +13,29 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
     "lint": "eslint \"src/**/*.ts*\"",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@mui/material": "^6.3.1",
     "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "@mui/material": "^6.3.1"
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "gdmn-eslint-config": "workspace:*",
-    "gdmn-tsconfig": "workspace:*",
+    "@storybook/addon-links": "^9.0.0",
+    "@storybook/react-vite": "^9.0.0",
+    "@storybook/testing-library": "^0.2.2",
     "@types/node": "^20.11.24",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.21",
     "eslint": "^8.57.0",
+    "gdmn-eslint-config": "workspace:*",
+    "gdmn-tsconfig": "workspace:*",
+    "postcss": "^8.5.3",
+    "storybook": "^9.0.0",
+    "tailwindcss": "^3",
     "tsup": "^8.0.2",
     "typescript": "^5.8.3"
   },
