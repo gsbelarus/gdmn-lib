@@ -59,7 +59,7 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
     }
 
     return slim({
-      type: mapAttrType2MongoType(type),
+      type: [itemSchema],
       ...rest,
       ...(mongoMatch && { match: mongoMatch }),
       ...(mappedDefault !== undefined && { default: mappedDefault }),
@@ -97,6 +97,9 @@ function mapAttrType2MongoType(attrType: AttrType): any {
     );
   } else if (Array.isArray(attrType)) {
     if (attrType.length === 1) {
+      if (attrType[0] === undefined) {
+        throw new Error("Array type's first element is undefined");
+      }
       return [mapAttrType2MongoType(attrType[0])];
     } else {
       throw new Error("Array type should have only one element");
