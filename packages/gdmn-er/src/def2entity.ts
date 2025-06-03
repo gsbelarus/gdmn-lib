@@ -32,6 +32,7 @@ export type EntityDefAttribute = {
   placeholder?: string;
   tooltip?: string;
   nestedAttributes?: EntityDefAttribute[];
+  namespace?: string;
 };
 
 type EntityDefDocument = {
