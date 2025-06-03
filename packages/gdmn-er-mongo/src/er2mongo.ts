@@ -58,6 +58,13 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
       itemSchema = innerType;
     }
 
+    console.log('itemSchema array', slim({
+      type: [itemSchema],
+      ...rest,
+      ...(mongoMatch && { match: mongoMatch }),
+      ...(mappedDefault !== undefined && { default: mappedDefault }),
+    }));
+
     return slim({
       type: [itemSchema],
       ...rest,
