@@ -49,7 +49,6 @@ function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any
   const result: EntityMethods = {};
 
   methods.forEach((methods, methodType) => {
-    console.log(`Method Type: ${methodType}`);
     methods.forEach((method) => {
       if (!result[methodType]) {
         result[methodType] = [];
