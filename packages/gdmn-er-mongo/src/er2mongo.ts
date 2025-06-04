@@ -30,59 +30,65 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 }
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  const { type, of, ref, default: def, match, ...rest } = attrTypeDef;
+  const { type, default: def, ...rest } = attrTypeDef;
 
   const mappedDefault = convertDefaultValueByType(type, def);
 
-  let mongoMatch: RegExp | undefined;
-  if (typeof match === 'string') {
-    mongoMatch = new RegExp(match);
-  }
-
-  if (type === 'array') {
-    if (!of) {
-      throw new Error(`AttrTypeDef with type 'array' must include 'of'`);
-    }
-
-    const innerType = mapAttrType2MongoType(of as AttrType);
-
-    let itemSchema: any;
-
-    if (
-      (typeof of === 'string' && of === 'objectid') ||
-      (typeof of === 'object' && 'type' in of && of.type === 'objectid')
-    ) {
-      itemSchema = { type: innerType };
-      if (ref) itemSchema.ref = ref;
-    } else {
-      itemSchema = innerType;
-    }
-
-    return slim({
-      type: [itemSchema],
-      ...rest,
-      ...(mongoMatch && { match: mongoMatch }),
-      ...(mappedDefault !== undefined && { default: mappedDefault }),
-    });
-  }
-
-  const schema: any = slim({
+  return slim({
     type: mapAttrType2MongoType(type),
     ...rest,
-    ...(of && { of }),
-    ...(ref && { ref }),
-    ...(mongoMatch && { match: mongoMatch }),
-    ...(mappedDefault !== undefined && { default: mappedDefault }),
+    default: mappedDefault,
   });
 
-  // if (type === 'objectid' && ref) {
-  //   schema.ref = ref;
-  // }
-  // if (type === 'map' && of) {
-  //   schema.of = mapAttrType2MongoType(of as AttrType);
+  // let mongoMatch: RegExp | undefined;
+  // if (typeof match === 'string') {
+  //   mongoMatch = new RegExp(match);
   // }
 
-  return schema;
+  // if (type === 'array') {
+  //   if (!of) {
+  //     throw new Error(`AttrTypeDef with type 'array' must include 'of'`);
+  //   }
+
+  //   const innerType = mapAttrType2MongoType(of as AttrType);
+
+  //   let itemSchema: any;
+
+  //   if (
+  //     (typeof of === 'string' && of === 'objectid') ||
+  //     (typeof of === 'object' && 'type' in of && of.type === 'objectid')
+  //   ) {
+  //     itemSchema = { type: innerType };
+  //     if (ref) itemSchema.ref = ref;
+  //   } else {
+  //     itemSchema = innerType;
+  //   }
+
+  //   return slim({
+  //     type: [itemSchema],
+  //     ...rest,
+  //     ...(mongoMatch && { match: mongoMatch }),
+  //     ...(mappedDefault !== undefined && { default: mappedDefault }),
+  //   });
+  // }
+
+  // const schema: any = slim({
+  //   type: mapAttrType2MongoType(type),
+  //   ...rest,
+  //   ...(of && { of }),
+  //   ...(ref && { ref }),
+  //   ...(mongoMatch && { match: mongoMatch }),
+  //   ...(mappedDefault !== undefined && { default: mappedDefault }),
+  // });
+
+  // // if (type === 'objectid' && ref) {
+  // //   schema.ref = ref;
+  // // }
+  // // if (type === 'map' && of) {
+  // //   schema.of = mapAttrType2MongoType(of as AttrType);
+  // // }
+
+  // return schema;
 }
 
 function mapAttrType2MongoType(attrType: AttrType): any {
