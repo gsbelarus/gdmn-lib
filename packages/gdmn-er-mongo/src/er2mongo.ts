@@ -30,7 +30,7 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 }
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  if (isAttrTypeDef(attrTypeDef) && attrTypeDef.type === 'string') {
+  if (isAttrTypeDef(attrTypeDef.type) && attrTypeDef.type.type === 'string') {
     return slim(attrTypeDef);
   }
 
@@ -83,8 +83,6 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   if (type === 'map' && of) {
     schema.of = mapAttrType2MongoType(of as AttrType);
   }
-
-  console.log('schema', JSON.stringify(schema, null, 2));
 
   return schema;
 }
