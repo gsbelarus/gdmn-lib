@@ -84,7 +84,7 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
     schema.of = mapAttrType2MongoType(of as AttrType);
   }
 
-  console.log('schema', schema);
+  console.log('schema', JSON.stringify(schema, null, 2));
 
   return schema;
 }
