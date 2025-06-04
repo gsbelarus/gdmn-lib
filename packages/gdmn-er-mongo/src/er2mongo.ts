@@ -30,18 +30,22 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 }
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
+  let mongoMatch: RegExp | undefined;
+  if (typeof attrTypeDef.match === 'string') {
+    mongoMatch = new RegExp(attrTypeDef.match);
+  }
+
   if (isAttrTypeDef(attrTypeDef.type) && attrTypeDef.type.type === 'string') {
-    return slim(attrTypeDef);
+    return slim({
+      ...attrTypeDef,
+      type: mapAttrType2MongoType(attrTypeDef.type),
+      ...(mongoMatch && { match: mongoMatch }),
+    });
   }
 
   const { type, of, ref, default: def, match, ...rest } = attrTypeDef;
 
   const mappedDefault = convertDefaultValueByType(type, def);
-
-  let mongoMatch: RegExp | undefined;
-  if (typeof match === 'string') {
-    mongoMatch = new RegExp(match);
-  }
 
   if (type === 'array') {
     if (!of) {
