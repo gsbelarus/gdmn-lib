@@ -30,6 +30,10 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 }
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
+  if (isAttrTypeDef(attrTypeDef) && attrTypeDef.type === 'string') {
+    return slim(attrTypeDef);
+  }
+
   const { type, of, ref, default: def, match, ...rest } = attrTypeDef;
 
   const mappedDefault = convertDefaultValueByType(type, def);
@@ -58,13 +62,6 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
       itemSchema = innerType;
     }
 
-    console.log('itemSchema array', slim({
-      type: [itemSchema],
-      ...rest,
-      ...(mongoMatch && { match: mongoMatch }),
-      ...(mappedDefault !== undefined && { default: mappedDefault }),
-    }));
-
     return slim({
       type: [itemSchema],
       ...rest,
@@ -86,6 +83,8 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   if (type === 'map' && of) {
     schema.of = mapAttrType2MongoType(of as AttrType);
   }
+
+  console.log('schema', schema);
 
   return schema;
 }
