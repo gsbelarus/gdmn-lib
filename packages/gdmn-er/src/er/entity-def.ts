@@ -128,6 +128,10 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
         return createAttributeDef(depth - 1);
       }
     },
+    namespace: {
+      type: "string",
+      required: false
+    }
   };
 
   return attributeDef;

@@ -123,6 +123,7 @@ export type AttrTypeDef = {
   nestedAttributes?: EntityAttributes[];
   system?: boolean,
   visible?: boolean;
+  namespace?: string;
 };
 export type Options = { _id?: boolean; collection?: string; };
 export type EntitySchema = { entity: Entity; options?: Options; };

@@ -89,6 +89,7 @@ export const ZodAttrTypeDef = z.object({
   displayedFields: z.array(ZodDisplayedField).optional(),
   fieldProps: ZodRefFieldProps.optional(),
   nestedAttributes: z.array(z.lazy(() => ZodEntityAttributes)).optional(),
+  namespace: z.string().optional(),
 });
 
 export const ZodEntityAttributes: z.ZodType<EntityAttributes> = z.record(

@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-mongo",
-  "version": "0.14.47",
+  "version": "0.14.48",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
