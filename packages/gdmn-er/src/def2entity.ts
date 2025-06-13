@@ -72,7 +72,7 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
         console.warn(`Invalid date default value: ${def}`);
         return undefined;
       }
-      return date;
+      return def;
 
     case 'number':
       const num = Number(def);
