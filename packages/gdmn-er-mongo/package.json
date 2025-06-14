@@ -16,7 +16,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "^20.19.0",
+    "@types/node": "^20.17.57",
     "eslint": "^8.57.0",
     "gdmn-er": "workspace:*",
     "gdmn-eslint-config": "workspace:*",
@@ -33,7 +33,7 @@
     "url": "https://github.com/gsbelarus/gdmn-lib"
   },
   "dependencies": {
-    "mongoose": "^8.15.2",
-    "zod": "^3.25.64"
+    "mongoose": "^8.15.1",
+    "zod": "^3.25.45"
   }
 }
