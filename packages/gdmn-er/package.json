@@ -16,7 +16,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "^20.17.57",
+    "@types/node": "^20.19.0",
     "eslint": "^8.57.0",
     "gdmn-eslint-config": "workspace:*",
     "gdmn-tsconfig": "workspace:*",
@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "gdmn-utils": "workspace:*",
-    "zod": "^3.25.45"
+    "zod": "^3.25.64"
   }
 }
