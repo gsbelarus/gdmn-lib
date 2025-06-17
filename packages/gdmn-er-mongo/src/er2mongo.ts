@@ -1,6 +1,7 @@
-import { AttrType, AttrTypeDef, convertDefaultValueByType, Entity, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
-import { slim } from 'gdmn-utils';
+import { AttrType, AttrTypeDef, convertDefaultValueByType, Entity, EntityAttributes, EntityDefAttribute, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
+import { generateMongoDBObjectId, slim } from 'gdmn-utils';
 import mongoose from 'mongoose';
+import { TEntityDef } from './types/entity-def';
 
 function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
   switch (attrType) {
@@ -179,4 +180,81 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
   }
 
   return new mongoose.Schema<T>(schema as any, options);
+}
+
+export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityDefAttribute[] {
+  return Object.entries(attributes).map(([attrName, attr]) => {
+
+    const id = generateMongoDBObjectId();
+    if (!isAttrTypeDef(attr)) {
+      return {
+        _id: id,
+        name: attrName,
+        type: 'string'
+      } as EntityDefAttribute;
+    }
+
+    switch (attr.type) {
+      case 'objectid':
+        return {
+          _id: id,
+          name: attrName,
+          ...attr,
+          displayedFields: attr.displayedFields?.map(({ field }) => field),
+        } as EntityDefAttribute;
+
+      case 'array':
+       return {
+        _id: id,
+        name: attrName,
+        ...attr,
+        ...(attr.of === 'string' && {
+          of: 'string',
+        }),
+        ...(attr.of === 'objectid' && {
+          of: 'string',
+          ref: attr.ref,
+          displayedFields: attr.displayedFields?.map(({ field }) => field),
+        }),
+        ...(typeof attr.of === 'object' && {
+          of: 'object',
+          nestedAttributes: entityAttrToEntityDefAttr(attr.of)
+        }),
+
+
+      } as EntityDefAttribute;
+
+      case 'enum':
+        return {
+          _id: id,
+          name: attrName,
+          ...attr,
+        } as EntityDefAttribute;
+    }
+
+    return {
+      _id: id,
+      name: attrName,
+      ...attr
+      } as EntityDefAttribute;
+  });
+}
+
+export function entityToEntityDef(e: Entity): TEntityDef {
+
+  // TODO: ещё не существует механизма указания parent в entityDef
+  const {
+    parent,
+    attributes,
+    methods,
+    ...sourceEntity
+  } = e;
+
+  const attributesArray = entityAttrToEntityDefAttr(attributes);
+
+  return {
+    ...sourceEntity,
+    name: sourceEntity.name,
+    attributes: attributesArray
+  };
 }
