@@ -182,6 +182,11 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
   return new mongoose.Schema<T>(schema as any, options);
 }
 
+/**
+ * Converts entity attributes to EntityDef attributes.
+ * @param {EntityAttributes} attributes
+ * @returns {EntityDefAttribute[]}
+ */
 export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityDefAttribute[] {
   return Object.entries(attributes).map(([attrName, attr]) => {
 
@@ -239,6 +244,13 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
       } as EntityDefAttribute;
   });
 }
+
+/**
+ * Transforms an Entity object to a EntityDef object.
+ *
+ * @param e - The Entity object to be converted.
+ * @returns A EntityDef object containing the converted entity definition.
+ */
 
 export function entityToEntityDef(e: Entity): TEntityDef {
 
