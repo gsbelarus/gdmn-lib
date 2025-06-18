@@ -132,6 +132,9 @@ export const ZodEntityDefShape = {
   attributes: z.array(attributeDefSchema),
   methods: entityMethodsSchema.optional(),
   parent: z.instanceof(Types.ObjectId).optional(),
+  abc: z.boolean().optional(),
+  dlgForm: z.string().optional(),
+  viewForm: z.string().optional(),
 };
 
 export const ZodEntityDef = z.object(ZodEntityDefShape);
