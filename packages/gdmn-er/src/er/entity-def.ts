@@ -207,7 +207,24 @@ export const entityDef: Entity = {
       type: "objectid",
       required: false,
       ref: "EntityDef",
+    },
+    obectTitle: {
+      type: "enum",
+      required: false,
+      enum: ["string", "string[]"]
+    },
+    abc: {
+      type: "boolean",
+      required: false
+    },
+    dlgForm: {
+      type: "string",
+      required: false
+    },
+    viewForm: {
+      type: "string",
+      required: false
     }
-  }
+  },
 };
 
