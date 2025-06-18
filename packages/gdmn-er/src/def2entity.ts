@@ -44,6 +44,10 @@ type EntityDefDocument = {
   prompts?: any[];
   methods?: EntityDefMethods;
   parent?: Entity;
+  objectTitle?: string | string[];
+  abc?: boolean;
+  dlgForm?: string;
+  viewForm?: string;
 };
 
 function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any[] } {
