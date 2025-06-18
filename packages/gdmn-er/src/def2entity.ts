@@ -99,6 +99,7 @@ export function def2entity(def: EntityDefDocument): Entity {
     attributes,
     methods,
     parent,
+    ...rest
   } = def;
 
   const entity: Entity = {
@@ -108,6 +109,7 @@ export function def2entity(def: EntityDefDocument): Entity {
     attributes: {},
     methods: methods ? convertMethodsToObject(methods) : {},
     parent,
+    ...rest
   };
 
   entity.attributes = buildAttributes(attributes);
