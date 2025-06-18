@@ -208,7 +208,7 @@ export const entityDef: Entity = {
       required: false,
       ref: "EntityDef",
     },
-    obectTitle: {
+    objectTitle: {
       type: "enum",
       required: false,
       enum: ["string", "string[]"]
