@@ -158,7 +158,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         ref, of: of as OfType | undefined,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,
-        match, validator, visible
+        match, validator, visible: visible ?? true,
       });
     }
 
