@@ -131,7 +131,12 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
     namespace: {
       type: "string",
       required: false
-    }
+    },
+    visible: {
+      type: "boolean",
+      required: false,
+      default: true
+    },
   };
 
   return attributeDef;

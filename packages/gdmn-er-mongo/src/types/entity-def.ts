@@ -70,6 +70,7 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     displayedFields: z.array(z.string()).optional(),
     nestedAttributes: z.array(attributeDefSchema).optional(),
     namespace: z.string().optional(),
+    visible: z.boolean().optional().default(true),
   }).superRefine((data, ctx) => {
     checkField(
       (data.type === 'objectid' || data.type === 'entity') && !data.ref,
