@@ -201,6 +201,7 @@ export const entityDef: Entity = {
     attributes: [attributeDef],
     methods: {
       type: "map",
+
       required: false
     },
     parent: {

@@ -33,6 +33,7 @@ export type EntityDefAttribute = {
   tooltip?: string;
   nestedAttributes?: EntityDefAttribute[];
   namespace?: string;
+  visible?: boolean;
 };
 
 type EntityDefDocument = {
@@ -124,7 +125,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
     const {
       name, type, required, enum: enumValues, default: def, ref, of,
       displayedFields, label, description, placeholder, tooltip, nestedAttributes,
-      min, max, minlength, maxlength, trim, lowercase, uppercase, match, validator
+      min, max, minlength, maxlength, trim, lowercase, uppercase, match, validator, visible
     } = attr;
 
     if (!name) {
@@ -157,7 +158,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         ref, of: of as OfType | undefined,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,
-        match, validator
+        match, validator, visible
       });
     }
 
