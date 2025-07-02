@@ -1,4 +1,3 @@
-import { get } from 'http';
 
 export type EntityRecord<T = undefined> = T extends object ? T : Record<string, any>;
 export type EntityRecordSet<T = EntityRecord> = T[];
@@ -85,6 +84,7 @@ export type RefFieldProps = {
 export type DisplayedField = {
   field: string;
   readonly?: boolean;
+  visible?: boolean;
 };
 
 export type AttrTypeDef = {

@@ -158,13 +158,14 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         ref, of: of as OfType | undefined,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,
-        match, validator, visible: visible ?? true,
+        match, validator
       });
     }
 
     const attrObject: AttrType = slim({
       ...finalType,
       label, description, placeholder, tooltip,
+      visible: visible ?? true,
       ...(displayedFields && displayedFields.length && {
         displayedFields: displayedFields.map(field => ({ field, readonly: true }))
       }),
