@@ -205,6 +205,7 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
           _id: id,
           name: attrName,
           ...attr,
+          ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
         } as EntityDefAttribute;
 
       case 'array':
@@ -212,19 +213,15 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
           _id: id,
           name: attrName,
           ...attr,
-          ...(attr.of === 'string' && {
-            of: 'string',
-          }),
           ...(attr.of === 'objectid' && {
-            of: 'string',
+            of: 'objectid',
             ref: attr.ref,
+            ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
           }),
           ...(typeof attr.of === 'object' && {
             of: 'object',
             nestedAttributes: entityAttrToEntityDefAttr(attr.of)
           }),
-
-
         } as EntityDefAttribute;
 
       case 'enum':
