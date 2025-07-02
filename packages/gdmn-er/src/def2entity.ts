@@ -4,7 +4,7 @@
  */
 
 import { slim } from 'gdmn-utils';
-import { AttrType, Entity, EntityAttributes, EntityDefMethods, EntityMethods, OfType, str2simpleAttrType } from './er';
+import { AttrType, DisplayedField, Entity, EntityAttributes, EntityDefMethods, EntityMethods, OfType, str2simpleAttrType } from './er';
 
 export type EntityDefAttribute = {
   name: string;
@@ -26,7 +26,7 @@ export type EntityDefAttribute = {
   sparse?: boolean,
   ref?: string;
   of?: string;
-  displayedFields?: string[];
+  displayedFields?: DisplayedField[];
   label?: string;
   description?: string;
   placeholder?: string;
@@ -162,12 +162,14 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
       });
     }
 
+    const v = visible ?? true;
+
     const attrObject: AttrType = slim({
       ...finalType,
       label, description, placeholder, tooltip,
-      visible: visible ?? true,
+      visible: v,
       ...(displayedFields && displayedFields.length && {
-        displayedFields: displayedFields.map(field => ({ field, readonly: true }))
+        displayedFields: displayedFields.map(item => ({ field: item.field, readonly: item.readonly ?? true, visible: item.visible ?? v })),
       }),
     });
 

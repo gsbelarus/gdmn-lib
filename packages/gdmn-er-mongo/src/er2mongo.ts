@@ -205,29 +205,27 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
           _id: id,
           name: attrName,
           ...attr,
-          displayedFields: attr.displayedFields?.map(({ field }) => field),
         } as EntityDefAttribute;
 
       case 'array':
-       return {
-        _id: id,
-        name: attrName,
-        ...attr,
-        ...(attr.of === 'string' && {
-          of: 'string',
-        }),
-        ...(attr.of === 'objectid' && {
-          of: 'string',
-          ref: attr.ref,
-          displayedFields: attr.displayedFields?.map(({ field }) => field),
-        }),
-        ...(typeof attr.of === 'object' && {
-          of: 'object',
-          nestedAttributes: entityAttrToEntityDefAttr(attr.of)
-        }),
+        return {
+          _id: id,
+          name: attrName,
+          ...attr,
+          ...(attr.of === 'string' && {
+            of: 'string',
+          }),
+          ...(attr.of === 'objectid' && {
+            of: 'string',
+            ref: attr.ref,
+          }),
+          ...(typeof attr.of === 'object' && {
+            of: 'object',
+            nestedAttributes: entityAttrToEntityDefAttr(attr.of)
+          }),
 
 
-      } as EntityDefAttribute;
+        } as EntityDefAttribute;
 
       case 'enum':
         return {
@@ -241,7 +239,7 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
       _id: id,
       name: attrName,
       ...attr
-      } as EntityDefAttribute;
+    } as EntityDefAttribute;
   });
 }
 

@@ -1,4 +1,4 @@
-import { EntityDefAttribute, METHOD_TYPES } from 'gdmn-er';
+import { EntityDefAttribute, METHOD_TYPES, ZodDisplayedField } from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -67,7 +67,7 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     placeholder: z.string().optional(),
     tooltip: z.string().optional(),
     of: z.string().optional(),
-    displayedFields: z.array(z.string()).optional(),
+    displayedFields: z.array(ZodDisplayedField).optional(),
     nestedAttributes: z.array(attributeDefSchema).optional(),
     namespace: z.string().optional(),
     visible: z.boolean().optional().default(true),

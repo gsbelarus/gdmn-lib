@@ -117,8 +117,22 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       enum: ofTypes,
     },
     displayedFields: {
-      type: "array",
-      of: 'string',
+      type: [{
+        field: {
+          type: "string",
+          required: true,
+        },
+        readonly: {
+          type: "boolean",
+          required: false,
+          default: true,
+        },
+        visible: {
+          type: "boolean",
+          required: false,
+          default: true,
+        },
+      }],
       required: false,
     },
     nestedAttributes: {
