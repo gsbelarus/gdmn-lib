@@ -111,7 +111,11 @@ export async function getEntity(name: string): Promise<Entity> {
   const getter = entityGetters[name];
 
   if (getter) {
-    return getter();
+    const entity = await getter();
+
+    if (entity) {
+      return entity;
+    }
   }
 
   throw new Error(`Entity ${name} not found`);

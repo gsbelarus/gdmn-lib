@@ -81,7 +81,11 @@ export async function getModel<T = any>(name: string): Promise<Model<T>> {
 
   const getter = modelGetters[name];
   if (getter) {
-    return getter();
+    const model = await getter();
+
+    if (model) {
+      return model;
+    }
   }
 
   throw new Error(`Model ${name} not found`);
