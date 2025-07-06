@@ -14,9 +14,9 @@
     "version:major": "npm --prefix packages/gdmn-er version major && npm --prefix packages/gdmn-er-mongo version major && npm --prefix packages/gdmn-er-ui version major && npm --prefix packages/gdmn-utils version major"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
+    "@changesets/cli": "^2.29.5",
     "eslint": "^8.57.0",
-    "prettier": "^3.2.5",
+    "prettier": "^3.6.2",
     "turbo": "^2.5.4"
   },
   "packageManager": "pnpm@10.8.0",
