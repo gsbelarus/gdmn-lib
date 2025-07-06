@@ -139,11 +139,19 @@ export function getEntityGetter(name: string): EntityGetter {
 };
 
 export function removeEntity(name: string): boolean {
+  let deleted = false;
+
   if (entityRegistry[name]) {
     delete entityRegistry[name];
-    return true;
+    deleted = true;
   }
-  return false;
+
+  if (entityGetters[name]) {
+    delete entityGetters[name];
+    deleted = true;
+  }
+
+  return deleted;
 };
 
 export function getEntityVersion(): number {

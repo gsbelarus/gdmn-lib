@@ -45,7 +45,7 @@ export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
   modelRegistry[model.modelName] = model;
 
   return model;
-}
+};
 
 export function registerModelGetter(name: string, getter: ModelGetter) {
   if (typeof window !== 'undefined') {
@@ -60,17 +60,17 @@ export function registerModelGetter(name: string, getter: ModelGetter) {
   }
 
   return getter;
-}
+};
 
 export function getModels(): string[] {
   const keys = new Set<string>([...Object.keys(modelRegistry), ...Object.keys(modelGetters)]);
   return Array.from(keys);
-}
+};
 
 export function isModelRegistered(name: string): boolean {
   return Object.prototype.hasOwnProperty.call(modelRegistry, name) ||
     Object.prototype.hasOwnProperty.call(modelGetters, name);
-}
+};
 
 export async function getModel<T = any>(name: string): Promise<Model<T>> {
   const model = modelRegistry[name];
@@ -89,7 +89,7 @@ export async function getModel<T = any>(name: string): Promise<Model<T>> {
   }
 
   throw new Error(`Model ${name} not found`);
-}
+};
 
 export function getModelGetter<T = any>(name: string): ModelGetter<T> {
   if (modelGetters[name]) {
@@ -105,12 +105,20 @@ export function getModelGetter<T = any>(name: string): ModelGetter<T> {
   delete modelRegistry[name];
 
   return modelGetters[name];
-}
+};
 
 export function removeModel(name: string): boolean {
+  let deleted = false;
+
   if (modelRegistry[name]) {
     delete modelRegistry[name];
-    return true;
+    deleted = true;
   }
-  return false;
-}
+
+  if (modelGetters[name]) {
+    delete modelGetters[name];
+    deleted = true;
+  }
+
+  return deleted;
+};
