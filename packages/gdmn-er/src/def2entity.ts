@@ -87,6 +87,21 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
       }
       return num;
 
+    case 'boolean':
+      if (typeof def === 'boolean') {
+        return def;
+      }
+      if (typeof def === 'string') {
+        const lowered = def.toLowerCase();
+        if (lowered === 'true') return true;
+        if (lowered === 'false') return false;
+      }
+      if (typeof def === 'number') {
+        return def !== 0;
+      }
+      console.warn(`Invalid boolean default value: ${def}`);
+      return undefined;
+
     default:
       return def;
   }
