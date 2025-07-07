@@ -1,4 +1,5 @@
 import { Model as SrcModel } from 'mongoose';
+import mongoose from 'mongoose';
 
 type Model<T = any> = SrcModel<T>;
 
@@ -117,6 +118,11 @@ export function removeModel(name: string): boolean {
 
   if (modelGetters[name]) {
     delete modelGetters[name];
+    deleted = true;
+  }
+
+  if (mongoose.model(name)) {
+    mongoose.deleteModel(name);
     deleted = true;
   }
 
