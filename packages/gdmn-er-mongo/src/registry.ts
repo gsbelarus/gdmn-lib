@@ -1,51 +1,40 @@
-import { Model as SrcModel } from 'mongoose';
+import { Model as SrcModel, Schema } from 'mongoose';
 import mongoose from 'mongoose';
 
 type Model<T = any> = SrcModel<T>;
 
 export type ModelGetter<T = any> = () => Promise<Model<T>>;
 
-const modelRegistryKey = "modelRegistry";
 const modelGettersKey = "modelGetters";
-
-if (!globalThis.hasOwnProperty(modelRegistryKey)) {
-  (globalThis as any)[modelRegistryKey] = {};
-}
 
 if (!globalThis.hasOwnProperty(modelGettersKey)) {
   (globalThis as any)[modelGettersKey] = {};
 }
 
-const modelRegistry = (globalThis as any)[modelRegistryKey] as Record<string, Model>;
 const modelGetters = (globalThis as any)[modelGettersKey] as Record<string, ModelGetter>;
 
-export function registerModel<T>(model: Model<T>, replace = false): Model<T> {
+export function registerModel<T>(name: string, schema: Schema<T>, replace = false): Model<T> {
   if (typeof window !== 'undefined') {
-    console.trace(`registerModel is not supported in the browser! model: ${model.modelName}`);
+    console.trace(`registerModel is not supported in the browser! model: ${name}`);
   }
 
-  const existingModel = modelRegistry[model.modelName];
+  const existingModel = mongoose.models[name] as Model<T> | undefined;
 
   if (existingModel && !replace) {
+    console.warn(`Model ${name} already registered... Will not replace it...`);
     return existingModel;
   }
 
-  const modelGetter = modelGetters[model.modelName];
-
-  if (!!modelGetter) {
-    delete modelGetters[model.modelName];
+  if (name in modelGetters) {
+    delete modelGetters[name];
   }
 
   if (existingModel) {
-    console.warn(`Model ${model.modelName} already registered...`);
-    if (replace) {
-      delete modelRegistry[model.modelName];
-    }
+    console.warn(`Model ${name} already registered... Will be replaced...`);
+    mongoose.deleteModel(name);
   }
 
-  modelRegistry[model.modelName] = model;
-
-  return model;
+  return mongoose.model(name, schema) as Model<T>;
 };
 
 export function registerModelGetter(name: string, getter: ModelGetter) {
@@ -56,25 +45,24 @@ export function registerModelGetter(name: string, getter: ModelGetter) {
   modelGetters[name] = getter;
 
   // If the model is already registered, remove it from the registry.
-  if (modelRegistry[name]) {
-    delete modelRegistry[name];
+  if (mongoose.models[name]) {
+    mongoose.deleteModel(name);
   }
 
   return getter;
 };
 
 export function getModels(): string[] {
-  const keys = new Set<string>([...Object.keys(modelRegistry), ...Object.keys(modelGetters)]);
+  const keys = new Set<string>([...Object.keys(mongoose.models), ...Object.keys(modelGetters)]);
   return Array.from(keys);
 };
 
 export function isModelRegistered(name: string): boolean {
-  return Object.prototype.hasOwnProperty.call(modelRegistry, name) ||
-    Object.prototype.hasOwnProperty.call(modelGetters, name);
+  return !!mongoose.models[name] || Object.prototype.hasOwnProperty.call(modelGetters, name);
 };
 
 export async function getModel<T = any>(name: string): Promise<Model<T>> {
-  const model = modelRegistry[name];
+  const model = mongoose.models[name] as Model<T> | undefined;
 
   if (model) {
     return model;
@@ -97,13 +85,13 @@ export function getModelGetter<T = any>(name: string): ModelGetter<T> {
     return modelGetters[name];
   }
 
-  const model = modelRegistry[name];
+  const model = mongoose.models[name] as Model<T> | undefined;
   if (!model) {
     throw new Error(`Model ${name} not found`);
   }
 
   modelGetters[name] = () => Promise.resolve(model);
-  delete modelRegistry[name];
+  console.warn(`Model getter for the model ${name} was created automatically. This is not recommended!`);
 
   return modelGetters[name];
 };
@@ -111,17 +99,12 @@ export function getModelGetter<T = any>(name: string): ModelGetter<T> {
 export function removeModel(name: string): boolean {
   let deleted = false;
 
-  if (modelRegistry[name]) {
-    delete modelRegistry[name];
-    deleted = true;
-  }
-
-  if (modelGetters[name]) {
+  if (name in modelGetters) {
     delete modelGetters[name];
     deleted = true;
   }
 
-  if (mongoose.model(name)) {
+  if (mongoose.models[name]) {
     mongoose.deleteModel(name);
     deleted = true;
   }
