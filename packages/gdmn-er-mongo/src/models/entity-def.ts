@@ -1,7 +1,7 @@
 import { entityDef } from 'gdmn-er';
 import { TEntityDefWithId } from '../types/entity-def';
-import { registerModel } from '../registry';
+import { registerModelForEntity } from '../registry';
 
-export const EntityDef = registerModel<TEntityDefWithId>(entityDef.name, entityDef);
+export const EntityDef = registerModelForEntity<TEntityDefWithId>(entityDef.name, entityDef);
 
 export { entityDef };

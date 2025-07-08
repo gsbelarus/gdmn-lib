@@ -43,7 +43,6 @@ export function registerModelForEntity<T>(name: string, entity: Entity, replace 
   return registerModel<T>(name, schema, replace);
 };
 
-
 export function registerModelGetter(name: string, getter: ModelGetter) {
   if (typeof window !== 'undefined') {
     console.trace('registerModelGetter is not supported in the browser! name: ' + name);
