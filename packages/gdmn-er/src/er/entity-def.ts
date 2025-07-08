@@ -230,9 +230,7 @@ export const entityDef: Entity = {
       ref: "EntityDef",
     },
     objectTitle: {
-      type: "enum",
-      required: false,
-      enum: ["string", "string[]"]
+      type: "string",
     },
     abc: {
       type: "boolean",
