@@ -35,7 +35,7 @@ export function registerModel<T>(name: string, entity: Entity, replace = false):
     mongoose.deleteModel(name);
   }
 
-  const schema = entity2schema<T>(entity);
+  const schema = entity2schema<T>(entity, { collection: entity.name });
 
   return mongoose.model(name, schema) as Model<T>;
 };
