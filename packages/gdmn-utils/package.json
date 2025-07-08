@@ -1,6 +1,6 @@
 {
   "name": "gdmn-utils",
-  "version": "0.14.69",
+  "version": "0.14.70",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

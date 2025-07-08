@@ -1,5 +1,7 @@
+import { Entity } from 'gdmn-er';
 import { Model as SrcModel, Schema } from 'mongoose';
 import mongoose from 'mongoose';
+import { entity2schema } from './er2mongo';
 
 type Model<T = any> = SrcModel<T>;
 
@@ -13,7 +15,7 @@ if (!globalThis.hasOwnProperty(modelGettersKey)) {
 
 const modelGetters = (globalThis as any)[modelGettersKey] as Record<string, ModelGetter>;
 
-export function registerModel<T>(name: string, schema: Schema<T>, replace = false): Model<T> {
+export function registerModel<T>(name: string, entity: Entity, replace = false): Model<T> {
   if (typeof window !== 'undefined') {
     console.trace(`registerModel is not supported in the browser! model: ${name}`);
   }
@@ -21,7 +23,6 @@ export function registerModel<T>(name: string, schema: Schema<T>, replace = fals
   const existingModel = mongoose.models[name] as Model<T> | undefined;
 
   if (existingModel && !replace) {
-    console.warn(`Model ${name} already registered... Will not replace it...`);
     return existingModel;
   }
 
@@ -33,6 +34,8 @@ export function registerModel<T>(name: string, schema: Schema<T>, replace = fals
     console.warn(`Model ${name} already registered... Will be replaced...`);
     mongoose.deleteModel(name);
   }
+
+  const schema = entity2schema<T>(entity);
 
   return mongoose.model(name, schema) as Model<T>;
 };
