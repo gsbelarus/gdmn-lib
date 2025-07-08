@@ -38,9 +38,9 @@ export function registerModel<T>(name: string, schema: Schema<T>, replace = fals
   return mongoose.model(name, schema) as Model<T>;
 };
 
-export function registerModelForEntity<T>(name: string, entity: Entity, replace = false): Model<T> {
+export function registerModelForEntity<T>(entity: Entity, replace = false): Model<T> {
   const schema = entity2schema<T>(entity, { collection: entity.name });
-  return registerModel<T>(name, schema, replace);
+  return registerModel<T>(entity.name, schema, replace);
 };
 
 export function registerModelGetter(name: string, getter: ModelGetter) {
