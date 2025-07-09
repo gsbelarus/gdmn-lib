@@ -1,10 +1,7 @@
 import { entityDef } from 'gdmn-er';
 import { TEntityDefWithId } from '../types/entity-def';
-import { registerModel } from '../registry';
-import { entity2schema } from '../er2mongo';
+import { registerModelForEntity } from '../registry';
 
-const schema = entity2schema<TEntityDefWithId>(entityDef);
-
-export const EntityDef = registerModel<TEntityDefWithId>(entityDef.name, schema);
+export const EntityDef = registerModelForEntity<TEntityDefWithId>(entityDef);
 
 export { entityDef };
