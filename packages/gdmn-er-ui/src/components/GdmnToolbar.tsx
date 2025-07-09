@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import GdmnSwitcher from './GdmnSwitcher';
 
 export type GdmnToolbarItem =
@@ -57,9 +57,11 @@ export type GdmnToolbarProps = {
   items: GdmnToolbarItems;
   showLabels?: boolean;
   theme?: GdmnToolbarThemeProps;
+  className?: string,
+  style?: CSSProperties
 };
 
-export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<GdmnToolbarProps>) {
+export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, style }: Readonly<GdmnToolbarProps>) {
 
   const theme: GdmnToolbarThemeProps = {
     border: propsTheme?.border ?? 'rgb(82 82 91)',
@@ -110,7 +112,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
   }, [animated]);
 
   return (
-    <div aria-label="toolbar" className="flex flex-row items-center gap-2 p-2">
+    <div aria-label="toolbar" className={`flex flex-row items-center gap-2 p-2 ${className ?? ''}`} style={style}>
       {items.map((item, index) => {
         const component =
           item.type === "button" ? (
@@ -264,7 +266,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme }: Readonly<G
                 key={index}
                 className="h-full border-0 border-l border-solid border-zinc-500"
               />
-            );                  
+            );
         }
       })}
     </div>
