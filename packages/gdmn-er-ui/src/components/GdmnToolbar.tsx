@@ -139,7 +139,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
               <div className="flex flex-col justify-center items-center">
                 {item.icon}
                 <GdmnSwitcher
-                  checked={item.checked}
+                  checked={item.checked ?? false}
                   disabled={item.disabled}
                   onChange={e => item.onChange?.(e.target.checked)}
                   size="small"
