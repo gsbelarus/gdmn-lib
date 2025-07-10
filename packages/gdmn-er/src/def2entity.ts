@@ -138,7 +138,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
   for (const attr of attrs) {
     const {
-      name, type, required, enum: enumValues, default: def, ref, of,
+      name, type, required, unique, enum: enumValues, default: def, ref, of,
       displayedFields, label, description, placeholder, tooltip, nestedAttributes,
       min, max, minlength, maxlength, trim, lowercase, uppercase, match, validator, visible
     } = attr;
@@ -159,7 +159,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
       finalType = {
         type: [nestedAttrs],
-        required,
+        required, unique,
         default: def,
       };
     } else {
@@ -167,7 +167,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
       finalType = slim({
         type: attrType,
-        required,
+        required, unique,
         enum: enumValues,
         default: mappedDefault,
         ref, of: of as OfType | undefined,

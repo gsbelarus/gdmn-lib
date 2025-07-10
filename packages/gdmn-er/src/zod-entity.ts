@@ -41,6 +41,7 @@ export const ZodRefFieldProps = z.object({
 export const ZodDisplayedField = z.object({
   field: z.string(),
   readonly: z.boolean().optional(),
+  visible: z.boolean().optional(),
 });
 
 export const ZodOptions = z.object({
