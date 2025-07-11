@@ -16,6 +16,8 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
     case "string":
       return String;
     case "timestamp":
+    case 'date':
+    case 'time':
       return Date;
     case "map":
       return Map;

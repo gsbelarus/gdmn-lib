@@ -71,6 +71,8 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
 
   switch (type) {
     case 'timestamp':
+    case 'date':
+    case 'time':
       if (def === 'now') return Date.now;
       const date = new Date(def);
       if (Number.isNaN(date.getTime())) {
