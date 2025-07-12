@@ -43,12 +43,12 @@ export const simpleAttrTypes = [
   "number",
   "string",
   "timestamp",
+  'date',
+  'time',
   "entity",
   "enum",
   "map",
-  'buffer',
-  'date',
-  'time'
+  'buffer'
 ] as const;
 
 export type SimpleAttrType = (typeof simpleAttrTypes)[number];
