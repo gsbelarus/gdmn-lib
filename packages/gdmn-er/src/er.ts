@@ -22,6 +22,7 @@ export type MethodCode = {
   code: string;
 };
 
+//TODO: remove unused fields
 export type Method<E = Entity, T = EntityRecord<any>> = {
   name: string;
   namespace: string;

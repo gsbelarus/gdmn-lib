@@ -51,7 +51,7 @@ type EntityDefDocument = {
   viewForm?: string;
 };
 
-function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any[] } {
+function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any[]; } {
   const result: EntityMethods = {};
 
   methods.forEach((methods, methodType) => {
@@ -64,7 +64,7 @@ function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any
   });
 
   return result;
-}
+};
 
 export function convertDefaultValueByType(type: AttrType, def: any): any {
   if (def == null) return undefined;
