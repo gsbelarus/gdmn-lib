@@ -20,6 +20,7 @@ export type MethodEnvironment = 'server' | 'client' | 'both';
 export type MethodCode = {
   lang: string;
   code: string;
+  prompt?: string; // for code generation
 };
 
 //TODO: remove unused fields
