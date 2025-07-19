@@ -18,9 +18,23 @@ export type MethodParam = {
 export type MethodEnvironment = 'server' | 'client' | 'both';
 
 export type MethodCode = {
+  /**
+   * Language of the code, e.g. 'javascript', 'typescript', etc.
+   */
   lang: string;
+  /**
+   * The actual code as a string.
+   */
   code: string;
-  prompt?: string; // for code generation
+  /**
+   * Prompt for the code generation.
+   */
+  prompt?: string;
+  /**
+   * Indicates if the code is derived from the prompt.
+   * Will be switched to false if the code is modified by the user.
+   */
+  derived?: boolean;
 };
 
 //TODO: remove unused fields
