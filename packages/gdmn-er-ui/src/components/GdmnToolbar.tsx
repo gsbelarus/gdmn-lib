@@ -153,6 +153,10 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
               </div>
               {showLabels && item.label}
             </div>
+          ) : item.type === "custom" ? (
+            <div className="w-full h-full flex flex-col justify-center items-center gap-1">
+              {item.component}
+            </div>
           ) : undefined;
 
         const getStyles = (toggled: boolean, disabled: boolean) => {
@@ -196,15 +200,6 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
           disabled = !!item.disabled;
         }
 
-        if (!component) {
-          return (
-            <div
-              key={index}
-              className="h-full border-0 border-l border-solid border-zinc-500"
-            />
-          );
-        }
-
         switch (item.type) {
           case "button": {
             return (
@@ -230,7 +225,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
                     : undefined
                 }
               >
-                {item.tooltip && index !== pressed ? (
+                {item.tooltip && index !== pressed && component ? (
                   <Tooltip
                     title={item.tooltip}
                     enterDelay={700}
@@ -251,7 +246,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
                 sx={getStyles(toggled, disabled)}
                 className="h-8 w-14 flex justify-center items-center rounded-2xl"
               >
-                {item.tooltip && index !== pressed ? (
+                {item.tooltip && index !== pressed && component ? (
                   <Tooltip
                     title={item.tooltip}
                     enterDelay={700}
@@ -272,7 +267,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
                 sx={getStyles(toggled, disabled)}
                 className="h-8 w-14 flex justify-center items-center rounded-2xl"
               >
-                {item.tooltip && index !== pressed ? (
+                {item.tooltip && index !== pressed && component ? (
                   <Tooltip
                     title={item.tooltip}
                     enterDelay={700}
