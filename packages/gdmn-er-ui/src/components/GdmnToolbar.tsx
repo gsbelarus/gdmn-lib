@@ -34,6 +34,13 @@ export type GdmnToolbarItem =
   }
   | {
     type: "separator";
+  }
+  | {
+    type: "custom";
+    id: string;
+    tooltip?: string;
+    disabled?: boolean;
+    component: React.ReactNode;
   };
 
 export type GdmnToolbarItems = GdmnToolbarItem[];
@@ -58,7 +65,7 @@ export type GdmnToolbarProps = {
   showLabels?: boolean;
   theme?: GdmnToolbarThemeProps;
   className?: string,
-  style?: CSSProperties
+  style?: CSSProperties;
 };
 
 export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, style }: Readonly<GdmnToolbarProps>) {
@@ -118,7 +125,6 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
           item.type === "button" ? (
             <div
               className="w-full h-full flex flex-col justify-center items-center gap-1 cursor-pointer"
-              key={index}
             >
               <div
                 className={
@@ -134,7 +140,6 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
           ) : item.type === "switcher" ? (
             <div
               className="w-full h-full flex flex-col justify-center items-center gap-1"
-              key={index}
             >
               <div className="flex flex-col justify-center items-center">
                 {item.icon}
@@ -204,7 +209,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
           case "button": {
             return (
               <Box
-                key={index}
+                key={item.id}
                 sx={getStyles(toggled, disabled)}
                 className={`w-8 h-8 flex justify-center items-center border
                   border-solid rounded ${index === pressed ? 'relative top-[1px] left-[1px]' : 'shadow'}`}
@@ -242,7 +247,28 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
           case "switcher": {
             return (
               <Box
-                key={index}
+                key={item.id}
+                sx={getStyles(toggled, disabled)}
+                className="h-8 w-14 flex justify-center items-center rounded-2xl"
+              >
+                {item.tooltip && index !== pressed ? (
+                  <Tooltip
+                    title={item.tooltip}
+                    enterDelay={700}
+                  >
+                    {component}
+                  </Tooltip>
+                ) : (
+                  component
+                )}
+              </Box>
+            );
+          }
+
+          case "custom": {
+            return (
+              <Box
+                key={item.id}
                 sx={getStyles(toggled, disabled)}
                 className="h-8 w-14 flex justify-center items-center rounded-2xl"
               >
@@ -263,7 +289,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
           default:
             return (
               <div
-                key={index}
+                key={`separator-${index}`}
                 className="h-full border-0 border-l border-solid border-zinc-500"
               />
             );
