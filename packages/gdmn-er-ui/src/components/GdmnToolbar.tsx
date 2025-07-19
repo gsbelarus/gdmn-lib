@@ -265,7 +265,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
               <Box
                 key={item.id}
                 sx={getStyles(toggled, disabled)}
-                className="h-8 w-14 flex justify-center items-center rounded-2xl"
+                className="h-8 flex justify-center items-center"
               >
                 {item.tooltip && index !== pressed && component ? (
                   <Tooltip
