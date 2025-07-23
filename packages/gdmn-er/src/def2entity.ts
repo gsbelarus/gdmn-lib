@@ -25,7 +25,7 @@ export type EntityDefAttribute = {
   unique?: boolean,
   sparse?: boolean,
   ref?: string;
-  of?: string;
+  of?: OfType;
   displayedFields?: DisplayedField[];
   label?: string;
   description?: string;
@@ -179,7 +179,8 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         required, unique: uniqueF, index: indexF,
         enum: enumValues,
         default: mappedDefault,
-        ref, of: of as OfType | undefined,
+        ref,
+        of,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,
         match, validator
