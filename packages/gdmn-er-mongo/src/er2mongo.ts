@@ -193,11 +193,16 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
   return Object.entries(attributes).map(([attrName, attr]) => {
 
     const id = generateMongoDBObjectId();
+
     if (!isAttrTypeDef(attr)) {
+      if (!isSimpleAttrType(attr)) {
+        console.warn(`entityAttrToEntityDefAttr: Invalid attribute type '${JSON.stringify(attr)}' for '${attrName}' in entity '${attributes.name}'`);
+      }
+
       return {
         _id: id,
         name: attrName,
-        type: 'string'
+        type: isSimpleAttrType(attr) ? attr : 'string'
       } as EntityDefAttribute;
     }
 
