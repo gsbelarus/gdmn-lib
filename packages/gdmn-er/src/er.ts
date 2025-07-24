@@ -302,6 +302,14 @@ export function isTimestampAttr(attrType: AttrType) {
   return attrType === "timestamp" || (isAttrTypeDef(attrType) && attrType.type === "timestamp");
 };
 
+export function isDateAttr(attrType: AttrType) {
+  return attrType === "date" || (isAttrTypeDef(attrType) && attrType.type === "date");
+};
+
+export function isTimeAttr(attrType: AttrType) {
+  return attrType === "time" || (isAttrTypeDef(attrType) && attrType.type === "time");
+};
+
 export type AttrTypeToGet = { type: SimpleAttrType; isArray: boolean; };
 
 export function getAttrType(attrType: AttrType): AttrTypeToGet {
