@@ -55,3 +55,17 @@ export const isTimeOnly = (str: string): boolean => {
   return timeRegex.test(str);
 };
 
+/**
+ * Checks if a string is a valid ISO 8601 date format
+ * @param str
+ * @returns
+ */
+export const isValidISODate = (str: string): boolean => {
+  if (typeof str !== 'string') return false;
+
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
+  if (!isoDateRegex.test(str)) return false;
+
+  const date = new Date(str);
+  return date.toISOString() === str;
+};
