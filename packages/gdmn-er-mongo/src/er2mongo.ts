@@ -1,4 +1,4 @@
-import { AttrType, AttrTypeDef, convertDefaultValueByType, Entity, EntityAttributes, EntityDefAttribute, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
+import { AttrType, AttrTypeDef, Entity, EntityAttributes, EntityDefAttribute, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
 import { generateMongoDBObjectId, slim } from 'gdmn-utils';
 import mongoose from 'mongoose';
 import { TEntityDef } from './types/entity-def';
@@ -32,10 +32,54 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
   }
 }
 
+function convertDefaultValueForMongoose(type: AttrType, def: any): any {
+  if (def == null) return undefined;
+
+  switch (type) {
+    case 'timestamp':
+    case 'date':
+    case 'time':
+      if (def === 'now') return Date.now();
+      const date = new Date(def);
+      if (Number.isNaN(date.getTime())) {
+        console.warn(`Invalid date default value: ${def}`);
+        return undefined;
+      }
+      return def;
+
+    case 'number':
+      const num = Number(def);
+      if (Number.isNaN(num)) {
+        console.warn(`Invalid number default value: ${def}`);
+        return undefined;
+      }
+      return num;
+
+    case 'boolean':
+      if (typeof def === 'boolean') {
+        return def;
+      }
+      if (typeof def === 'string') {
+        const lowered = def.toLowerCase();
+        if (lowered === 'true') return true;
+        if (lowered === 'false') return false;
+      }
+      if (typeof def === 'number') {
+        return def !== 0;
+      }
+      console.warn(`Invalid boolean default value: ${def}`);
+      return undefined;
+
+    default:
+      return def;
+  }
+}
+
+
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   const { type, default: def, ...rest } = attrTypeDef;
 
-  const mappedDefault = convertDefaultValueByType(type, def);
+  const mappedDefault = convertDefaultValueForMongoose(type, def);
 
   return slim({
     type: mapAttrType2MongoType(type),
