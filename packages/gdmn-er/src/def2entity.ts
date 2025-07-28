@@ -74,6 +74,7 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
     case 'date':
     case 'time':
       if (def === 'now') return Date.now;
+      if (typeof def === 'function' && def === Date.now) return Date.now;
       const date = new Date(def);
       if (Number.isNaN(date.getTime())) {
         console.warn(`Invalid date default value: ${def}`);
