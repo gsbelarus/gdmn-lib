@@ -17,12 +17,30 @@ export function convertBytes(bytes: number): string {
 };
 
 /**
- * Remove undefined values from object
- * @param obj
- * @returns
+ * Creates a new object by removing properties from the given object based on provided criteria.
+ *
+ * @typeParam T - The type of the object to process.
+ * @param obj - The source object to slim.
+ * @param removeNulls - If true, properties with null values will be removed.
+ * @param removeEmptyObjects - If true, properties whose value is an empty object will be removed.
+ * @param removeEmptyArrays - If true, properties whose value is an empty array will be removed.
+ * @param removeEmptyStrings - If true, properties with empty string values will be removed.
+ * @returns A new object of type T containing only the properties that passed the filters.
  */
-export function slim<T extends {}>(obj: T): T {
-  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined)) as T;
+export function slim<T extends {}>(
+  obj: T,
+  removeNulls?: boolean,
+  removeEmptyObjects?: boolean,
+  removeEmptyArrays?: boolean,
+  removeEmptyStrings?: boolean
+): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v !== undefined
+      && (!removeNulls || v !== null)
+      && (!removeEmptyStrings || v !== '')
+      && (!removeEmptyObjects || (typeof v !== 'object' || (v !== null && Object.keys(v).length > 0)))
+      && (!removeEmptyArrays || (Array.isArray(v) && v.length > 0)))
+  ) as T;
 };
 
 /**
