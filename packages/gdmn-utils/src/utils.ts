@@ -21,25 +21,51 @@ export function convertBytes(bytes: number): string {
  *
  * @typeParam T - The type of the object to process.
  * @param obj - The source object to slim.
- * @param removeNulls - If true, properties with null values will be removed.
- * @param removeEmptyObjects - If true, properties whose value is an empty object will be removed.
- * @param removeEmptyArrays - If true, properties whose value is an empty array will be removed.
- * @param removeEmptyStrings - If true, properties with empty string values will be removed.
+ * @param options - Configuration object for slimming behavior.
  * @returns A new object of type T containing only the properties that passed the filters.
  */
 export function slim<T extends {}>(
   obj: T,
-  removeNulls?: boolean,
-  removeEmptyObjects?: boolean,
-  removeEmptyArrays?: boolean,
-  removeEmptyStrings?: boolean
+  options: {
+    deep?: boolean;
+    removeNulls?: boolean;
+    removeEmptyObjects?: boolean;
+    removeEmptyArrays?: boolean;
+    removeEmptyStrings?: boolean;
+  } = {}
 ): T {
+  const { deep, removeNulls, removeEmptyObjects, removeEmptyArrays, removeEmptyStrings } = options;
+
+  const shouldRemove = (value: any): boolean => {
+    return value === undefined ||
+      (removeNulls && value === null) ||
+      (removeEmptyStrings && value === '') ||
+      (removeEmptyObjects && value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) ||
+      (removeEmptyArrays && Array.isArray(value) && value.length === 0);
+  };
+
+  const processValue = (value: any): any => {
+    if (!deep || typeof value !== 'object' || value === null) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(processValue).filter(item => !shouldRemove(item));
+    }
+
+    return Object.fromEntries(
+      Object.entries(value)
+        .map(([key, val]) => [key, processValue(val)])
+        .filter(([_, val]) => !shouldRemove(val))
+    );
+  };
+
+  if (deep) {
+    return processValue(obj) as T;
+  }
+
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, v]) => v !== undefined
-      && (!removeNulls || v !== null)
-      && (!removeEmptyStrings || v !== '')
-      && (!removeEmptyObjects || (typeof v !== 'object' || (v !== null && Object.keys(v).length > 0)))
-      && (!removeEmptyArrays || (Array.isArray(v) && v.length > 0)))
+    Object.entries(obj).filter(([_, value]) => !shouldRemove(value))
   ) as T;
 };
 
