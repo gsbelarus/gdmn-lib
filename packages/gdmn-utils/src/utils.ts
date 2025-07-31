@@ -32,16 +32,17 @@ export function slim<T extends {}>(
     removeEmptyObjects?: boolean;
     removeEmptyArrays?: boolean;
     removeEmptyStrings?: boolean;
+    removeFalse?: boolean;
   } = {}
 ): T {
-  const { deep, removeNulls, removeEmptyObjects, removeEmptyArrays, removeEmptyStrings } = options;
-
+  const { deep, removeNulls, removeEmptyObjects, removeEmptyArrays, removeEmptyStrings, removeFalse } = options;
   const shouldRemove = (value: any): boolean => {
     return value === undefined ||
       (removeNulls && value === null) ||
       (removeEmptyStrings && value === '') ||
       (removeEmptyObjects && value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) ||
-      (removeEmptyArrays && Array.isArray(value) && value.length === 0);
+      (removeEmptyArrays && Array.isArray(value) && value.length === 0) ||
+      (removeFalse && typeof value === 'boolean' && !value);
   };
 
   const processValue = (value: any): any => {
