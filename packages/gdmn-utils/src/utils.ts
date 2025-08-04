@@ -114,3 +114,15 @@ export const isValidISODate = (str: string): boolean => {
   const date = new Date(str);
   return date.toISOString() === str;
 };
+
+/** * Creates a UTC date with the specified time (hour, minute, second).
+ * @param hour
+  * @param minute
+  * @param second
+  * @returns {Date} A Date object representing the UTC date with the specified time.
+ */
+export const createUTCDateWithTime = (hour: number, minute: number, second: number = 0): Date => {
+  const utcDate = new Date(0); // 1970-01-01T00:00:00.000Z
+  utcDate.setUTCHours(hour, minute, second, 0);
+  return utcDate;
+};
