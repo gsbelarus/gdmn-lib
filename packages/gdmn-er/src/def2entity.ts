@@ -40,6 +40,7 @@ type EntityDefDocument = {
   _id: string;
   namespace?: string | undefined;
   name: string;
+  label?: string;
   description?: string;
   attributes: EntityDefAttribute[];
   prompts?: any[];
@@ -107,12 +108,13 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
     default:
       return def;
   }
-}
+};
 
 export function def2entity(def: EntityDefDocument): Entity {
   const {
     namespace,
     name,
+    label,
     description,
     attributes,
     methods,
@@ -123,6 +125,7 @@ export function def2entity(def: EntityDefDocument): Entity {
   const entity: Entity = {
     namespace,
     name,
+    label,
     description,
     attributes: {},
     methods: methods ? convertMethodsToObject(methods) : {},
@@ -133,7 +136,7 @@ export function def2entity(def: EntityDefDocument): Entity {
   entity.attributes = buildAttributes(attributes);
 
   return entity;
-}
+};
 
 function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
   const result: EntityAttributes = {};

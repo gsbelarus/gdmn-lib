@@ -1,6 +1,6 @@
 import { EntityDefAttribute, METHOD_TYPES, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
 import { Types } from "mongoose";
-import { z } from "zod";
+import { late, z } from "zod";
 
 const methodParamSchema = z.object({
   name: z.string(),
@@ -121,6 +121,7 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
 export const ZodEntityDefShape = {
   namespace: z.string().trim().min(2).max(60).optional(),
   name: z.string().trim().min(2).max(60),
+  label: z.string().trim().optional(),
   description: z.string().trim().max(255).optional(),
   prompts: z.array(
     z.object({

@@ -186,6 +186,11 @@ export const entityDef: Entity = {
       maxlength: 60,
       // match: '^(?!\$)(?!.*[.\/\\\s"*\[\]<>{}|:;!?@#%^&+=`~])[A-Za-z][A-Za-z0-9_]*$'
     },
+    label: {
+      type: "string",
+      required: false,
+      trim: true,
+    },
     description: {
       type: "string",
       trim: true,
