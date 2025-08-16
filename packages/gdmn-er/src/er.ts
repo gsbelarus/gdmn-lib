@@ -94,9 +94,19 @@ export function str2OfTypes(
 };
 
 export type RefFieldProps = {
-  entityName: string; // name of the Entity we are referencing
-  fieldName: string; //name of the reference field in the current Entity
-  displayedFieldName: string; //name of the field to display from the referenced Entity
+  /**
+   * The full name of the entity being referenced.
+   */
+  referencesEntity: string;
+  /**
+   * The name of the reference field in the current Entity.
+   */
+  referenceFieldName: string;
+  /**
+   * The name of the field to display from the referenced Entity.
+   * The field should contain a string identifying the referenced object.
+   */
+  referencedObjectDisplayFieldName: string;
 };
 
 export type DisplayedField = {
@@ -123,7 +133,10 @@ export type AttrTypeDef = {
   index?: boolean;
   unique?: boolean;
   sparse?: boolean;
-  ref?: string;
+  /**
+   * For reference fields, the full name of the entity being referenced.
+   */
+  referencesEntity?: string;
   //FIXME: rename to caption? because we use caption in the ui components
   label?: string;
   description?: string;
@@ -137,7 +150,7 @@ export type AttrTypeDef = {
   filterable?: boolean;
   readonly?: boolean;
   displayedFields?: DisplayedField[];
-  fieldProps?: RefFieldProps;
+  referenceFieldProps?: RefFieldProps;
   nestedAttributes?: EntityAttributes[];
   system?: boolean,
   visible?: boolean;

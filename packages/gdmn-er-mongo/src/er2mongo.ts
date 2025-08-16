@@ -86,57 +86,7 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
     ...rest,
     default: mappedDefault,
   });
-
-  // let mongoMatch: RegExp | undefined;
-  // if (typeof match === 'string') {
-  //   mongoMatch = new RegExp(match);
-  // }
-
-  // if (type === 'array') {
-  //   if (!of) {
-  //     throw new Error(`AttrTypeDef with type 'array' must include 'of'`);
-  //   }
-
-  //   const innerType = mapAttrType2MongoType(of as AttrType);
-
-  //   let itemSchema: any;
-
-  //   if (
-  //     (typeof of === 'string' && of === 'objectid') ||
-  //     (typeof of === 'object' && 'type' in of && of.type === 'objectid')
-  //   ) {
-  //     itemSchema = { type: innerType };
-  //     if (ref) itemSchema.ref = ref;
-  //   } else {
-  //     itemSchema = innerType;
-  //   }
-
-  //   return slim({
-  //     type: [itemSchema],
-  //     ...rest,
-  //     ...(mongoMatch && { match: mongoMatch }),
-  //     ...(mappedDefault !== undefined && { default: mappedDefault }),
-  //   });
-  // }
-
-  // const schema: any = slim({
-  //   type: mapAttrType2MongoType(type),
-  //   ...rest,
-  //   ...(of && { of }),
-  //   ...(ref && { ref }),
-  //   ...(mongoMatch && { match: mongoMatch }),
-  //   ...(mappedDefault !== undefined && { default: mappedDefault }),
-  // });
-
-  // // if (type === 'objectid' && ref) {
-  // //   schema.ref = ref;
-  // // }
-  // // if (type === 'map' && of) {
-  // //   schema.of = mapAttrType2MongoType(of as AttrType);
-  // // }
-
-  // return schema;
-}
+};
 
 function mapAttrType2MongoType(attrType: AttrType): any {
   if (isSimpleAttrType(attrType)) {
@@ -211,7 +161,10 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
   );
 
   if (entity.parent) {
-    schema['parent'] = { type: mongoose.Schema.Types.ObjectId, ref: "EntityDef" };
+    schema['parent'] = {
+      type: mongoose.Schema.Types.String,
+      required: false
+    };
   }
 
   if (entity.options) {
@@ -266,7 +219,7 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
           ...attr,
           ...(attr.of === 'objectid' && {
             of: 'objectid',
-            ref: attr.ref,
+            referencesEntity: attr.referencesEntity,
             ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
           }),
           ...(typeof attr.of === 'object' && {

@@ -89,7 +89,7 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       type: "boolean",
       required: false,
     },
-    ref: {
+    referencesEntity: {
       type: "string",
       required: false,
     },
@@ -230,9 +230,8 @@ export const entityDef: Entity = {
       required: false
     },
     parent: {
-      type: "objectid",
+      type: "string",
       required: false,
-      ref: "EntityDef",
     },
     objectTitle: {
       type: "string",

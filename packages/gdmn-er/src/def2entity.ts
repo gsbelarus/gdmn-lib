@@ -24,7 +24,7 @@ export type EntityDefAttribute = {
   index?: boolean,
   unique?: boolean,
   sparse?: boolean,
-  ref?: string;
+  referencesEntity?: string;
   of?: OfType;
   displayedFields?: DisplayedField[];
   label?: string;
@@ -143,7 +143,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
   for (const attr of attrs) {
     const {
-      name, type, required, unique, index, enum: enumValues, default: def, ref, of,
+      name, type, required, unique, index, enum: enumValues, default: def, referencesEntity, of,
       displayedFields, label, description, placeholder, tooltip, nestedAttributes,
       min, max, minlength, maxlength, trim, lowercase, uppercase, match, validator, visible
     } = attr;
@@ -182,7 +182,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
         required, unique: uniqueF, index: indexF,
         enum: enumValues,
         default: mappedDefault,
-        ref,
+        referencesEntity,
         of,
         min, max, minlength, maxlength,
         trim, lowercase, uppercase,

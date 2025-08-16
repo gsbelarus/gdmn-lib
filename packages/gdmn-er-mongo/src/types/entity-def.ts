@@ -62,7 +62,7 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     index: z.boolean().optional(),
     unique: z.boolean().optional(),
     sparse: z.boolean().optional(),
-    ref: z.string().optional(),
+    referencesEntity: z.string().optional(),
     label: z.string().optional(),
     placeholder: z.string().optional(),
     tooltip: z.string().optional(),
@@ -73,9 +73,9 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     visible: z.boolean().optional().default(true),
   }).superRefine((data, ctx) => {
     checkField(
-      (data.type === 'objectid' || data.type === 'entity') && !data.ref,
-      ['ref'],
-      "'ref' is required when type is 'objectid' or 'entity'",
+      (data.type === 'objectid' || data.type === 'entity') && !data.referencesEntity,
+      ['referencesEntity'],
+      "'referencesEntity' is required when type is 'objectid' or 'entity'",
       ctx
     );
 
@@ -89,9 +89,9 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     checkField(
       data.type === 'array' &&
       (data.of === 'objectid' || data.of === 'entity') &&
-      !data.ref,
-      ['ref'],
-      "'ref' is required when type is 'array' and of is 'objectid' or 'entity'",
+      !data.referencesEntity,
+      ['referencesEntity'],
+      "'referencesEntity' is required when type is 'array' and of is 'objectid' or 'entity'",
       ctx
     );
 

@@ -33,9 +33,9 @@ export const ZodOfTypes = z.union([
 ]);
 
 export const ZodRefFieldProps = z.object({
-  entityName: z.string(),
-  fieldName: z.string(),
-  displayedFieldName: z.string(),
+  referencesEntity: z.string(),
+  referenceFieldName: z.string(),
+  referencedObjectDisplayFieldName: z.string(),
 });
 
 export const ZodDisplayedField = z.object({
@@ -78,7 +78,7 @@ export const ZodAttrTypeDef = z.object({
   index: z.boolean().optional(),
   unique: z.boolean().optional(),
   sparse: z.boolean().optional(),
-  ref: z.string().optional(),
+  referencesEntity: z.string().optional(),
   label: z.string().optional(),
   description: z.string().optional(),
   placeholder: z.string().optional(),
@@ -88,7 +88,7 @@ export const ZodAttrTypeDef = z.object({
   filterable: z.boolean().optional(),
   readonly: z.boolean().optional(),
   displayedFields: z.array(ZodDisplayedField).optional(),
-  fieldProps: ZodRefFieldProps.optional(),
+  referenceFieldProps: ZodRefFieldProps.optional(),
   nestedAttributes: z.array(z.lazy(() => ZodEntityAttributes)).optional(),
   namespace: z.string().optional(),
   visible: z.boolean().optional(),
