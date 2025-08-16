@@ -167,7 +167,7 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
 const attributeDef = createAttributeDef();
 
 export const entityDef: Entity = {
-  parent: baseEntity,
+  parent: 'sys:BaseEntity',
   namespace: "sys",
   name: "EntityDef",
   attributes: {

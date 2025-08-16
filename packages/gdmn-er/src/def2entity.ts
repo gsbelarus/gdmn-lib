@@ -45,7 +45,7 @@ type EntityDefDocument = {
   attributes: EntityDefAttribute[];
   prompts?: any[];
   methods?: EntityDefMethods;
-  parent?: Entity;
+  parent?: string;
   objectTitle?: string | string[];
   abc?: boolean;
   dlgForm?: string;

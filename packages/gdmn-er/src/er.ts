@@ -184,10 +184,17 @@ export type EntityMethods = Partial<Record<MethodType, Method[]>>;
 
 export interface Entity {
   /**
-   *  Entity we inherit from
+   *  Full entity name we inherit from
    */
-  parent?: Entity;
+  parent?: string;
+  /**
+   *  Namespace the entity belongs to
+   */
   namespace?: string;
+  /**
+   *  Name of the entity
+   *  Must be unique within the namespace
+   */
   name: string;
   /**
    * Label for use in the user interface

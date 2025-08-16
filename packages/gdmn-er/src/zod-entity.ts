@@ -133,7 +133,7 @@ export const ZodEntitySchema = z.object({
 // main Entity validator
 export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
   z.object({
-    parent: ZodEntity.optional(),
+    parent: z.string().optional(),
     namespace: z.string().optional(),
     name: z.string(),
     label: z.string().optional(),
