@@ -253,7 +253,6 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
 
 export function entityToEntityDef(e: Entity): TEntityDef {
 
-  // TODO: ещё не существует механизма указания parent в entityDef
   const {
     parent,
     attributes,

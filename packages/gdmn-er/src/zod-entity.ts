@@ -6,24 +6,11 @@ import {
   EntityMethods,
   METHOD_TYPES,
   ofTypes,
-  simpleAttrTypes
+  simpleAttrTypes,
+  ZodMethodParam,
+  ZodMethodEnvironment,
+  ZodMethodCode
 } from './er';
-
-// primitive/enums
-export const ZodMethodParam = z.object({
-  name: z.string(),
-  type: z.string(),
-  required: z.boolean().optional(),
-  nullable: z.boolean().optional(),
-  default: z.any().optional(),
-});
-
-export const ZodMethodEnvironment = z.enum(['server', 'client', 'both']);
-
-export const ZodMethodCode = z.object({
-  lang: z.string(),
-  code: z.string(),
-});
 
 export const ZodSimpleAttrType = z.enum(simpleAttrTypes);
 
@@ -60,6 +47,7 @@ export const ZodAttrType: z.ZodType<AttrType> = z.lazy(() =>
   ])
 );
 
+//TODO: must be synchronized with AttrTypeDef
 export const ZodAttrTypeDef = z.object({
   type: ZodAttrType,
   required: z.boolean().optional(),
@@ -90,8 +78,9 @@ export const ZodAttrTypeDef = z.object({
   displayedFields: z.array(ZodDisplayedField).optional(),
   referenceFieldProps: ZodRefFieldProps.optional(),
   nestedAttributes: z.array(z.lazy(() => ZodEntityAttributes)).optional(),
-  namespace: z.string().optional(),
+  system: z.boolean().optional(),
   visible: z.boolean().optional(),
+  namespace: z.string().optional(),
 });
 
 export const ZodEntityAttributes: z.ZodType<EntityAttributes> = z.record(

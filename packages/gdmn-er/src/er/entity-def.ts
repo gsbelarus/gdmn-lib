@@ -1,5 +1,4 @@
 import { Entity, ofTypes, simpleAttrTypes } from '../er';
-import { baseEntity } from './base-entity';
 
 function createAttributeDef(depth: number = 3): Record<string, any> {
   if (depth <= 0) {
@@ -155,14 +154,7 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
   };
 
   return attributeDef;
-}
-
-
-/**
- * An object to group values into smaller group. Similar on values merging.
- * */
-// highLevelGroupingObject?: Record<any, any>;
-// filterable?: boolean;
+};
 
 const attributeDef = createAttributeDef();
 

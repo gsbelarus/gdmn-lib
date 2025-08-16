@@ -1,3 +1,4 @@
+import { z } from 'zod';
 
 export type EntityRecord<T = undefined> = T extends object ? T : Record<string, any>;
 export type EntityRecordSet<T = EntityRecord> = T[];
@@ -7,35 +8,29 @@ export type EntityEvent2<T extends EntityRecord> = (E: Entity, Record: EntityRec
 
 export type EntityMethodFn<E, T extends EntityRecord<any>> = (e: E, args?: Record<string, any>) => Promise<EntityRecord<T> | boolean>;
 
-export type MethodParam = {
-  name: string;
-  type: string;
-  required?: boolean;
-  nullable?: boolean;
-  default?: any;
-};
+// primitive/enums
+export const ZodMethodParam = z.object({
+  name: z.string(),
+  type: z.string(),
+  required: z.boolean().optional(),
+  nullable: z.boolean().optional(),
+  default: z.any().optional(),
+});
 
-export type MethodEnvironment = 'server' | 'client' | 'both';
+export type MethodParam = z.infer<typeof ZodMethodParam>;
 
-export type MethodCode = {
-  /**
-   * Language of the code, e.g. 'javascript', 'typescript', etc.
-   */
-  lang: string;
-  /**
-   * The actual code as a string.
-   */
-  code: string;
-  /**
-   * Prompt for the code generation.
-   */
-  prompt?: string;
-  /**
-   * Indicates if the code is derived from the prompt.
-   * Will be switched to false if the code is modified by the user.
-   */
-  derived?: boolean;
-};
+export const ZodMethodEnvironment = z.enum(['server', 'client', 'both']);
+
+export type MethodEnvironment = z.infer<typeof ZodMethodEnvironment>;
+
+export const ZodMethodCode = z.object({
+  lang: z.string().describe('Language of the code, e.g. \'javascript\', \'typescript\', etc.'),
+  code: z.string().describe('The actual code'),
+  prompt: z.string().optional().describe('Prompt for the code generation'),
+  derived: z.boolean().optional().describe('Indicates if the code is derived from the prompt. Will be switched to false if the code is modified by the user.'),
+});
+
+export type MethodCode = z.infer<typeof ZodMethodCode>;
 
 //TODO: remove unused fields
 export type Method<E = Entity, T = EntityRecord<any>> = {
@@ -115,6 +110,7 @@ export type DisplayedField = {
   visible?: boolean;
 };
 
+//TODO: must be synchronized with ZodAttrTypeDef
 export type AttrTypeDef = {
   type: AttrType;
   required?: boolean;
@@ -156,6 +152,7 @@ export type AttrTypeDef = {
   visible?: boolean;
   namespace?: string;
 };
+
 export type Options = { _id?: boolean; collection?: string; };
 export type EntitySchema = { entity: Entity; options?: Options; };
 export type AttrType =
