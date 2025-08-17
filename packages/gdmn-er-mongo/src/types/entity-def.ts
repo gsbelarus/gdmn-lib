@@ -1,4 +1,4 @@
-import { EntityDefAttribute, METHOD_TYPES, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
+import { DisplayedField, EntityDefMethods, METHOD_TYPES, OfType, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -25,6 +25,37 @@ const methodSchema = z.object({
 
 const methodTypeSchema = z.enum(METHOD_TYPES);
 const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
+
+export type EntityDefAttribute = {
+  name: string;
+  type: string;
+  description?: string;
+  required?: boolean;
+  nullable?: boolean;
+  enum?: string[];
+  default?: any;
+  min?: number,
+  max?: number,
+  minlength?: number,
+  maxlength?: number,
+  trim?: boolean,
+  lowercase?: boolean,
+  uppercase?: boolean,
+  match?: string,
+  validator?: string,
+  index?: boolean,
+  unique?: boolean,
+  sparse?: boolean,
+  referencesEntity?: string;
+  label?: string;
+  placeholder?: string;
+  tooltip?: string;
+  of?: OfType;
+  displayedFields?: DisplayedField[];
+  nestedAttributes?: EntityDefAttribute[];
+  namespace?: string;
+  visible?: boolean;
+};
 
 const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
   const checkField = (
@@ -151,6 +182,23 @@ const ZodEntityDefPlainWithId = z.object({
   _id: z.string(),
   ...ZodEntityDefShape,
 });
+
+export type EntityDefDocument = {
+  _id: string;
+  namespace?: string | undefined;
+  name: string;
+  label?: string;
+  description?: string;
+  prompts?: any[];
+  entitySchema?: string;
+  attributes: EntityDefAttribute[];
+  methods?: EntityDefMethods;
+  parent?: string;
+  objectTitle?: string | string[];
+  abc?: boolean;
+  dlgForm?: string;
+  viewForm?: string;
+};
 
 export type TEntityDef = z.infer<typeof ZodEntityDef>;
 export type TEntityDefWithId = z.infer<typeof ZodEntityDefWithId>;

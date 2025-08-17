@@ -1,7 +1,7 @@
-import { AttrType, AttrTypeDef, Entity, EntityAttributes, EntityDefAttribute, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
+import { AttrType, AttrTypeDef, Entity, EntityAttributes, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
 import { generateMongoDBObjectId, slim } from 'gdmn-utils';
 import mongoose from 'mongoose';
-import { TEntityDef } from './types/entity-def';
+import { EntityDefAttribute, TEntityDef } from './types/entity-def';
 
 function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
   switch (attrType) {

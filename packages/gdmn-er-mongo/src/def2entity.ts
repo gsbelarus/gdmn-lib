@@ -3,56 +3,9 @@
  * This file contains the code to convert these definitions (i.e. documents of entitydefs) into entities.
  */
 
+import { AttrType, Entity, EntityAttributes, EntityDefMethods, EntityMethods, str2simpleAttrType } from 'gdmn-er';
 import { slim } from 'gdmn-utils';
-import { AttrType, DisplayedField, Entity, EntityAttributes, EntityDefMethods, EntityMethods, OfType, str2simpleAttrType } from './er';
-
-export type EntityDefAttribute = {
-  name: string;
-  type: string;
-  description?: string;
-  required?: boolean;
-  nullable?: boolean;
-  enum?: string[];
-  default?: any;
-  min?: number,
-  max?: number,
-  minlength?: number,
-  maxlength?: number,
-  trim?: boolean,
-  lowercase?: boolean,
-  uppercase?: boolean,
-  match?: string,
-  validator?: string,
-  index?: boolean,
-  unique?: boolean,
-  sparse?: boolean,
-  referencesEntity?: string;
-  label?: string;
-  placeholder?: string;
-  tooltip?: string;
-  of?: OfType;
-  displayedFields?: DisplayedField[];
-  nestedAttributes?: EntityDefAttribute[];
-  namespace?: string;
-  visible?: boolean;
-};
-
-type EntityDefDocument = {
-  _id: string;
-  namespace?: string | undefined;
-  name: string;
-  label?: string;
-  description?: string;
-  prompts?: any[];
-  entitySchema?: string;
-  attributes: EntityDefAttribute[];
-  methods?: EntityDefMethods;
-  parent?: string;
-  objectTitle?: string | string[];
-  abc?: boolean;
-  dlgForm?: string;
-  viewForm?: string;
-};
+import { EntityDefAttribute, EntityDefDocument } from './types/entity-def';
 
 function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any[]; } {
   const result: EntityMethods = {};
