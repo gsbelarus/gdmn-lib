@@ -12,7 +12,8 @@ import {
   ZodSimpleAttrType,
   ZodRefFieldProps,
   ZodDisplayedField,
-  ZodOptions
+  ZodOptions,
+  gptReferenceTypes
 } from './er';
 
 export const ZodOfTypes = z.union([
@@ -31,6 +32,21 @@ export const ZodAttrType: z.ZodType<AttrType> = z.lazy(() =>
     z.array(ZodAttrType)
   ])
 );
+
+export const checkField = (
+  condition: boolean,
+  path: (string | number)[],
+  message: string,
+  ctx: z.RefinementCtx
+) => {
+  if (condition) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message,
+      path,
+    });
+  }
+};
 
 //TODO: must be synchronized with AttrTypeDef
 export const ZodAttrTypeDef = z.object({
@@ -52,6 +68,8 @@ export const ZodAttrTypeDef = z.object({
   unique: z.boolean().optional(),
   sparse: z.boolean().optional(),
   referencesEntity: z.string().optional(),
+  referenceDescription: z.string().optional(),
+  referenceType: z.enum(gptReferenceTypes).optional(),
   label: z.string().optional(),
   description: z.string().optional(),
   placeholder: z.string().optional(),
@@ -66,6 +84,36 @@ export const ZodAttrTypeDef = z.object({
   system: z.boolean().optional(),
   visible: z.boolean().optional(),
   namespace: z.string().optional(),
+}).superRefine((data, ctx) => {
+  checkField(
+    ((data.of === 'objectid' && !data.unique) || data.type === 'entity') && !data.referencesEntity,
+    ['referencesEntity'],
+    "'referencesEntity' is required when type is 'objectid' or 'entity'",
+    ctx
+  );
+
+  checkField(
+    data.type === 'array' && !data.of,
+    ['of'],
+    "'of' is required when type is 'array'",
+    ctx
+  );
+
+  checkField(
+    data.type === 'array' &&
+    (data.of === 'objectid' || data.of === 'entity') &&
+    !data.referencesEntity,
+    ['referencesEntity'],
+    "'referencesEntity' is required when type is 'array' and of is 'objectid' or 'entity'",
+    ctx
+  );
+
+  checkField(
+    data.type === 'enum' && !data.enum,
+    ['enum'],
+    "'enum' is required when type is 'enum'",
+    ctx
+  );
 });
 
 export const ZodEntityAttributes: z.ZodType<EntityAttributes> = z.record(
@@ -119,6 +167,7 @@ export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
     abc: z.boolean().optional(),
     viewForm: z.string().optional(),
     dlgForm: z.string().optional(),
+    states: z.array(z.string()).optional(),
   })
 );
 

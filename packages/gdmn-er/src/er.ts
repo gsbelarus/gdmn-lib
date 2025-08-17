@@ -106,6 +106,19 @@ export const ZodDisplayedField = z.object({
 
 export type DisplayedField = z.infer<typeof ZodDisplayedField>;
 
+export const gptReferenceTypes = [
+  'one-to-one',                    // 1:1      |———|
+  'one-to-zero-or-one',           // 1:0..1   |———|○
+  'one-to-many',                  // 1:N      |———<
+  'one-to-one-or-many',           // 1:1..N   |———<|
+  'one-to-zero-or-many',          // 1:0..N   |———○<
+  'many-to-many',                 // N:N      <———>
+  'one-or-many-to-one-or-many',   // 1..N:1..N <|———<|
+  'zero-or-many-to-zero-or-many', // 0..N:0..N ○<———○<
+] as const;
+
+export type ErdCardinality = typeof gptReferenceTypes[number];
+
 //TODO: must be synchronized with ZodAttrTypeDef
 export type AttrTypeDef = {
   type: AttrType;
@@ -129,6 +142,8 @@ export type AttrTypeDef = {
    * For reference fields, the full name of the entity being referenced.
    */
   referencesEntity?: string;
+  referenceDescription?: string;
+  referenceType?: ErdCardinality;
   //FIXME: rename to caption? because we use caption in the ui components
   label?: string;
   description?: string;
@@ -239,6 +254,7 @@ export interface Entity {
    * Custom page for creating/editing/viewing single record of the entity
    * */
   dlgForm?: string;
+  states?: string[];
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
