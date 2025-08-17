@@ -1,6 +1,6 @@
 import { EntityDefAttribute, METHOD_TYPES, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
 import { Types } from "mongoose";
-import { late, z } from "zod";
+import { z } from "zod";
 
 const methodParamSchema = z.object({
   name: z.string(),
@@ -26,7 +26,7 @@ const methodSchema = z.object({
 const methodTypeSchema = z.enum(METHOD_TYPES);
 const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
 
-const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
+const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
   const checkField = (
     condition: boolean,
     path: (string | number)[],
@@ -68,7 +68,7 @@ const attributeDefSchema: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     tooltip: z.string().optional(),
     of: ZodOfTypes.optional(),
     displayedFields: z.array(ZodDisplayedField).optional(),
-    nestedAttributes: z.array(attributeDefSchema).optional(),
+    nestedAttributes: z.array(ZodEntityDefAttribute).optional(),
     namespace: z.string().optional(),
     visible: z.boolean().optional().default(true),
   }).superRefine((data, ctx) => {
@@ -131,7 +131,7 @@ export const ZodEntityDefShape = {
     })
   ).optional(),
   entitySchema: z.string().optional(),
-  attributes: z.array(attributeDefSchema),
+  attributes: z.array(ZodEntityDefAttribute),
   methods: entityMethodsSchema.optional(),
   parent: z.instanceof(Types.ObjectId).optional(),
   objectTitle: z.union([z.string(), z.array(z.string())]).optional(),

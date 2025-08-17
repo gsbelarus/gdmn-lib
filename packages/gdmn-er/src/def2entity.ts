@@ -9,7 +9,9 @@ import { AttrType, DisplayedField, Entity, EntityAttributes, EntityDefMethods, E
 export type EntityDefAttribute = {
   name: string;
   type: string;
+  description?: string;
   required?: boolean;
+  nullable?: boolean;
   enum?: string[];
   default?: any;
   min?: number,
@@ -25,12 +27,11 @@ export type EntityDefAttribute = {
   unique?: boolean,
   sparse?: boolean,
   referencesEntity?: string;
-  of?: OfType;
-  displayedFields?: DisplayedField[];
   label?: string;
-  description?: string;
   placeholder?: string;
   tooltip?: string;
+  of?: OfType;
+  displayedFields?: DisplayedField[];
   nestedAttributes?: EntityDefAttribute[];
   namespace?: string;
   visible?: boolean;
@@ -42,8 +43,9 @@ type EntityDefDocument = {
   name: string;
   label?: string;
   description?: string;
-  attributes: EntityDefAttribute[];
   prompts?: any[];
+  entitySchema?: string;
+  attributes: EntityDefAttribute[];
   methods?: EntityDefMethods;
   parent?: string;
   objectTitle?: string | string[];
