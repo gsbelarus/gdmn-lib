@@ -90,6 +90,9 @@ export function def2entity(def: EntityDefDocument): Entity {
 
   entity.attributes = buildAttributes(attributes);
 
+  console.log(`def2entity: Converted definition for entity '${name}'`, JSON.stringify(def, null, 2));
+  console.log(`def2entity: Resulting entity object`, JSON.stringify(entity, null, 2));
+
   return entity;
 };
 
@@ -160,4 +163,4 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
   }
 
   return result;
-}
+};

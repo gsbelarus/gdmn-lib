@@ -178,6 +178,8 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
     };
   }
 
+  console.log(`entity2schema: Converting entity '${entity.name}' to schema...`, JSON.stringify(schema, null, 2));
+
   return new mongoose.Schema<T>(schema as any, options);
 }
 
