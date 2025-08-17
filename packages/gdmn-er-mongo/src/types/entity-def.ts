@@ -1,4 +1,4 @@
-import { DisplayedField, EntityDefMethods, METHOD_TYPES, OfType, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
+import { DisplayedField, EntityDefMethods, ErdCardinality, gptReferenceTypes, METHOD_TYPES, OfType, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -47,6 +47,8 @@ export type EntityDefAttribute = {
   unique?: boolean,
   sparse?: boolean,
   referencesEntity?: string;
+  referenceDescription?: string;
+  referenceType?: ErdCardinality;
   label?: string;
   placeholder?: string;
   tooltip?: string;
@@ -94,6 +96,8 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     unique: z.boolean().optional(),
     sparse: z.boolean().optional(),
     referencesEntity: z.string().optional(),
+    referenceDescription: z.string().optional(),
+    referenceType: z.enum(gptReferenceTypes).optional(),
     label: z.string().optional(),
     placeholder: z.string().optional(),
     tooltip: z.string().optional(),
