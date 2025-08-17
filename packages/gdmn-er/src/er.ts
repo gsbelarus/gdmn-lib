@@ -62,12 +62,14 @@ export const simpleAttrTypes = [
   'buffer'
 ] as const;
 
-export type SimpleAttrType = (typeof simpleAttrTypes)[number];
+export const ZodSimpleAttrType = z.enum(simpleAttrTypes);
+
+export type SimpleAttrType = z.infer<typeof ZodSimpleAttrType>;
 
 export function str2simpleAttrType(
   str: string,
 ): SimpleAttrType | undefined {
-  return simpleAttrTypes.find((t) => t === str);
+  return ZodSimpleAttrType.safeParse(str).success ? str as SimpleAttrType : undefined;
 };
 
 export const ofTypes = [
@@ -88,27 +90,21 @@ export function str2OfTypes(
   return ofTypes.find((t) => t === str);
 };
 
-export type RefFieldProps = {
-  /**
-   * The full name of the entity being referenced.
-   */
-  referencesEntity: string;
-  /**
-   * The name of the reference field in the current Entity.
-   */
-  referenceFieldName: string;
-  /**
-   * The name of the field to display from the referenced Entity.
-   * The field should contain a string identifying the referenced object.
-   */
-  referencedObjectDisplayFieldName: string;
-};
+export const ZodRefFieldProps = z.object({
+  referencesEntity: z.string().describe('The full name of the entity being referenced.'),
+  referenceFieldName: z.string().describe('The name of the reference field in the current Entity.'),
+  referencedObjectDisplayFieldName: z.string().describe('The name of the field to display from the referenced Entity.'),
+});
 
-export type DisplayedField = {
-  field: string;
-  readonly?: boolean;
-  visible?: boolean;
-};
+export type RefFieldProps = z.infer<typeof ZodRefFieldProps>;
+
+export const ZodDisplayedField = z.object({
+  field: z.string(),
+  readonly: z.boolean().optional(),
+  visible: z.boolean().optional(),
+});
+
+export type DisplayedField = z.infer<typeof ZodDisplayedField>;
 
 //TODO: must be synchronized with ZodAttrTypeDef
 export type AttrTypeDef = {
@@ -153,7 +149,14 @@ export type AttrTypeDef = {
   namespace?: string;
 };
 
-export type Options = { _id?: boolean; collection?: string; };
+export const ZodOptions = z.object({
+  _id: z.boolean().optional(),
+  collection: z.string().optional(),
+});
+
+
+export type Options = z.infer<typeof ZodOptions>;
+
 export type EntitySchema = { entity: Entity; options?: Options; };
 export type AttrType =
   | SimpleAttrType

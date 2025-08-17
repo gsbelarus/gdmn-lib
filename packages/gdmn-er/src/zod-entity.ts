@@ -6,35 +6,20 @@ import {
   EntityMethods,
   METHOD_TYPES,
   ofTypes,
-  simpleAttrTypes,
   ZodMethodParam,
   ZodMethodEnvironment,
-  ZodMethodCode
+  ZodMethodCode,
+  ZodSimpleAttrType,
+  ZodRefFieldProps,
+  ZodDisplayedField,
+  ZodOptions
 } from './er';
-
-export const ZodSimpleAttrType = z.enum(simpleAttrTypes);
 
 export const ZodOfTypes = z.union([
   z.enum(ofTypes),
   z.lazy(() => ZodEntityAttributes)
 ]);
 
-export const ZodRefFieldProps = z.object({
-  referencesEntity: z.string(),
-  referenceFieldName: z.string(),
-  referencedObjectDisplayFieldName: z.string(),
-});
-
-export const ZodDisplayedField = z.object({
-  field: z.string(),
-  readonly: z.boolean().optional(),
-  visible: z.boolean().optional(),
-});
-
-export const ZodOptions = z.object({
-  _id: z.boolean().optional(),
-  collection: z.string().optional(),
-});
 
 // forward-declare for recursion
 export const ZodAttrType: z.ZodType<AttrType> = z.lazy(() =>
