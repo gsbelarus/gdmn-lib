@@ -1,6 +1,6 @@
 import { AttrType, AttrTypeDef, Entity, EntityAttributes, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
 import { generateMongoDBObjectId, slim } from 'gdmn-utils';
-import mongoose from 'mongoose';
+import mongoose, { SchemaDefinition } from 'mongoose';
 import { EntityDefAttribute, TEntityDef } from './types/entity-def';
 
 function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
@@ -30,7 +30,7 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
         `mapSimpleAttrType2MongoType: Unknown attribute type: ${attrType}`,
       );
   }
-}
+};
 
 function convertDefaultValueForMongoose(type: AttrType, def: any): any {
   if (def == null) return undefined;
@@ -73,8 +73,7 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
     default:
       return def;
   }
-}
-
+};
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   const { type, default: def, ...rest } = attrTypeDef;
@@ -139,9 +138,9 @@ function methodSchema() {
     order: { type: Number, required: true },
     disabled: { type: Boolean, default: false },
   });
-}
+};
 
-export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Schema<T> {
+export function entity2schemaDefinition<T>(entity: Entity): SchemaDefinition<T> {
   const attributes = Object.entries(entity.attributes);
 
   const schema = Object.fromEntries(
@@ -178,8 +177,12 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
     };
   }
 
-  return new mongoose.Schema<T>(schema as any, options);
-}
+  return schema;
+};
+
+export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Schema<T> {
+  return new mongoose.Schema<T>(entity2schemaDefinition<T>(entity), options);
+};
 
 /**
  * Converts entity attributes to EntityDef attributes.
