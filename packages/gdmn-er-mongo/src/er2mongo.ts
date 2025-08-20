@@ -83,7 +83,7 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   return slim({
     type: mapAttrType2MongoType(type),
     ...rest,
-    match: match ? [new RegExp(match)] : undefined,
+    //match: match ? match : undefined,
     default: mappedDefault,
   });
 };
