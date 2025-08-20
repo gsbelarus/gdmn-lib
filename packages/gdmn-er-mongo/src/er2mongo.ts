@@ -76,23 +76,17 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
 };
 
 function mapAttrDefType2MongoType(attrName: string, attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, match, ...rest } = attrTypeDef;
+  const { type, default: def, ...rest } = attrTypeDef;
 
   const res = slim({
     type: mapAttrType2MongoType(attrName, type),
-    ...rest,
-    match: match ? /usd/ : undefined
+    ...rest
   }, { removeNulls: true });
 
   const mappedDefault = convertDefaultValueForMongoose(type, def);
 
   if (typeof mappedDefault !== 'undefined') {
     (res as any).default = mappedDefault;
-  }
-
-  if (match) {
-    console.log(match);
-    console.log('Attr ' + attrName + ': ' + JSON.stringify(res, null, 2));
   }
 
   return res;

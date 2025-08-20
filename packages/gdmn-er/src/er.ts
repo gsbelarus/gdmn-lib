@@ -262,7 +262,9 @@ export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
 };
 
 export function isAttrTypeDef(attrType: AttrType): attrType is AttrTypeDef {
-  return typeof attrType === "object" && attrType.hasOwnProperty("type");
+  return typeof attrType === "object"
+    && attrType.hasOwnProperty("type")
+    && typeof (attrType as any).type === "string";
 };
 
 export function isEntityAttributes(
