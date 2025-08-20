@@ -76,13 +76,14 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
 };
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, ...rest } = attrTypeDef;
+  const { type, default: def, match, ...rest } = attrTypeDef;
 
   const mappedDefault = convertDefaultValueForMongoose(type, def);
 
   return slim({
     type: mapAttrType2MongoType(type),
     ...rest,
+    match: match ? new RegExp(match) : undefined,
     default: mappedDefault,
   });
 };
