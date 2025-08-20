@@ -90,6 +90,10 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
     (res as any).default = mappedDefault;
   }
 
+  if (match) {
+    console.log(JSON.stringify(res, null, 2));
+  }
+
   return res;
 };
 
