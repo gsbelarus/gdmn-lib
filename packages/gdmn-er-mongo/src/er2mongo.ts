@@ -75,11 +75,11 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
   }
 };
 
-function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
+function mapAttrDefType2MongoType(attrName: string, attrTypeDef: AttrTypeDef): any {
   const { type, default: def, match, ...rest } = attrTypeDef;
 
   const res = slim({
-    type: mapAttrType2MongoType(type),
+    type: mapAttrType2MongoType(attrName, type),
     ...rest,
     match: match ? /usd/ : undefined
   }, { removeNulls: true });
@@ -91,30 +91,31 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   }
 
   if (match) {
-    console.log(JSON.stringify(res, null, 2));
+    console.log(match);
+    console.log('Attr ' + attrName + ': ' + JSON.stringify(res, null, 2));
   }
 
   return res;
 };
 
-function mapAttrType2MongoType(attrType: AttrType): any {
+function mapAttrType2MongoType(attrName: string, attrType: AttrType): any {
   if (isSimpleAttrType(attrType)) {
     return mapSimpleAttrType2MongoType(attrType);
   } else if (isAttrTypeDef(attrType)) {
-    return mapAttrDefType2MongoType(attrType);
+    return mapAttrDefType2MongoType(attrName, attrType);
   } else if (isEntitySchema(attrType)) {
     return entity2schema(attrType.entity, attrType.options);
   } else if (isEntityAttributes(attrType)) {
     const attributes = Object.entries(attrType);
     return Object.fromEntries(
-      attributes.map(([n, t]) => [n, mapAttrType2MongoType(t)]),
+      attributes.map(([n, t]) => [n, mapAttrType2MongoType(n, t)]),
     );
   } else if (Array.isArray(attrType)) {
     if (attrType.length === 1) {
       if (attrType[0] === undefined) {
         throw new Error("Array type's first element is undefined");
       }
-      return [mapAttrType2MongoType(attrType[0])];
+      return [mapAttrType2MongoType(attrName, attrType[0])];
     } else {
       throw new Error("Array type should have only one element");
     }
@@ -158,7 +159,7 @@ export function entity2schemaDefinition<T>(entity: Entity): SchemaDefinition<T> 
       try {
         const res = [
           attrName,
-          mapAttrType2MongoType(attrType),
+          mapAttrType2MongoType(attrName, attrType),
         ];
 
         return res;
