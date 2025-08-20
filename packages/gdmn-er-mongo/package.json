@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-mongo",
-  "version": "0.14.126",
+  "version": "0.14.127",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -13,16 +13,19 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
     "lint": "eslint \"src/**/*.ts*\"",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "test": "tsx --enable-source-maps --test"
   },
   "devDependencies": {
     "@types/node": "^20.19.11",
+    "dotenv": "^17.2.1",
     "eslint": "^8.57.0",
     "gdmn-er": "workspace:*",
     "gdmn-eslint-config": "workspace:*",
     "gdmn-tsconfig": "workspace:*",
     "gdmn-utils": "workspace:*",
     "tsup": "^8.5.0",
+    "tsx": "^4.20.4",
     "typescript": "^5.9.2"
   },
   "publishConfig": {

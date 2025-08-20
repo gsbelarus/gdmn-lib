@@ -65,34 +65,6 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
   }
 };
 
-export function def2entity(def: EntityDefDocument): Entity {
-  const {
-    namespace,
-    name,
-    label,
-    description,
-    attributes,
-    methods,
-    parent,
-    ...rest
-  } = def;
-
-  const entity: Entity = {
-    namespace,
-    name,
-    label,
-    description,
-    attributes: {},
-    methods: methods ? convertMethodsToObject(methods) : {},
-    parent,
-    ...rest
-  };
-
-  entity.attributes = buildAttributes(attributes);
-
-  return entity;
-};
-
 function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
   const result: EntityAttributes = {};
 
@@ -150,7 +122,7 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
     const attrObject: AttrType = slim({
       ...finalType,
       label, description, placeholder, tooltip,
-      visible: v,
+      visible,
       ...(displayedFields && displayedFields.length && {
         displayedFields: displayedFields.map(item => ({ field: item.field, readonly: item.readonly ?? true, visible: item.visible ?? v })),
       }),
@@ -160,4 +132,20 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
   }
 
   return result;
+};
+
+export function def2entity(def: EntityDefDocument): Entity {
+  const {
+    attributes,
+    methods,
+    ...rest
+  } = def;
+
+  const entity: Entity = {
+    ...rest,
+    attributes: buildAttributes(attributes),
+    methods: methods ? convertMethodsToObject(methods) : undefined,
+  };
+
+  return slim(entity, { deep: true });
 };

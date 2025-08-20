@@ -76,10 +76,11 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
 };
 
 function mapAttrDefType2MongoType(attrName: string, attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, ...rest } = attrTypeDef;
+  const { type, default: def, match, ...rest } = attrTypeDef;
 
   const res = slim({
     type: mapAttrType2MongoType(attrName, type),
+    match: match ? new RegExp(match) : undefined,
     ...rest
   }, { removeNulls: true });
 
@@ -149,19 +150,21 @@ export function entity2schemaDefinition<T>(entity: Entity): SchemaDefinition<T> 
   const attributes = Object.entries(entity.attributes);
 
   const schema = Object.fromEntries(
-    attributes.map(([attrName, attrType]) => {
-      try {
-        const res = [
-          attrName,
-          mapAttrType2MongoType(attrName, attrType),
-        ];
+    attributes
+      //.filter(([attrName]) => attrName !== '_id')
+      .map(([attrName, attrType]) => {
+        try {
+          const res = [
+            attrName,
+            mapAttrType2MongoType(attrName, attrType),
+          ];
 
-        return res;
-      } catch (error) {
-        console.error(`Error mapping attribute '${entity.name}.${attrName}':`, error);
-        throw error;
-      }
-    })
+          return res;
+        } catch (error) {
+          console.error(`Error mapping attribute '${entity.name}.${attrName}':`, error);
+          throw error;
+        }
+      })
   );
 
   if (entity.parent) {
