@@ -76,17 +76,20 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
 };
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, enum: enumValues, match, ...rest } = attrTypeDef;
+  const { type, default: def, ...rest } = attrTypeDef;
+
+  const res = slim({
+    type: mapAttrType2MongoType(type),
+    ...rest,
+  }, { removeNulls: true });
 
   const mappedDefault = convertDefaultValueForMongoose(type, def);
 
-  return slim({
-    type: mapAttrType2MongoType(type),
-    ...rest,
-    enum: Array.isArray(enumValues) ? enumValues : undefined,
-    //match: match ? match : undefined,
-    default: mappedDefault,
-  });
+  if (typeof mappedDefault !== 'undefined') {
+    (res as any).default = mappedDefault;
+  }
+
+  return res;
 };
 
 function mapAttrType2MongoType(attrType: AttrType): any {
