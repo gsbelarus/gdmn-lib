@@ -76,13 +76,14 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
 };
 
 function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, match, ...rest } = attrTypeDef;
+  const { type, default: def, enum: enumValues, match, ...rest } = attrTypeDef;
 
   const mappedDefault = convertDefaultValueForMongoose(type, def);
 
   return slim({
     type: mapAttrType2MongoType(type),
     ...rest,
+    enum: Array.isArray(enumValues) ? enumValues : undefined,
     //match: match ? match : undefined,
     default: mappedDefault,
   });
