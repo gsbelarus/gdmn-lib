@@ -81,7 +81,7 @@ function mapAttrDefType2MongoType(attrTypeDef: AttrTypeDef): any {
   const res = slim({
     type: mapAttrType2MongoType(type),
     ...rest,
-    match: match ? RegExp(match) : undefined
+    match: match ? /usd/ : undefined
   }, { removeNulls: true });
 
   const mappedDefault = convertDefaultValueForMongoose(type, def);
