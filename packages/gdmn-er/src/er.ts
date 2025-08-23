@@ -134,7 +134,6 @@ export type AttrTypeDef = {
   lowercase?: boolean;
   uppercase?: boolean;
   match?: string;
-  validator?: string | RegExp;
   index?: boolean;
   unique?: boolean;
   sparse?: boolean;

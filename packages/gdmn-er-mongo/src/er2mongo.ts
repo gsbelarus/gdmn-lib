@@ -33,7 +33,9 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
 };
 
 function convertDefaultValueForMongoose(type: AttrType, def: any): any {
-  if (def == null) return undefined;
+  if (def === null || def === undefined) {
+    return def;
+  }
 
   switch (type) {
     case 'timestamp':
@@ -110,7 +112,21 @@ function mapAttrType2MongoType(attrName: string, attrType: AttrType): any {
       if (attrType[0] === undefined) {
         throw new Error("Array type's first element is undefined");
       }
-      return [mapAttrType2MongoType(attrName, attrType[0])];
+      if (isSimpleAttrType(attrType[0])) {
+        return [mapSimpleAttrType2MongoType(attrType[0])];
+      }
+      else if (isAttrTypeDef(attrType[0])) {
+        return [mapAttrDefType2MongoType(attrName, attrType[0])];
+      }
+      else if (isEntityAttributes(attrType[0])) {
+        const attributes = Object.entries(attrType);
+        return [Object.fromEntries(
+          attributes.map(([n, t]) => [n, mapAttrType2MongoType(n, t)]),
+        )];
+      }
+      else {
+        throw new Error(`mapAttrType2MongoType: Unknown attributes type for the array's element: ${attrType[0]}`);
+      }
     } else {
       throw new Error("Array type should have only one element");
     }
@@ -202,58 +218,65 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
 
     const id = generateMongoDBObjectId();
 
-    if (!isAttrTypeDef(attr)) {
-      if (!isSimpleAttrType(attr)) {
-        console.warn(`entityAttrToEntityDefAttr: Invalid attribute type '${JSON.stringify(attr)}' for '${attrName}' in entity '${attributes.name}'`);
+    if (isAttrTypeDef(attr)) {
+      switch (attr.type) {
+        case 'objectid':
+          return {
+            _id: id,
+            name: attrName,
+            ...attr,
+            ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
+          } as EntityDefAttribute;
+
+        case 'array':
+          return {
+            _id: id,
+            name: attrName,
+            ...attr,
+            ...(attr.of === 'objectid' && {
+              of: 'objectid',
+              referencesEntity: attr.referencesEntity,
+              ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
+            }),
+            ...(typeof attr.of === 'object' && {
+              of: 'object',
+              nestedAttributes: entityAttrToEntityDefAttr(attr.of)
+            }),
+          } as EntityDefAttribute;
       }
 
       return {
         _id: id,
         name: attrName,
-        type: isSimpleAttrType(attr) ? attr : 'string'
+        ...attr
       } as EntityDefAttribute;
     }
-
-    switch (attr.type) {
-      case 'objectid':
-        return {
-          _id: id,
-          name: attrName,
-          ...attr,
-          ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
-        } as EntityDefAttribute;
-
-      case 'array':
-        return {
-          _id: id,
-          name: attrName,
-          ...attr,
-          ...(attr.of === 'objectid' && {
-            of: 'objectid',
-            referencesEntity: attr.referencesEntity,
-            ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
-          }),
-          ...(typeof attr.of === 'object' && {
-            of: 'object',
-            nestedAttributes: entityAttrToEntityDefAttr(attr.of)
-          }),
-        } as EntityDefAttribute;
-
-      case 'enum':
-        return {
-          _id: id,
-          name: attrName,
-          ...attr,
-        } as EntityDefAttribute;
+    else if (isSimpleAttrType(attr)) {
+      return {
+        _id: id,
+        name: attrName,
+        type: attr
+      } as EntityDefAttribute;
     }
+    else if (Array.isArray(attr)) {
+      return {
+        _id: id,
+        name: attrName,
+        type: 'array',
+        of: attr[0],
+      } as EntityDefAttribute;
+    }
+    else {
+      console.warn(`entityAttrToEntityDefAttr: Invalid attribute type '${JSON.stringify(attr)}' for '${attrName}' in entity '${attributes.name}'`);
 
-    return {
-      _id: id,
-      name: attrName,
-      ...attr
-    } as EntityDefAttribute;
+      return {
+        _id: id,
+        name: attrName,
+        type: 'string'
+      } as EntityDefAttribute;
+    }
   });
-}
+};
 
 /**
  * Transforms an Entity object to a EntityDef object.

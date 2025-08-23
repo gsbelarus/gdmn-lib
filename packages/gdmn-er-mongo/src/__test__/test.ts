@@ -1,12 +1,12 @@
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { Entity } from 'gdmn-er';
 import { entity2schema, entityToEntityDef } from '../er2mongo';
 import { def2entity } from '../def2entity';
 import { EntityDefDocument } from '../types/entity-def';
 import { registerModel, removeModel } from '../registry';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { entities, testEntity } from './entities';
 
 dotenv.config({});
 
@@ -52,54 +52,18 @@ describe('entity2entityDef', () => {
     }
   });
 
-  const testEntity: Entity = {
-    name: 'Test',
-    namespace: 'sys',
-    objectTitle: '$NAME',
-    attributes: {
-      // '_id': {
-      //   type: 'objectid',
-      //   required: true,
-      //   unique: true,
-      //   index: true,
-      // },
-      name: {
-        type: 'string',
-        required: true,
-        match: '[a-zA-Z0-9_]+',
-      },
-      match: {
-        type: 'string',
-        required: false,
-      },
-      default: {
-        type: 'number',
-        default: 1000
-      },
-      nonRequiredString: {
-        type: 'string',
-        required: false,
-        default: 'now'
-      },
-      requiredString10_20: {
-        type: 'string',
-        required: true,
-        minlength: 10,
-        maxlength: 20,
-      },
-    },
-  };
+  it('should convert entity to entityDef and back', async () => {
+    for (const entity of entities) {
+      const entityDef = entityToEntityDef(entity);
+      assert(entityDef.name === entity.name);
 
-  it('should convert entity 2 entityDef', async () => {
-    const entityDef = entityToEntityDef(testEntity);
-    assert(entityDef.name === testEntity.name);
-
-    const reverse = def2entity(entityDef as EntityDefDocument);
-    assert(reverse.name === testEntity.name);
-    assert.deepEqual(reverse, testEntity);
+      const reverse = def2entity(entityDef as EntityDefDocument);
+      assert(reverse.name === entity.name);
+      assert.deepEqual(reverse, entity, `Error converting ${entity.name} back to entity`);
+    }
   });
 
-  it('should convert entity 2 schema', async () => {
+  it('should convert test entity 2 schema and create document', async () => {
     const schema = entity2schema(testEntity);
     const model = registerModel('t', schema);
 

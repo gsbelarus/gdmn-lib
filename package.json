@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build && turbo test",
+    "test": "turbo test",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "clean": "turbo clean && rm -rf node_modules",

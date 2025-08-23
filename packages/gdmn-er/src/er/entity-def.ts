@@ -72,10 +72,6 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       type: "string",
       required: false,
     },
-    validator: {
-      type: "string",
-      required: false,
-    },
     index: {
       type: "boolean",
       required: false,

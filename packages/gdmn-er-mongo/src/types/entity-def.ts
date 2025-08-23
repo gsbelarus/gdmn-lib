@@ -42,7 +42,6 @@ export type EntityDefAttribute = {
   lowercase?: boolean,
   uppercase?: boolean,
   match?: string,
-  validator?: string,
   index?: boolean,
   unique?: boolean,
   sparse?: boolean,
@@ -57,6 +56,9 @@ export type EntityDefAttribute = {
   nestedAttributes?: EntityDefAttribute[];
   namespace?: string;
   visible?: boolean;
+  readonly?: boolean;
+  system?: boolean;
+  filterable?: boolean;
 };
 
 const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
@@ -91,7 +93,6 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     lowercase: z.boolean().optional(),
     uppercase: z.boolean().optional(),
     match: z.string().optional(),
-    validator: z.string().optional(),
     index: z.boolean().optional(),
     unique: z.boolean().optional(),
     sparse: z.boolean().optional(),
@@ -106,6 +107,9 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     nestedAttributes: z.array(ZodEntityDefAttribute).optional(),
     namespace: z.string().optional(),
     visible: z.boolean().optional().default(true),
+    readonly: z.boolean().optional().default(false),
+    system: z.boolean().optional().default(false),
+    filterable: z.boolean().optional().default(false),
   }).superRefine((data, ctx) => {
     checkField(
       (data.type === 'objectid' || data.type === 'entity') && !data.referencesEntity,

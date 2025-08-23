@@ -3,7 +3,7 @@
  * This file contains the code to convert these definitions (i.e. documents of entitydefs) into entities.
  */
 
-import { AttrType, Entity, EntityAttributes, EntityDefMethods, EntityMethods, str2simpleAttrType } from 'gdmn-er';
+import { AttrType, AttrTypeDef, Entity, EntityAttributes, EntityDefMethods, EntityMethods, str2simpleAttrType } from 'gdmn-er';
 import { slim } from 'gdmn-utils';
 import { EntityDefAttribute, EntityDefDocument } from './types/entity-def';
 
@@ -23,7 +23,9 @@ function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any
 };
 
 export function convertDefaultValueByType(type: AttrType, def: any): any {
-  if (def == null) return undefined;
+  if (def === null || def === undefined) {
+    return def;
+  }
 
   switch (type) {
     case 'timestamp':
@@ -65,14 +67,15 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
   }
 };
 
-function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
+function buildAttributes(attrs: EntityDefAttribute[], useArrays = false): EntityAttributes {
   const result: EntityAttributes = {};
 
   for (const attr of attrs) {
     const {
       name, type, required, unique, index, enum: enumValues, default: def, referencesEntity, of,
-      displayedFields, label, description, placeholder, tooltip, nestedAttributes,
-      min, max, minlength, maxlength, trim, lowercase, uppercase, match, validator, visible
+      displayedFields, label, description, placeholder, tooltip, nestedAttributes, min, max,
+      minlength, maxlength, trim, lowercase, uppercase, match, visible, readonly, system,
+      filterable, nullable
     } = attr;
 
     if (!name) {
@@ -80,19 +83,26 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
     }
 
     const attrType = str2simpleAttrType(type);
+
     if (!attrType) {
       throw new Error(`Unknown attribute type: ${type}`);
     }
 
-    let finalType: AttrType;
+    let finalType: AttrTypeDef;
 
     if (attrType === 'array' && of === 'object' && nestedAttributes?.length) {
       const nestedAttrs = buildAttributes(nestedAttributes);
 
-      finalType = {
+      finalType = useArrays ? {
         type: [nestedAttrs],
-        required, unique, index,
+        required,
+        nullable,
         default: def,
+      } : {
+        type: 'array',
+        required,
+        nullable,
+        of: nestedAttrs,
       };
     } else {
       const mappedDefault = convertDefaultValueByType(attrType, def);
@@ -106,35 +116,53 @@ function buildAttributes(attrs: EntityDefAttribute[]): EntityAttributes {
 
       finalType = slim({
         type: attrType,
-        required, unique: uniqueF, index: indexF,
+        required,
+        unique: uniqueF,
+        index: indexF,
         enum: enumValues,
         default: mappedDefault,
         referencesEntity,
         of,
-        min, max, minlength, maxlength,
-        trim, lowercase, uppercase,
-        match, validator
+        min,
+        max,
+        minlength,
+        maxlength,
+        trim,
+        lowercase,
+        uppercase,
+        match,
+        readonly,
+        system,
+        filterable,
+        nullable
       });
     }
 
-    const v = visible ?? true;
-
-    const attrObject: AttrType = slim({
+    const attrObject: AttrTypeDef = slim({
       ...finalType,
-      label, description, placeholder, tooltip,
+      label,
+      description,
+      placeholder,
+      tooltip,
       visible,
-      ...(displayedFields && displayedFields.length && {
-        displayedFields: displayedFields.map(item => ({ field: item.field, readonly: item.readonly ?? true, visible: item.visible ?? v })),
-      }),
+      displayedFields: displayedFields?.length
+        ? displayedFields.map(item => ({
+          field: item.field,
+          readonly: item.readonly,
+          visible: item.visible
+        }))
+        : undefined,
     });
 
-    result[name] = attrObject;
+    result[name] = Object.keys(attrObject).length === 1 && typeof attrObject.type === 'string'
+      ? attrObject.type
+      : attrObject;
   }
 
   return result;
 };
 
-export function def2entity(def: EntityDefDocument): Entity {
+export function def2entity(def: EntityDefDocument, useArrays = false): Entity {
   const {
     attributes,
     methods,
@@ -143,7 +171,7 @@ export function def2entity(def: EntityDefDocument): Entity {
 
   const entity: Entity = {
     ...rest,
-    attributes: buildAttributes(attributes),
+    attributes: buildAttributes(attributes, useArrays),
     methods: methods ? convertMethodsToObject(methods) : undefined,
   };
 

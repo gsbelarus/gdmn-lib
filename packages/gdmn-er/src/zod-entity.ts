@@ -63,7 +63,6 @@ export const ZodAttrTypeDef = z.object({
   lowercase: z.boolean().optional(),
   uppercase: z.boolean().optional(),
   match: z.string().optional(),
-  validator: z.union([z.string(), z.instanceof(RegExp)]).optional(),
   index: z.boolean().optional(),
   unique: z.boolean().optional(),
   sparse: z.boolean().optional(),
