@@ -1,4 +1,4 @@
-import { AttrType, Entity } from 'gdmn-er';
+import { Entity } from 'gdmn-er';
 import { EMAIL_REGEXP } from 'gdmn-utils';
 
 export const testEntity: Entity = {
@@ -369,85 +369,6 @@ const goodEntity: Entity = {
   },
 };
 
-const permissionForEntity: AttrType = {
-  attributes: {
-    read: {
-      type: 'boolean',
-      default: false,
-      required: false,
-    },
-    write: {
-      type: 'boolean',
-      default: false,
-      required: false,
-    },
-    delete: {
-      type: 'boolean',
-      default: false,
-      required: false,
-    },
-    execute: {
-      type: 'boolean',
-      default: false,
-      required: false,
-    },
-    full: {
-      type: 'boolean',
-      default: false,
-      required: false,
-    },
-  },
-};
-
-const permissionForField: AttrType = {
-  attributes: {
-    read: {
-      type: 'boolean',
-      default: false,
-    },
-    write: {
-      type: 'boolean',
-      default: false,
-    },
-  },
-};
-
-const permissionForModule: AttrType = {
-  attributes: {
-    actions: {
-      type: 'map',
-      of: 'boolean',
-      default: {}
-    },
-    methods: {
-      type: 'map',
-      of: 'boolean',
-    },
-  },
-};
-
-const permissionEntity: Entity = {
-  name: 'Permission',
-  namespace: 'sys',
-  attributes: {
-    entities: {
-      type: 'map',
-      of: permissionForEntity,
-      default: {},
-    },
-    fields: {
-      type: 'map',
-      of: permissionForField,
-      default: {},
-    },
-    modules: {
-      type: 'map',
-      of: permissionForModule,
-      default: {},
-    }
-  },
-};
-
 const projectEntity: Entity = {
   name: 'Project',
   namespace: 'sys',
@@ -627,7 +548,7 @@ const userEntity: Entity = {
   },
 };
 
-export const entities = [
+export const systemEntities = [
   testEntity,
   chatHistoryEntity,
   userMembershipsEntity,
@@ -636,7 +557,6 @@ export const entities = [
   fileEntity,
   globalSettingsEntity,
   goodEntity,
-  permissionEntity,
   projectEntity,
   roleEntity,
   userEntity

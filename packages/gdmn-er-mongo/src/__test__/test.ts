@@ -6,9 +6,11 @@ import { EntityDefDocument } from '../types/entity-def';
 import { registerModel, removeModel } from '../registry';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { entities, testEntity } from './entities';
+import { systemEntities, testEntity } from './entities';
+import { entityDef, EntityDef } from '../models/entity-def';
+import util from 'node:util';
 
-dotenv.config({});
+dotenv.config({ path: '../../.env.local' });
 
 const config = {
   db_superadmin_user: process.env.DB_SUPERADMIN_USER || '',
@@ -37,23 +39,25 @@ describe('entity2entityDef', () => {
 
   let conn: mongoose.Mongoose | null = null;
 
-  before(async (ctx) => {
+  before(async () => {
     const opts: mongoose.ConnectOptions = {
       bufferCommands: false,
       dbName,
     };
 
     conn = await mongoose.connect(DB_URL, opts);
+    console.log('Connected to MongoDB', DB_URL, dbName);
   });
 
   after(async () => {
     if (conn) {
       await conn.disconnect();
+      console.log('Disconnected from MongoDB');
     }
   });
 
   it('should convert entity to entityDef and back', async () => {
-    for (const entity of entities) {
+    for (const entity of systemEntities) {
       const entityDef = entityToEntityDef(entity);
       assert(entityDef.name === entity.name);
 
@@ -65,7 +69,7 @@ describe('entity2entityDef', () => {
 
   it('should convert test entity 2 schema and create document', async () => {
     const schema = entity2schema(testEntity);
-    const model = registerModel('t', schema);
+    const model = registerModel('temp', schema);
 
     await model.create({
       name: 'Test',
@@ -74,6 +78,35 @@ describe('entity2entityDef', () => {
     });
     await model.deleteMany({});
 
-    removeModel('t');
+    removeModel('temp');
+  });
+
+  it('should insert system entities into entity def', async (t) => {
+    const createdIds = [];
+
+    for (const entity of systemEntities) {
+      const entityDef = entityToEntityDef(entity);
+
+      await EntityDef.validate(entityDef);
+
+      const existingEntity = await EntityDef.findOne({ name: entity.name, namespace: entity.namespace }).exec();
+      if (!existingEntity) {
+        const createdEntity = await EntityDef.create(entityDef);
+        createdIds.push(createdEntity._id);
+        t.diagnostic(`Created entity definition for ${entity.name}`);
+      } else {
+        await EntityDef.findOneAndUpdate(
+          { name: entity.name, namespace: entity.namespace },
+          entityDef
+        ).exec();
+
+        t.diagnostic(`Updated entity definition for ${entity.name}`);
+      }
+    }
+
+    if (createdIds.length > 0) {
+      await EntityDef.deleteMany({ _id: { $in: createdIds } }).exec();
+      t.diagnostic(`Cleaned up ${createdIds.length} created entity definitions`);
+    }
   });
 });

@@ -119,7 +119,7 @@ function mapAttrType2MongoType(attrName: string, attrType: AttrType): any {
         return [mapAttrDefType2MongoType(attrName, attrType[0])];
       }
       else if (isEntityAttributes(attrType[0])) {
-        const attributes = Object.entries(attrType);
+        const attributes = Object.entries(attrType[0]);
         return [Object.fromEntries(
           attributes.map(([n, t]) => [n, mapAttrType2MongoType(n, t)]),
         )];
