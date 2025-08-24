@@ -548,6 +548,53 @@ const userEntity: Entity = {
   },
 };
 
+const workspaceEntity: Entity = {
+  name: 'Workspace',
+  namespace: 'sys',
+  objectTitle: '$name',
+  attributes: {
+    name: {
+      type: 'string',
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    createdBy: {
+      type: 'objectid',
+      index: true,
+      required: true,
+      referencesEntity: 'User',
+    },
+    organizations: {
+      type: 'array',
+      of: 'objectid',
+      referencesEntity: 'Company'
+    },
+    createdAt: {
+      type: 'timestamp',
+      required: true,
+      default: 'now',
+    },
+    updatedAt: {
+      type: 'timestamp',
+      required: true,
+      default: 'now',
+    },
+    domain: {
+      type: 'string',
+      required: false,
+    },
+    mainPort: {
+      type: 'number',
+      required: false,
+    },
+    dbPort: {
+      type: 'number',
+      required: false,
+    }
+  },
+};
+
 export const systemEntities = [
   testEntity,
   chatHistoryEntity,
@@ -559,5 +606,6 @@ export const systemEntities = [
   goodEntity,
   projectEntity,
   roleEntity,
-  userEntity
+  userEntity,
+  workspaceEntity
 ];

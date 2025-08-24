@@ -119,7 +119,7 @@ function buildAttributes(attrs: EntityDefAttribute[], useArrays = false): Entity
         required,
         unique: uniqueF,
         index: indexF,
-        enum: enumValues,
+        enum: Array.isArray(enumValues) && enumValues.length ? enumValues : undefined,
         default: mappedDefault,
         referencesEntity,
         of,

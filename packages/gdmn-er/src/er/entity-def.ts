@@ -37,8 +37,6 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
     enum: {
       type: "array",
       of: "string",
-      required: false,
-      default: undefined
     },
     min: {
       type: "number",

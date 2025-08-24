@@ -2,13 +2,13 @@ import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { entity2schema, entityToEntityDef } from '../er2mongo';
 import { def2entity } from '../def2entity';
-import { EntityDefDocument } from '../types/entity-def';
-import { registerModel, removeModel } from '../registry';
+import { EntityDefDocument, TEntityDefPlainWithId } from '../types/entity-def';
+import { isModelRegistered, registerModel, registerModelForEntity, removeModel } from '../registry';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { systemEntities, testEntity } from './entities';
-import { entityDef, EntityDef } from '../models/entity-def';
-import util from 'node:util';
+import { EntityDef } from '../models/entity-def';
+import { Entity, isAttrTypeDef, isEntityRegistered, registerEntity } from 'gdmn-er';
 
 dotenv.config({ path: '../../.env.local' });
 
@@ -34,6 +34,22 @@ const DB_URL =
     : `mongodb://${db_host}:${db_port}`;
 
 const dbName = db_name;
+
+function validateEntityEnums(ctx: string, entity: Entity): void {
+  for (const [attrName, attr] of Object.entries(entity.attributes)) {
+    if (isAttrTypeDef(attr) && 'enum' in attr && Array.isArray(attr.enum) && attr.enum.length === 0) {
+      throw new Error(`${ctx}, Entity "${entity.name}" has attribute "${attrName}" with empty enum array`);
+    }
+  }
+};
+
+function validateEntityDefEnums(ctx: string, entityDef: TEntityDefPlainWithId): void {
+  for (const [attrName, attr] of Object.entries(entityDef.attributes)) {
+    if (attr && typeof attr === 'object' && 'enum' in attr && Array.isArray(attr.enum) && attr.enum.length === 0) {
+      throw new Error(`${ctx}, EntityDef "${entityDef.name}" has attribute "${attrName}" with empty enum array`);
+    }
+  }
+};
 
 describe('entity2entityDef', () => {
 
@@ -81,18 +97,26 @@ describe('entity2entityDef', () => {
     removeModel('temp');
   });
 
-  it('should insert system entities into entity def', async (t) => {
+  it('should insert system entities into entity def and register models', async (t) => {
     const createdIds = [];
+    const registeredModels = [];
 
     for (const entity of systemEntities) {
+      validateEntityEnums('entity-2-entityDef', entity);
       const entityDef = entityToEntityDef(entity);
+      validateEntityDefEnums('entity-2-entityDef', entityDef as TEntityDefPlainWithId);
 
       await EntityDef.validate(entityDef);
 
       const existingEntity = await EntityDef.findOne({ name: entity.name, namespace: entity.namespace }).exec();
       if (!existingEntity) {
         const createdEntity = await EntityDef.create(entityDef);
-        createdIds.push(createdEntity._id);
+        const def = await EntityDef.findOne({ _id: createdEntity._id }).exec();
+        if (!def) {
+          throw new Error(`Failed to find created entity definition for ${entity.name}`);
+        }
+        const plain = def.toObject({ flattenObjectIds: true }) as any as TEntityDefPlainWithId;
+        createdIds.push(plain._id);
         t.diagnostic(`Created entity definition for ${entity.name}`);
       } else {
         await EntityDef.findOneAndUpdate(
@@ -104,9 +128,36 @@ describe('entity2entityDef', () => {
       }
     }
 
+    const defs = await EntityDef.find({}).exec();
+
+    for (const def of defs) {
+      const entityName = def.name;
+      let entity: Entity;
+
+      const plain = def.toObject({ flattenObjectIds: true }) as any as TEntityDefPlainWithId;
+      entity = def2entity(plain as any);
+      validateEntityEnums('loaded entity from entityDef', entity);
+
+      const shouldReregister = isEntityRegistered(entityName);
+      registerEntity(entity, shouldReregister);
+
+      if (isModelRegistered(entity.name)) {
+        removeModel(entity.name);
+      }
+
+      registerModelForEntity(entity);
+      registeredModels.push(entity.name);
+      t.diagnostic(`Registered model for entity ${entity.name}`);
+    }
+
     if (createdIds.length > 0) {
       await EntityDef.deleteMany({ _id: { $in: createdIds } }).exec();
       t.diagnostic(`Cleaned up ${createdIds.length} created entity definitions`);
     }
+
+    for (const modelName of registeredModels) {
+      removeModel(modelName);
+    }
+    t.diagnostic(`Unregistered ${registeredModels.length} models`);
   });
 });
