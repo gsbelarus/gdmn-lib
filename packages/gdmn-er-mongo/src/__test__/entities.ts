@@ -30,6 +30,12 @@ export const testEntity: Entity = {
       minlength: 10,
       maxlength: 20,
     },
+    email: {
+      type: 'string',
+      required: true,
+      unique: true,
+      match: EMAIL_REGEXP.source,
+    },
   },
 };
 

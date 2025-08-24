@@ -9,6 +9,12 @@ import dotenv from 'dotenv';
 import { systemEntities, testEntity } from './entities';
 import { EntityDef } from '../models/entity-def';
 import { Entity, isAttrTypeDef, isEntityRegistered, registerEntity } from 'gdmn-er';
+import { EMAIL_REGEXP } from 'gdmn-utils';
+
+// Add a check to ensure EMAIL_REGEXP is properly imported
+if (!EMAIL_REGEXP) {
+  throw new Error('EMAIL_REGEXP is not properly imported from gdmn-utils');
+}
 
 dotenv.config({ path: '../../.env.local' });
 
@@ -72,6 +78,18 @@ describe('entity2entityDef', () => {
     }
   });
 
+  it('should test EMAIL REGEXP', () => {
+    const email = 'test@example.com';
+    const invalidEmail = 'invalid-email';
+    assert(EMAIL_REGEXP.test(email));
+    assert(!EMAIL_REGEXP.test(invalidEmail));
+
+    const reText = EMAIL_REGEXP.source;
+    const re = new RegExp(reText);
+    assert(re.test(email));
+    assert(!re.test(invalidEmail));
+  });
+
   it('should convert entity to entityDef and back', async () => {
     for (const entity of systemEntities) {
       const entityDef = entityToEntityDef(entity);
@@ -90,7 +108,8 @@ describe('entity2entityDef', () => {
     await model.create({
       name: 'Test',
       match: 'Test',
-      requiredString10_20: '1234567890'
+      requiredString10_20: '1234567890',
+      email: 'mail@example.com'
     });
     await model.deleteMany({});
 
