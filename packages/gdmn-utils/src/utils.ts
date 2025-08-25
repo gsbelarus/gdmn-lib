@@ -33,9 +33,10 @@ export function slim<T extends {}>(
     removeEmptyArrays?: boolean;
     removeEmptyStrings?: boolean;
     removeFalse?: boolean;
+    stripFields?: string[];
   } = {}
 ): T {
-  const { deep, removeNulls, removeEmptyObjects, removeEmptyArrays, removeEmptyStrings, removeFalse } = options;
+  const { deep, removeNulls, removeEmptyObjects, removeEmptyArrays, removeEmptyStrings, removeFalse, stripFields } = options;
   const shouldRemove = (value: any): boolean => {
     return value === undefined ||
       (removeNulls && value === null) ||
@@ -57,7 +58,7 @@ export function slim<T extends {}>(
     return Object.fromEntries(
       Object.entries(value)
         .map(([key, val]) => [key, processValue(val)])
-        .filter(([_, val]) => !shouldRemove(val))
+        .filter(([key, val]) => !shouldRemove(val) && !stripFields?.includes(key))
     );
   };
 
