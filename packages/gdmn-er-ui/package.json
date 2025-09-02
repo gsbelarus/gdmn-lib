@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-ui",
-  "version": "0.14.133",
+  "version": "0.14.134",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

@@ -188,14 +188,20 @@ export const METHOD_TYPES_SERVER = [
   "beforeUpdate",
   "afterUpdate",
   "beforeDelete",
-  "afterDelete"
+  "afterDelete",
+  "beforeQuery",
+  "afterQuery"
 ] as const;
 
 export const METHOD_TYPES_CLIENT = [
   "beforeSubmit",
   "afterSubmit",
   "beforeFormOpen",
-  "afterFormOpen"
+  "afterFormOpen",
+  "beforeEdit",
+  "afterEdit",
+  "beforeInsert",
+  "afterInsert"
 ] as const;
 
 export const METHOD_TYPES = [
