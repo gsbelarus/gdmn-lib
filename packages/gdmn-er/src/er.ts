@@ -201,7 +201,10 @@ export const METHOD_TYPES_CLIENT = [
   "beforeEdit",
   "afterEdit",
   "beforeInsert",
-  "afterInsert"
+  "afterInsert",
+  "beforeDelete",
+  "afterDelete",
+  "fieldChange",
 ] as const;
 
 export const METHOD_TYPES = [
