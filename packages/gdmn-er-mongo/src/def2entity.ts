@@ -22,7 +22,7 @@ function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any
   return result;
 };
 
-export function convertDefaultValueByType(type: AttrType, def: any): any {
+export function convertDefaultValueByType(entityName: string, attrName: string, type: AttrType, def: any): any {
   if (def === null || def === undefined) {
     return def;
   }
@@ -34,7 +34,7 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
       if (def === 'now') return def;
       const date = new Date(def);
       if (Number.isNaN(date.getTime())) {
-        console.warn(`Invalid date default value: ${def}`);
+        console.warn(`Invalid date default value ${def} for ${entityName}.${attrName}`);
         return undefined;
       }
       return def;
@@ -42,7 +42,7 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
     case 'number':
       const num = Number(def);
       if (Number.isNaN(num)) {
-        console.warn(`Invalid number default value: ${def}`);
+        console.warn(`Invalid number default value ${def} for ${entityName}.${attrName}`);
         return undefined;
       }
       return num;
@@ -59,7 +59,7 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
       if (typeof def === 'number') {
         return def !== 0;
       }
-      console.warn(`Invalid boolean default value: ${def}`);
+      console.warn(`Invalid boolean default value ${def} for ${entityName}.${attrName}`);
       return undefined;
 
     default:
@@ -67,7 +67,7 @@ export function convertDefaultValueByType(type: AttrType, def: any): any {
   }
 };
 
-function buildAttributes(attrs: EntityDefAttribute[], useArrays = false): EntityAttributes {
+function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArrays = false): EntityAttributes {
   const result: EntityAttributes = {};
 
   for (const attr of attrs) {
@@ -91,7 +91,7 @@ function buildAttributes(attrs: EntityDefAttribute[], useArrays = false): Entity
     let finalType: AttrTypeDef;
 
     if (attrType === 'array' && of === 'object' && nestedAttributes?.length) {
-      const nestedAttrs = buildAttributes(nestedAttributes);
+      const nestedAttrs = buildAttributes(entityName, nestedAttributes);
 
       finalType = useArrays ? {
         type: [nestedAttrs],
@@ -105,7 +105,7 @@ function buildAttributes(attrs: EntityDefAttribute[], useArrays = false): Entity
         of: nestedAttrs,
       };
     } else {
-      const mappedDefault = convertDefaultValueByType(attrType, def);
+      const mappedDefault = convertDefaultValueByType(entityName, name, attrType, def);
       let uniqueF = unique;
       let indexF = index;
 
@@ -171,7 +171,7 @@ export function def2entity(def: EntityDefDocument, useArrays = false): Entity {
 
   const entity: Entity = {
     ...rest,
-    attributes: buildAttributes(attributes, useArrays),
+    attributes: buildAttributes(def.name, attributes, useArrays),
     methods: methods ? convertMethodsToObject(methods) : undefined,
   };
 

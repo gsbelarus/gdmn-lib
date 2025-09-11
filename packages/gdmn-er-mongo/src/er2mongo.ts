@@ -32,7 +32,7 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
   }
 };
 
-function convertDefaultValueForMongoose(type: AttrType, def: any): any {
+function convertDefaultValueForMongoose(entityName: string, attrName: string, type: AttrType, def: any): any {
   if (def === null || def === undefined) {
     return def;
   }
@@ -44,7 +44,7 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
       if (def === 'now') return Date.now();
       const date = new Date(def);
       if (Number.isNaN(date.getTime())) {
-        console.warn(`Invalid date default value: ${def}`);
+        console.warn(`Invalid date default value ${def} for ${entityName}.${attrName}`);
         return undefined;
       }
       return def;
@@ -52,7 +52,7 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
     case 'number':
       const num = Number(def);
       if (Number.isNaN(num)) {
-        console.warn(`Invalid number default value: ${def}`);
+        console.warn(`Invalid number default value ${def} for ${entityName}.${attrName}`);
         return undefined;
       }
       return num;
@@ -69,7 +69,7 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
       if (typeof def === 'number') {
         return def !== 0;
       }
-      console.warn(`Invalid boolean default value: ${def}`);
+      console.warn(`Invalid boolean default value ${def} for ${entityName}.${attrName}`);
       return undefined;
 
     default:
@@ -77,16 +77,16 @@ function convertDefaultValueForMongoose(type: AttrType, def: any): any {
   }
 };
 
-function mapAttrDefType2MongoType(attrName: string, attrTypeDef: AttrTypeDef): any {
+function mapAttrDefType2MongoType(entityName: string, attrName: string, attrTypeDef: AttrTypeDef): any {
   const { type, default: def, match, ...rest } = attrTypeDef;
 
   const res = slim({
-    type: mapAttrType2MongoType(attrName, type),
+    type: mapAttrType2MongoType(entityName, attrName, type),
     match: match ? new RegExp(match) : undefined,
     ...rest
   }, { removeNulls: true });
 
-  const mappedDefault = convertDefaultValueForMongoose(type, def);
+  const mappedDefault = convertDefaultValueForMongoose(entityName, attrName, type, def);
 
   if (typeof mappedDefault !== 'undefined') {
     (res as any).default = mappedDefault;
@@ -95,17 +95,17 @@ function mapAttrDefType2MongoType(attrName: string, attrTypeDef: AttrTypeDef): a
   return res;
 };
 
-function mapAttrType2MongoType(attrName: string, attrType: AttrType): any {
+function mapAttrType2MongoType(entityName: string, attrName: string, attrType: AttrType): any {
   if (isSimpleAttrType(attrType)) {
     return mapSimpleAttrType2MongoType(attrType);
   } else if (isAttrTypeDef(attrType)) {
-    return mapAttrDefType2MongoType(attrName, attrType);
+    return mapAttrDefType2MongoType(entityName, attrName, attrType);
   } else if (isEntitySchema(attrType)) {
     return entity2schema(attrType.entity, attrType.options);
   } else if (isEntityAttributes(attrType)) {
     const attributes = Object.entries(attrType);
     return Object.fromEntries(
-      attributes.map(([n, t]) => [n, mapAttrType2MongoType(n, t)]),
+      attributes.map(([n, t]) => [n, mapAttrType2MongoType(entityName, n, t)]),
     );
   } else if (Array.isArray(attrType)) {
     if (attrType.length === 1) {
@@ -116,12 +116,12 @@ function mapAttrType2MongoType(attrName: string, attrType: AttrType): any {
         return [mapSimpleAttrType2MongoType(attrType[0])];
       }
       else if (isAttrTypeDef(attrType[0])) {
-        return [mapAttrDefType2MongoType(attrName, attrType[0])];
+        return [mapAttrDefType2MongoType(entityName, attrName, attrType[0])];
       }
       else if (isEntityAttributes(attrType[0])) {
         const attributes = Object.entries(attrType[0]);
         return [Object.fromEntries(
-          attributes.map(([n, t]) => [n, mapAttrType2MongoType(n, t)]),
+          attributes.map(([n, t]) => [n, mapAttrType2MongoType(entityName, n, t)]),
         )];
       }
       else {
@@ -172,7 +172,7 @@ export function entity2schemaDefinition<T>(entity: Entity): SchemaDefinition<T> 
         try {
           const res = [
             attrName,
-            mapAttrType2MongoType(attrName, attrType),
+            mapAttrType2MongoType(entity.name, attrName, attrType),
           ];
 
           return res;
