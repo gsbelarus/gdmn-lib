@@ -22,7 +22,7 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
     case "map":
       return Map;
     case "enum":
-      return String;
+      return [String];
     case "buffer":
       return mongoose.Schema.Types.Buffer;
     default:
@@ -84,12 +84,15 @@ function mapAttrDefType2MongoType(entityName: string, attrName: string, attrType
     type: mapAttrType2MongoType(entityName, attrName, type),
     match: match ? new RegExp(match) : undefined,
     ...rest
-  }, { deep: true, removeEmptyArrays: true, removeEmptyObjects: true });
+  });
 
   const mappedDefault = convertDefaultValueForMongoose(entityName, attrName, type, def);
 
   if (typeof mappedDefault !== 'undefined') {
     (res as any).default = mappedDefault;
+  } else if (!attrTypeDef.required) {
+    // If the attribute is not required and no valid default value is specified, set default to undefined
+    (res as any).default = undefined;
   }
 
   return res;

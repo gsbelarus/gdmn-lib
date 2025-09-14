@@ -58,7 +58,7 @@ const chatHistoryEntity: Entity = {
       type: 'array',
       of: {
         role: {
-          type: 'enum',
+          type: 'string',
           required: true,
           enum: ['system', 'user', 'assistant'],
         },
