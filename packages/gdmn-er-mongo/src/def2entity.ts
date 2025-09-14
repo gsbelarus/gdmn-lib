@@ -135,7 +135,7 @@ function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArr
         system,
         filterable,
         nullable
-      }, { deep: true, removeNulls: true, removeEmptyArrays: true, removeEmptyObjects: true });
+      }, { deep: true, removeEmptyArrays: true, removeEmptyObjects: true });
     }
 
     const attrObject: AttrTypeDef = slim({
@@ -152,7 +152,7 @@ function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArr
           visible: item.visible
         }))
         : undefined,
-    }, { deep: true, removeNulls: true, removeEmptyArrays: true, removeEmptyObjects: true });
+    }, { deep: true, removeEmptyArrays: true, removeEmptyObjects: true });
 
     result[name] = Object.keys(attrObject).length === 1 && typeof attrObject.type === 'string'
       ? attrObject.type

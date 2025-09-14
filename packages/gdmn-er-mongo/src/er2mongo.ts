@@ -84,7 +84,7 @@ function mapAttrDefType2MongoType(entityName: string, attrName: string, attrType
     type: mapAttrType2MongoType(entityName, attrName, type),
     match: match ? new RegExp(match) : undefined,
     ...rest
-  }, { deep: true, removeNulls: true, removeEmptyArrays: true, removeEmptyObjects: true });
+  }, { deep: true, removeEmptyArrays: true, removeEmptyObjects: true });
 
   const mappedDefault = convertDefaultValueForMongoose(entityName, attrName, type, def);
 
@@ -200,8 +200,6 @@ export function entity2schemaDefinition<T>(entity: Entity): SchemaDefinition<T> 
       of: [methodSchema()]
     };
   }
-
-  console.log(`entity2schemaDefinition: Mapped entity '${entity.name}' to schema definition:`, JSON.stringify(schema, null, 2));
 
   return schema;
 };
