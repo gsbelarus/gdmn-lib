@@ -84,7 +84,7 @@ function mapAttrDefType2MongoType(entityName: string, attrName: string, attrType
     type: mapAttrType2MongoType(entityName, attrName, type),
     match: match ? new RegExp(match) : undefined,
     ...rest
-  }, { removeNulls: true, removeEmptyArrays: true, removeEmptyObjects: true });
+  }, { deep: true, removeNulls: true, removeEmptyArrays: true, removeEmptyObjects: true });
 
   const mappedDefault = convertDefaultValueForMongoose(entityName, attrName, type, def);
 
