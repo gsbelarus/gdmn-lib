@@ -201,6 +201,8 @@ export function entity2schemaDefinition<T>(entity: Entity): SchemaDefinition<T> 
     };
   }
 
+  console.log(`entity2schemaDefinition: Mapped entity '${entity.name}' to schema definition:`, JSON.stringify(schema, null, 2));
+
   return schema;
 };
 
