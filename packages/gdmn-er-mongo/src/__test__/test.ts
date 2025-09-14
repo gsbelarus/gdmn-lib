@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { systemEntities, testEntity } from './entities';
 import { EntityDef } from '../models/entity-def';
-import { Entity, isAttrTypeDef, isEntityRegistered, registerEntity } from 'gdmn-er';
+import { Entity, isAttrTypeDef, isEntityRegistered, isSimpleAttrType, registerEntity } from 'gdmn-er';
 import { EMAIL_REGEXP } from 'gdmn-utils';
 
 // Add a check to ensure EMAIL_REGEXP is properly imported
@@ -92,8 +92,24 @@ describe('entity2entityDef', () => {
 
   it('should convert entity to entityDef and back', async () => {
     for (const entity of systemEntities) {
-      const entityDef = entityToEntityDef(entity);
-      assert(entityDef.name === entity.name);
+      const e = { ...entity };
+
+      e.attributes = Object.fromEntries(Object.entries(e.attributes).map(([attrName, attr]) => {
+
+        if (!isAttrTypeDef(attr)) {
+          return [attrName, attr];
+        }
+
+        const { required, ...rest } = attr;
+        if (required) {
+          return [attrName, attr];
+        } else {
+          return [attrName, rest];
+        }
+      }));
+
+      const entityDef = entityToEntityDef(e);
+      assert(entityDef.name === e.name);
 
       for (const [attrName, attr] of Object.entries(entityDef.attributes)) {
         if ('enum' in attr && Array.isArray(attr.enum)) {
@@ -110,8 +126,17 @@ describe('entity2entityDef', () => {
       }
 
       const reverse = def2entity(entityDef as EntityDefDocument);
-      assert(reverse.name === entity.name);
-      assert.deepEqual(reverse, entity, `Error converting ${entity.name} back to entity`);
+
+      reverse.attributes = Object.fromEntries(Object.entries(reverse.attributes).map(([attrName, attr]) => {
+        if (isSimpleAttrType(attr) && isAttrTypeDef(e.attributes[attrName])) {
+          return [attrName, { type: attr }];
+        }
+
+        return [attrName, attr];
+      }));
+
+      assert(reverse.name === e.name);
+      assert.deepEqual(reverse, e, `Error converting ${e.name} back to entity`);
 
       for (const [attrName, attr] of Object.entries(reverse.attributes)) {
         if (isAttrTypeDef(attr) && 'enum' in attr && Array.isArray(attr.enum)) {

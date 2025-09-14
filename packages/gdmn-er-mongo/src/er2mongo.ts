@@ -78,11 +78,12 @@ function convertDefaultValueForMongoose(entityName: string, attrName: string, ty
 };
 
 function mapAttrDefType2MongoType(entityName: string, attrName: string, attrTypeDef: AttrTypeDef): any {
-  const { type, default: def, match, ...rest } = attrTypeDef;
+  const { type, default: def, match, required, ...rest } = attrTypeDef;
 
   const res = slim({
     type: mapAttrType2MongoType(entityName, attrName, type),
     match: match ? new RegExp(match) : undefined,
+    required: required ? true : undefined,
     ...rest
   });
 
@@ -217,68 +218,76 @@ export function entity2schema<T>(entity: Entity, options?: Options): mongoose.Sc
  * @returns {EntityDefAttribute[]}
  */
 export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityDefAttribute[] {
-  return Object.entries(attributes).map(([attrName, attr]) => {
+  return Object.entries(attributes)
+    .map(([attrName, attr]) => {
+      const id = generateMongoDBObjectId();
 
-    const id = generateMongoDBObjectId();
-
-    if (isAttrTypeDef(attr)) {
-      switch (attr.type) {
-        case 'objectid':
-          return {
-            _id: id,
-            name: attrName,
-            ...attr,
-            ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
-          } as EntityDefAttribute;
-
-        case 'array':
-          return {
-            _id: id,
-            name: attrName,
-            ...attr,
-            ...(attr.of === 'objectid' && {
-              of: 'objectid',
-              referencesEntity: attr.referencesEntity,
+      if (isAttrTypeDef(attr)) {
+        switch (attr.type) {
+          case 'objectid':
+            return {
+              _id: id,
+              name: attrName,
+              ...attr,
               ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
-            }),
-            ...(typeof attr.of === 'object' && {
-              of: 'object',
-              nestedAttributes: entityAttrToEntityDefAttr(attr.of)
-            }),
-          } as EntityDefAttribute;
+            } as EntityDefAttribute;
+
+          case 'array':
+            return {
+              _id: id,
+              name: attrName,
+              ...attr,
+              ...(attr.of === 'objectid' && {
+                of: 'objectid',
+                referencesEntity: attr.referencesEntity,
+                ...(attr.displayedFields && { displayedFields: attr.displayedFields }),
+              }),
+              ...(typeof attr.of === 'object' && {
+                of: 'object',
+                nestedAttributes: entityAttrToEntityDefAttr(attr.of)
+              }),
+            } as EntityDefAttribute;
+        }
+
+        return {
+          _id: id,
+          name: attrName,
+          ...attr
+        } as EntityDefAttribute;
       }
+      else if (isSimpleAttrType(attr)) {
+        return {
+          _id: id,
+          name: attrName,
+          type: attr
+        } as EntityDefAttribute;
+      }
+      else if (Array.isArray(attr)) {
+        return {
+          _id: id,
+          name: attrName,
+          type: 'array',
+          of: attr[0],
+        } as EntityDefAttribute;
+      }
+      else {
+        console.warn(`entityAttrToEntityDefAttr: Invalid attribute type '${JSON.stringify(attr)}' for '${attrName}' in entity '${attributes.name}'`);
 
-      return {
-        _id: id,
-        name: attrName,
-        ...attr
-      } as EntityDefAttribute;
-    }
-    else if (isSimpleAttrType(attr)) {
-      return {
-        _id: id,
-        name: attrName,
-        type: attr
-      } as EntityDefAttribute;
-    }
-    else if (Array.isArray(attr)) {
-      return {
-        _id: id,
-        name: attrName,
-        type: 'array',
-        of: attr[0],
-      } as EntityDefAttribute;
-    }
-    else {
-      console.warn(`entityAttrToEntityDefAttr: Invalid attribute type '${JSON.stringify(attr)}' for '${attrName}' in entity '${attributes.name}'`);
-
-      return {
-        _id: id,
-        name: attrName,
-        type: 'string'
-      } as EntityDefAttribute;
-    }
-  });
+        return {
+          _id: id,
+          name: attrName,
+          type: 'string'
+        } as EntityDefAttribute;
+      }
+    })
+    .map((attr => {
+      const { required, ...rest } = attr;
+      if (required) {
+        return attr;
+      } else {
+        return rest;
+      }
+    }));
 };
 
 /**
