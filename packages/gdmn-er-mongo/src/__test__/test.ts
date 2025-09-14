@@ -95,9 +95,37 @@ describe('entity2entityDef', () => {
       const entityDef = entityToEntityDef(entity);
       assert(entityDef.name === entity.name);
 
+      for (const [attrName, attr] of Object.entries(entityDef.attributes)) {
+        if ('enum' in attr && Array.isArray(attr.enum)) {
+          assert(attr.enum.length > 0, `entity-2-entityDef, EntityDef "${entityDef.name}" has attribute "${attrName}" with empty enum array`);
+        }
+
+        if ('displayedFields' in attr && Array.isArray(attr.displayedFields)) {
+          assert(attr.displayedFields.length > 0, `entity-2-entityDef, EntityDef "${entityDef.name}" has attribute "${attrName}" with empty displayedFields array`);
+        }
+
+        if ('nestedAttributes' in attr && Array.isArray(attr.nestedAttributes)) {
+          assert(attr.nestedAttributes.length > 0, `entity-2-entityDef, EntityDef "${entityDef.name}" has attribute "${attrName}" with empty nestedAttributes array`);
+        }
+      }
+
       const reverse = def2entity(entityDef as EntityDefDocument);
       assert(reverse.name === entity.name);
       assert.deepEqual(reverse, entity, `Error converting ${entity.name} back to entity`);
+
+      for (const [attrName, attr] of Object.entries(reverse.attributes)) {
+        if (isAttrTypeDef(attr) && 'enum' in attr && Array.isArray(attr.enum)) {
+          assert(attr.enum.length > 0, `entity-2-entityDef, Entity "${reverse.name}" has attribute "${attrName}" with empty enum array`);
+        }
+
+        if (isAttrTypeDef(attr) && 'displayedFields' in attr && Array.isArray(attr.displayedFields)) {
+          assert(attr.displayedFields.length > 0, `entity-2-entityDef, Entity "${reverse.name}" has attribute "${attrName}" with empty displayedFields array`);
+        }
+
+        if (isAttrTypeDef(attr) && 'nestedAttributes' in attr && Array.isArray(attr.nestedAttributes)) {
+          assert(attr.nestedAttributes.length > 0, `entity-2-entityDef, Entity "${reverse.name}" has attribute "${attrName}" with empty nestedAttributes array`);
+        }
+      }
     }
   });
 
