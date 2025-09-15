@@ -145,6 +145,16 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       required: false,
       default: true
     },
+    readonly: {
+      type: "boolean",
+      required: false,
+      default: true
+    },
+    filterable: {
+      type: "boolean",
+      required: false,
+      default: true
+    },
   };
 
   return attributeDef;
