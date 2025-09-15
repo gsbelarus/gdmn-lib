@@ -22,7 +22,7 @@ function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
     case "map":
       return Map;
     case "enum":
-      return [String];
+      return String;
     case "buffer":
       return mongoose.Schema.Types.Buffer;
     default:

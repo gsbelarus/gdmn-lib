@@ -36,6 +36,10 @@ export const testEntity: Entity = {
       unique: true,
       match: EMAIL_REGEXP.source,
     },
+    enumField: {
+      type: 'enum',
+      enum: ['one', 'two', 'three'],
+    }
   },
 };
 

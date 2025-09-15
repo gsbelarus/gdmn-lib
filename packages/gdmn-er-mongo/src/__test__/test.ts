@@ -162,11 +162,21 @@ describe('entity2entityDef', () => {
       name: 'Test',
       match: 'Test',
       requiredString10_20: '1234567890',
-      email: 'mail@example.com'
+      email: 'mail@example.com',
+      enumField: 'two'
     });
-    await model.deleteMany({});
 
-    removeModel('temp');
+    const found: any = await model.findOne({ email: 'mail@example.com' });
+
+    assert(found);
+    assert(found?.name === 'Test');
+    assert(found?.requiredString10_20 === '1234567890');
+    assert(found?.enumField === 'two');
+
+    after(async () => {
+      await model.deleteMany({});
+      removeModel('temp');
+    });
   });
 
   it('should insert system entities into entity def and register models', async (t) => {
