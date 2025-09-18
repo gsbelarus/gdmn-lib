@@ -299,7 +299,6 @@ const goodEntity: Entity = {
     unit: {
       type: 'objectid',
       referencesEntity: 'Unit',
-      filterable: true,
       required: true,
       displayedFields: [{ field: 'name' }, { field: 'ettnCode', readonly: true }],
     },

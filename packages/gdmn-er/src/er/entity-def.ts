@@ -124,7 +124,6 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
         visible: {
           type: "boolean",
           required: false,
-          default: true,
         },
       },
       required: false,
@@ -143,17 +142,14 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
     visible: {
       type: "boolean",
       required: false,
-      default: true
     },
     readonly: {
       type: "boolean",
       required: false,
-      default: false
     },
     filterable: {
       type: "boolean",
       required: false,
-      default: true
     },
   };
 

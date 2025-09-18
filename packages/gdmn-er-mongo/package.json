@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-mongo",
-  "version": "0.14.148",
+  "version": "0.14.149",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -17,7 +17,7 @@
     "test": "tsx --enable-source-maps --test"
   },
   "devDependencies": {
-    "@types/node": "^20.19.13",
+    "@types/node": "^20.19.17",
     "dotenv": "^17.2.2",
     "eslint": "^8.57.0",
     "gdmn-er": "workspace:*",
