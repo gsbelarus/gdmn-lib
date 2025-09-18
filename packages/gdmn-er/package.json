@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er",
-  "version": "0.14.149",
+  "version": "0.14.150",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "gdmn-utils": "workspace:*",
-    "zod": "^3.25.76"
+    "zod": "^4"
   }
 }

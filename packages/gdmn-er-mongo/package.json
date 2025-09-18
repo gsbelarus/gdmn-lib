@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-mongo",
-  "version": "0.14.149",
+  "version": "0.14.150",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -37,6 +37,6 @@
   },
   "dependencies": {
     "mongoose": "^8.18.1",
-    "zod": "^3.25.76"
+    "zod": "^4"
   }
 }

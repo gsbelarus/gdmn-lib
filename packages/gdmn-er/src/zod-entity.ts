@@ -9,6 +9,7 @@ import {
   ZodMethodParam,
   ZodMethodEnvironment,
   ZodMethodCode,
+  EntityMethodFn,
   ZodSimpleAttrType,
   ZodRefFieldProps,
   ZodDisplayedField,
@@ -41,7 +42,7 @@ export const checkField = (
 ) => {
   if (condition) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message,
       path,
     });
@@ -74,7 +75,8 @@ export const ZodAttrTypeDef = z.object({
   placeholder: z.string().optional(),
   tooltip: z.string().optional(),
   of: ZodOfTypes.optional(),
-  highLevelGroupingObject: z.record(z.any(), z.any()).optional(),
+  // zod v4 requires a key schema; use string keys for records
+  highLevelGroupingObject: z.record(z.string(), z.any()).optional(),
   filterable: z.boolean().optional(),
   readonly: z.boolean().optional(),
   displayedFields: z.array(ZodDisplayedField).optional(),
@@ -120,7 +122,8 @@ export const ZodEntityAttributes: z.ZodType<EntityAttributes> = z.record(
   ZodAttrType
 );
 
-export const ZodEntityMethods: z.ZodType<EntityMethods> = z.record(
+// In Zod v4, enum-keyed records are exhaustive; our EntityMethods is Partial<...>
+export const ZodEntityMethods: z.ZodType<EntityMethods> = z.partialRecord(
   z.enum(METHOD_TYPES),
   z.lazy(() => z.array(ZodMethod))
 );
@@ -134,12 +137,18 @@ export const ZodMethod = z.object({
   returnType: z.string().optional(),
   returnDescription: z.string().optional(),
   code: ZodMethodCode.optional(),
+  // fn: z
+  //   .function()
+  //   .args(z.any(), z.record(z.string(), z.any()).optional())
+  //   .returns(
+  //     z.promise(z.union([z.record(z.string(), z.any()), z.boolean()]))
+  //   )
+  //   .optional(),  
+  // Zod v4: z.function() is no longer a schema; validate presence and type only
   fn: z
-    .function()
-    .args(z.any(), z.record(z.string(), z.any()).optional())
-    .returns(
-      z.promise(z.union([z.record(z.string(), z.any()), z.boolean()]))
-    )
+    .custom<EntityMethodFn<any, any>>((v) => typeof v === 'function', {
+      message: 'fn must be a function',
+    })
     .optional(),
   order: z.number(),
   disabled: z.boolean().optional(),
