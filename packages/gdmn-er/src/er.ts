@@ -59,7 +59,8 @@ export const simpleAttrTypes = [
   "entity",
   "enum",
   "map",
-  'buffer'
+  'buffer',
+  'object',
 ] as const;
 
 export const ZodSimpleAttrType = z.enum(simpleAttrTypes);
@@ -82,7 +83,7 @@ export const ofTypes = [
   "object",
 ] as const;
 
-export type OfType = (typeof ofTypes)[number] | EntityAttributes;
+export type OfType = Extract<SimpleAttrType, "string" | "number" | "boolean" | "timestamp" | "objectid" | "entity" | "object"> | EntityAttributes;
 
 export function str2OfTypes(
   str: string,
@@ -357,20 +358,4 @@ export function isTimeAttr(attrType: AttrType) {
   return attrType === "time" || (isAttrTypeDef(attrType) && attrType.type === "time");
 };
 
-export type AttrTypeToGet = { type: SimpleAttrType; isArray: boolean; };
-
-export function getAttrType(attrType: AttrType): AttrTypeToGet {
-  if (isEntitySchema(attrType)) {
-    return { type: "entity", isArray: true };
-  } else if (isAttrTypeDef(attrType)) {
-    if (Array.isArray(attrType.type)) {
-      return { type: attrType.type[0] as SimpleAttrType, isArray: true };
-    } else {
-      return { type: attrType.type as SimpleAttrType, isArray: false };
-    }
-  }
-
-  //FIXME: not done yet
-  return { type: "string", isArray: false };
-};
 
