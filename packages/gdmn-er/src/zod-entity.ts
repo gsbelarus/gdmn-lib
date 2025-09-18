@@ -167,6 +167,16 @@ export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
     viewForm: z.string().optional(),
     dlgForm: z.string().optional(),
     states: z.array(z.string()).optional(),
+    tools: z.array(
+      z.object({
+        type: z.string(),
+        function: z.object({
+          name: z.string(),
+          description: z.string().optional(),
+          parameters: z.any().optional(),
+        })
+      })
+    ).optional(),
   })
 );
 

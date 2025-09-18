@@ -263,6 +263,7 @@ export interface Entity {
    * */
   dlgForm?: string;
   states?: string[];
+  tools?: any[];
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
