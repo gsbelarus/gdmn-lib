@@ -286,16 +286,6 @@ const goodEntity: Entity = {
       type: 'number',
       required: true,
     },
-    editionDate: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
-    creationDate: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
     unit: {
       type: 'objectid',
       referencesEntity: 'Unit',
@@ -438,11 +428,6 @@ const projectEntity: Entity = {
         name: 'string',
       },
       required: false
-    },
-    editionDate: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
     },
     chatMessages: {
       type: 'string',
