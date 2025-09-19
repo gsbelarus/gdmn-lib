@@ -189,6 +189,12 @@ export function prettyJSON(obj: object) {
           } catch (e: unknown) {
             console.log('Not JSON:', (e as Error).message || String(e));
           }
+        } else {
+          const pretty = candidate.replaceAll('\\"', '"');
+          if (pretty !== candidate) {
+            s = s.substring(0, b) + pretty + s.substring(e);
+            k = b + pretty.length + 1;
+          }
         }
         b = -1;
         e = -1;
