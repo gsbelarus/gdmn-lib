@@ -176,36 +176,24 @@ export function prettyJSON(obj: object) {
         b = k + 1;
       } else if (e === -1) {
         e = k;
-        let candidate = s.substring(b, e);
-        let candidatePrefix = '';
-
-        const pp = candidate.indexOf('{');
-        const pb = candidate.indexOf('[');
-
-        let p = -1;
-
-        if (pp !== -1) p = pp;
-        if (pb !== -1 && (pb < pp || pp === -1)) p = pb;
-
-        if (p !== -1) {
-          candidatePrefix = candidate.substring(0, p);
-          candidate = candidate.substring(p);
-        }
+        const candidate = s.substring(b, e);
 
         if ((candidate.startsWith('{') && candidate.endsWith('}')) || (candidate.startsWith('[') && candidate.endsWith(']'))) {
           console.log('Trying to parse JSON candidate:', candidate);
           try {
-            const parsed = JSON.parse(candidate.replaceAll('\\"', '\''));
-            const pretty = candidatePrefix + makeIndentation(JSON.stringify(parsed, null, 2), i);
+            const parsed = JSON.parse(candidate.replaceAll('\\"', '"'));
+            const pretty = makeIndentation(JSON.stringify(parsed, null, 2), i);
+
             b--;
             e++;
+
             s = s.substring(0, b) + pretty + s.substring(e);
             k = b + pretty.length;
           } catch (e: unknown) {
             console.log('Not JSON:', (e as Error).message || String(e));
           }
         } else {
-          const pretty = candidate.replaceAll('\\"', '"');
+          const pretty = candidate.replaceAll('\\"', '\'');
           if (pretty !== candidate) {
             s = s.substring(0, b) + pretty + s.substring(e);
             k = b + pretty.length + 1;
