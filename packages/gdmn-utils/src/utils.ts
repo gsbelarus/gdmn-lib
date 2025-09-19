@@ -131,3 +131,75 @@ export const createBaseDateWithTime = (hour: number, minute: number, second: num
   }
   return baseDate;
 };
+
+/**
+ * Pretty prints a JSON object with indentation.
+ * If a property contains a JSON string, it will be parsed and pretty printed as well.
+ * @param obj object to stringify
+ * @returns pretty printed JSON string
+ */
+export function prettyJSON(obj: object) {
+  function makeIndentation(s: string, level: number) {
+    const lines = s.split('\n');
+    const indent = ' '.repeat(level);
+    return lines.map((line, idx) => idx === 0 ? line : indent + line).join('\n');
+  }
+
+  let s = JSON.stringify(obj, null, 2);
+
+  let k = 0;
+  let b = -1;
+  let e = -1;
+  let i = 0;
+  let otherChar = false;
+
+  while (k < s.length) {
+    const ch = s.charAt(k);
+
+    if (b === -1) {
+      if (ch === ' ' || ch === '\t') {
+        if (!otherChar) {
+          i++;
+        }
+      }
+      else if (ch === '\n' || ch === '\r') {
+        i = 0;
+        otherChar = false;
+      }
+      else {
+        otherChar = true;
+      }
+    }
+
+    if (ch === '"') {
+      if (b === -1) {
+        b = k + 1;
+      } else if (e === -1) {
+        e = k;
+        const candidate = s.substring(b, e);
+        if (candidate.startsWith('{') || candidate.startsWith('[')) {
+          console.log('Trying to parse JSON candidate:', candidate);
+          try {
+            const parsed = JSON.parse(candidate.replaceAll('\\"', '"'));
+            const pretty = makeIndentation(JSON.stringify(parsed, null, 2), i);
+            b--;
+            e++;
+            s = s.substring(0, b) + pretty + s.substring(e);
+            k = b + pretty.length;
+          } catch (e: unknown) {
+            console.log('Not JSON:', (e as Error).message || String(e));
+          }
+        }
+        b = -1;
+        e = -1;
+      }
+    }
+    else if (ch === '\\' && k + 1 < s.length && s.charAt(k + 1) === '"') {
+      k++;
+    }
+
+    k++;
+  }
+
+  return s;
+};
