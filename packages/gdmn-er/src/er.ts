@@ -353,26 +353,38 @@ export function compareEntityNames(
   return nameA === nameB;
 };
 
-export function appendMethod(entity: Entity, method: Method) {
+export function appendMethods(entity: Entity, method: Method | Method[]): Entity {
   if (!entity.methods) {
     entity.methods = {};
   }
 
-  if (Array.isArray(entity.methods[method.name])) {
-    entity.methods[method.name]?.push(method);
-  } else {
-    entity.methods[method.name] = [method];
+  if (!Array.isArray(method)) {
+    method = [method];
+  }
+
+  for (const m of method) {
+    if (Array.isArray(entity.methods[m.name])) {
+      entity.methods[m.name]?.push(m);
+    } else {
+      entity.methods[m.name] = [m];
+    }
+
+    entity.methods[m.name]?.sort((a, b) => a.order - b.order);
   }
 
   return entity;
 };
 
-export function appendUICommand(entity: Entity, command: EntityUICommand) {
+export function appendUICommands(entity: Entity, command: EntityUICommand | EntityUICommand[]): Entity {
   if (!entity.uiCommands) {
     entity.uiCommands = [];
   }
 
-  entity.uiCommands.push(command);
+  if (!Array.isArray(command)) {
+    command = [command];
+  }
+
+  entity.uiCommands.push(...command);
   return entity;
 };
 
