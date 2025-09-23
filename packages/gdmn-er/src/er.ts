@@ -172,7 +172,6 @@ export const ZodOptions = z.object({
   collection: z.string().optional(),
 });
 
-
 export type Options = z.infer<typeof ZodOptions>;
 
 export type EntitySchema = { entity: Entity; options?: Options; };
@@ -225,6 +224,10 @@ export type EntityMethods = Partial<Record<MethodType, Method[]>>;
 export type EntityUICommand = {
   type: 'command';
   /**
+   * A unique identifier for the command. Used to reference the command in the system.
+   */
+  id: string;
+  /**
    * A grouping identifier for the method. Used to categorize commands in the UI.
    */
   group?: string;
@@ -233,13 +236,17 @@ export type EntityUICommand = {
    */
   label?: string;
   /**
+   * A detailed description of what the command does. Also used as a tooltip in the UI.
+   */
+  tooltip?: string;
+  /**
    * An icon name to visually represent the method in the UI.
    */
   icon?: string;
   /**
    * The name of the method to be executed when the command is invoked.
    */
-  method: string;
+  method?: string;
 } | {
   type: 'separator';
 };
