@@ -37,6 +37,9 @@ export type Method<E = Entity, T = EntityRecord<any>> = {
   name: string;
   namespace: string;
   environment: MethodEnvironment;
+  /**
+   * A detailed description of what the method does. Also used as a tooltip in the UI.
+   */
   description?: string;
   params?: MethodParam[];
   returnType?: string;
@@ -213,11 +216,26 @@ export const METHOD_TYPES = [
   ...METHOD_TYPES_CLIENT
 ] as const;
 
-export type MethodType = typeof METHOD_TYPES[number];
+export type MethodType = string;
 
 export type EntityDefMethods = Map<MethodType, Method[]>;
 
 export type EntityMethods = Partial<Record<MethodType, Method[]>>;
+
+export type EntityUICommand = {
+  type: 'command';
+  /**
+   * A brief label for the method. Used in the UI where space is limited.
+   */
+  label?: string;
+  /**
+   * An icon name to visually represent the method in the UI.
+   */
+  icon?: string;
+  method: string;
+} | {
+  type: 'separator';
+};
 
 export interface Entity {
   /**
@@ -265,6 +283,7 @@ export interface Entity {
   dlgForm?: string;
   states?: string[];
   tools?: any[];
+  uiCommands?: EntityUICommand[];
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {

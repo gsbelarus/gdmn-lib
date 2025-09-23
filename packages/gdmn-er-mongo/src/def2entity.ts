@@ -3,11 +3,11 @@
  * This file contains the code to convert these definitions (i.e. documents of entitydefs) into entities.
  */
 
-import { AttrType, AttrTypeDef, Entity, EntityAttributes, EntityDefMethods, EntityMethods, str2simpleAttrType } from 'gdmn-er';
+import { AttrType, AttrTypeDef, Entity, EntityAttributes, EntityDefMethods, EntityMethods, Method, str2simpleAttrType } from 'gdmn-er';
 import { slim } from 'gdmn-utils';
 import { EntityDefAttribute, EntityDefDocument } from './types/entity-def';
 
-function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: any[]; } {
+function convertMethodsToObject(methods: EntityDefMethods): { [key: string]: (Method<Entity, any>[] | undefined); } {
   const result: EntityMethods = {};
 
   methods.forEach((methods, methodType) => {
