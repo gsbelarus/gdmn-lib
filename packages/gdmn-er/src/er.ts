@@ -225,6 +225,10 @@ export type EntityMethods = Partial<Record<MethodType, Method[]>>;
 export type EntityUICommand = {
   type: 'command';
   /**
+   * A grouping identifier for the method. Used to categorize commands in the UI.
+   */
+  group?: string;
+  /**
    * A brief label for the method. Used in the UI where space is limited.
    */
   label?: string;
@@ -232,6 +236,9 @@ export type EntityUICommand = {
    * An icon name to visually represent the method in the UI.
    */
   icon?: string;
+  /**
+   * The name of the method to be executed when the command is invoked.
+   */
   method: string;
 } | {
   type: 'separator';
@@ -344,6 +351,29 @@ export function compareEntityNames(
       : '';
 
   return nameA === nameB;
+};
+
+export function appendMethod(entity: Entity, method: Method) {
+  if (!entity.methods) {
+    entity.methods = {};
+  }
+
+  if (Array.isArray(entity.methods[method.name])) {
+    entity.methods[method.name]?.push(method);
+  } else {
+    entity.methods[method.name] = [method];
+  }
+
+  return entity;
+};
+
+export function appendUICommand(entity: Entity, command: EntityUICommand) {
+  if (!entity.uiCommands) {
+    entity.uiCommands = [];
+  }
+
+  entity.uiCommands.push(command);
+  return entity;
 };
 
 export function isSimpleAttrType(
