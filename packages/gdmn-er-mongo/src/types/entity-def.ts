@@ -57,7 +57,7 @@ export type EntityDefAttribute = {
   hidden?: boolean;
   readonly?: boolean;
   system?: boolean;
-  unFilterable?: boolean;
+  nonfilterable?: boolean;
 };
 
 const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
@@ -108,7 +108,7 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     hidden: z.boolean().optional(),
     readonly: z.boolean().optional(),
     system: z.boolean().optional(),
-    unFilterable: z.boolean().optional(),
+    nonfilterable: z.boolean().optional(),
   }).superRefine((data, ctx) => {
     checkField(
       (data.type === 'objectid' || data.type === 'entity') && !data.referencesEntity,

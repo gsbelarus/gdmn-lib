@@ -147,7 +147,7 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       type: "boolean",
       required: false,
     },
-    unFilterable: {
+    nonfilterable: {
       type: "boolean",
       required: false,
     },

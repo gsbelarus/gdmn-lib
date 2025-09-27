@@ -77,7 +77,7 @@ export const ZodAttrTypeDef = z.object({
   of: ZodOfTypes.optional(),
   // zod v4 requires a key schema; use string keys for records
   highLevelGroupingObject: z.record(z.string(), z.any()).optional(),
-  unFilterable: z.boolean().optional(),
+  nonfilterable: z.boolean().optional(),
   readonly: z.boolean().optional(),
   displayedFields: z.array(ZodDisplayedField).optional(),
   referenceFieldProps: ZodRefFieldProps.optional(),

@@ -75,7 +75,7 @@ function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArr
       name, type, required, unique, index, enum: enumValues, default: def, referencesEntity, of,
       displayedFields, label, description, placeholder, tooltip, nestedAttributes, min, max,
       minlength, maxlength, trim, lowercase, uppercase, match, hidden, readonly, system,
-      unFilterable, nullable
+      nonfilterable, nullable
     } = attr;
 
     if (!name) {
@@ -133,7 +133,7 @@ function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArr
         match,
         readonly: readonly || undefined,
         system: system || undefined,
-        unFilterable: unFilterable || undefined,
+        nonfilterable: nonfilterable || undefined,
         hidden: hidden || undefined,
         nullable
       }, { deep: true, removeEmptyArrays: true, removeEmptyObjects: true });

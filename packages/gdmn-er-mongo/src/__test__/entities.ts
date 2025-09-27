@@ -489,7 +489,7 @@ const userEntity: Entity = {
       type: 'string',
       required: true,
       minlength: 1,
-      unFilterable: true,
+      nonfilterable: true,
     },
     name: {
       type: 'string',

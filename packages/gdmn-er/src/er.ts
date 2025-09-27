@@ -157,7 +157,7 @@ export type AttrTypeDef = {
    * An object to group values into smaller group. Similar on values merging.
    * */
   highLevelGroupingObject?: Record<any, any>;
-  unFilterable?: boolean;
+  nonfilterable?: boolean;
   readonly?: boolean;
   displayedFields?: DisplayedField[];
   referenceFieldProps?: RefFieldProps;
