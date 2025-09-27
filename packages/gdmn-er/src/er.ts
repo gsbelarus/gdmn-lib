@@ -105,7 +105,7 @@ export type RefFieldProps = z.infer<typeof ZodRefFieldProps>;
 export const ZodDisplayedField = z.object({
   field: z.string(),
   readonly: z.boolean().optional(),
-  visible: z.boolean().optional(),
+  hidden: z.boolean().optional(),
 });
 
 export type DisplayedField = z.infer<typeof ZodDisplayedField>;
@@ -157,13 +157,13 @@ export type AttrTypeDef = {
    * An object to group values into smaller group. Similar on values merging.
    * */
   highLevelGroupingObject?: Record<any, any>;
-  filterable?: boolean;
+  unFilterable?: boolean;
   readonly?: boolean;
   displayedFields?: DisplayedField[];
   referenceFieldProps?: RefFieldProps;
   nestedAttributes?: EntityAttributes[];
   system?: boolean,
-  visible?: boolean;
+  hidden?: boolean;
   namespace?: string;
 };
 

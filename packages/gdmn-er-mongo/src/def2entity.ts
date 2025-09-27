@@ -74,8 +74,8 @@ function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArr
     const {
       name, type, required, unique, index, enum: enumValues, default: def, referencesEntity, of,
       displayedFields, label, description, placeholder, tooltip, nestedAttributes, min, max,
-      minlength, maxlength, trim, lowercase, uppercase, match, visible, readonly, system,
-      filterable, nullable
+      minlength, maxlength, trim, lowercase, uppercase, match, hidden, readonly, system,
+      unFilterable, nullable
     } = attr;
 
     if (!name) {
@@ -131,9 +131,10 @@ function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArr
         lowercase,
         uppercase,
         match,
-        readonly,
-        system,
-        filterable,
+        readonly: readonly || undefined,
+        system: system || undefined,
+        unFilterable: unFilterable || undefined,
+        hidden: hidden || undefined,
         nullable
       }, { deep: true, removeEmptyArrays: true, removeEmptyObjects: true });
     }
@@ -144,12 +145,12 @@ function buildAttributes(entityName: string, attrs: EntityDefAttribute[], useArr
       description,
       placeholder,
       tooltip,
-      visible,
+      hidden,
       displayedFields: displayedFields?.length
         ? displayedFields.map(item => ({
           field: item.field,
           readonly: item.readonly,
-          visible: item.visible
+          hidden: item.hidden
         }))
         : undefined,
     }, { deep: true, removeEmptyArrays: true, removeEmptyObjects: true });

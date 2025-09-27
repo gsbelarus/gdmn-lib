@@ -2,7 +2,7 @@ import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { entity2schema, entityToEntityDef } from '../er2mongo';
 import { def2entity } from '../def2entity';
-import { EntityDefDocument, TEntityDefPlainWithId } from '../types/entity-def';
+import { EntityDefDocument, TEntityDefPlainWithId, ZodEntityDef } from '../types/entity-def';
 import { isModelRegistered, registerModel, registerModelForEntity, removeModel } from '../registry';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -108,7 +108,7 @@ describe('entity2entityDef', () => {
         }
       }));
 
-      const entityDef = entityToEntityDef(e);
+      const entityDef = ZodEntityDef.parse(entityToEntityDef(e));
       assert(entityDef.name === e.name);
 
       for (const [attrName, attr] of Object.entries(entityDef.attributes)) {

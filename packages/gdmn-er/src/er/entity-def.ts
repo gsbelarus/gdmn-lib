@@ -121,7 +121,7 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
           required: false,
           default: true,
         },
-        visible: {
+        hidden: {
           type: "boolean",
           required: false,
         },
@@ -139,7 +139,7 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       type: "string",
       required: false
     },
-    visible: {
+    hidden: {
       type: "boolean",
       required: false,
     },
@@ -147,7 +147,7 @@ function createAttributeDef(depth: number = 3): Record<string, any> {
       type: "boolean",
       required: false,
     },
-    filterable: {
+    unFilterable: {
       type: "boolean",
       required: false,
     },
@@ -216,9 +216,9 @@ export const entityDef: Entity = {
       type: "string"
     },
     attributes: [attributeDef],
+    // TODO: do we need map here?
     methods: {
       type: "map",
-
       required: false
     },
     parent: {

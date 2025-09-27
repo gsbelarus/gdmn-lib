@@ -23,8 +23,7 @@ const methodSchema = z.object({
   disabled: z.boolean().optional(),
 });
 
-const methodTypeSchema = z.enum(METHOD_TYPES);
-const entityMethodsSchema = z.record(methodTypeSchema, z.array(methodSchema));
+const entityMethodsSchema = z.map(z.string(), z.array(methodSchema));
 
 export type EntityDefAttribute = {
   name: string;
@@ -55,10 +54,10 @@ export type EntityDefAttribute = {
   displayedFields?: DisplayedField[];
   nestedAttributes?: EntityDefAttribute[];
   namespace?: string;
-  visible?: boolean;
+  hidden?: boolean;
   readonly?: boolean;
   system?: boolean;
-  filterable?: boolean;
+  unFilterable?: boolean;
 };
 
 const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
@@ -106,10 +105,10 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     displayedFields: z.array(ZodDisplayedField).optional(),
     nestedAttributes: z.array(ZodEntityDefAttribute).optional(),
     namespace: z.string().optional(),
-    visible: z.boolean().optional().default(true),
-    readonly: z.boolean().optional().default(false),
-    system: z.boolean().optional().default(false),
-    filterable: z.boolean().optional().default(false),
+    hidden: z.boolean().optional(),
+    readonly: z.boolean().optional(),
+    system: z.boolean().optional(),
+    unFilterable: z.boolean().optional(),
   }).superRefine((data, ctx) => {
     checkField(
       (data.type === 'objectid' || data.type === 'entity') && !data.referencesEntity,
@@ -179,7 +178,7 @@ const ZodEntityDefShape = {
   viewForm: z.string().optional(),
 };
 
-const ZodEntityDef = z.object(ZodEntityDefShape);
+export const ZodEntityDef = z.object(ZodEntityDefShape);
 
 export const ZodEntityDefWithId = z.object({
   _id: z.instanceof(Types.ObjectId),

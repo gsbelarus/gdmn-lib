@@ -77,13 +77,13 @@ export const ZodAttrTypeDef = z.object({
   of: ZodOfTypes.optional(),
   // zod v4 requires a key schema; use string keys for records
   highLevelGroupingObject: z.record(z.string(), z.any()).optional(),
-  filterable: z.boolean().optional(),
+  unFilterable: z.boolean().optional(),
   readonly: z.boolean().optional(),
   displayedFields: z.array(ZodDisplayedField).optional(),
   referenceFieldProps: ZodRefFieldProps.optional(),
   nestedAttributes: z.array(z.lazy(() => ZodEntityAttributes)).optional(),
   system: z.boolean().optional(),
-  visible: z.boolean().optional(),
+  hidden: z.boolean().optional(),
   namespace: z.string().optional(),
 }).superRefine((data, ctx) => {
   checkField(

@@ -298,7 +298,6 @@ export function entityAttrToEntityDefAttr(attributes: EntityAttributes): EntityD
  */
 
 export function entityToEntityDef(e: Entity): TEntityDef {
-
   const {
     parent,
     attributes,

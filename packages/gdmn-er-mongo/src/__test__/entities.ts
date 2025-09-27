@@ -202,7 +202,7 @@ const fileEntity: Entity = {
     textData: {
       type: 'string',
       required: false,
-      visible: false
+      hidden: true
     },
     createdBy: {
       type: 'objectid',
@@ -211,9 +211,8 @@ const fileEntity: Entity = {
       required: false,
       referencesEntity: 'User',
       system: true,
-      visible: false,
       displayedFields: [
-        { field: 'name', readonly: true, visible: false },
+        { field: 'name', readonly: true, hidden: true },
       ],
     },
     createdAt: {
@@ -222,7 +221,6 @@ const fileEntity: Entity = {
       readonly: true,
       default: 'now',
       system: true,
-      visible: false
     },
     updatedBy: {
       type: 'objectid',
@@ -231,9 +229,8 @@ const fileEntity: Entity = {
       required: false,
       referencesEntity: 'User',
       system: true,
-      visible: false,
       displayedFields: [
-        { field: 'name', readonly: true, visible: false },
+        { field: 'name', readonly: true, hidden: true },
       ],
     },
     updatedAt: {
@@ -242,12 +239,10 @@ const fileEntity: Entity = {
       readonly: true,
       default: 'now',
       system: true,
-      visible: false,
     },
     binaryData: {
       type: 'buffer',
       required: false,
-      visible: false
     },
   },
 };
@@ -494,7 +489,7 @@ const userEntity: Entity = {
       type: 'string',
       required: true,
       minlength: 1,
-      filterable: false,
+      unFilterable: true,
     },
     name: {
       type: 'string',
