@@ -6,7 +6,7 @@ export type EntityRecordSet<T = EntityRecord> = T[];
 export type EntityEvent<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<void>;
 export type EntityEvent2<T extends EntityRecord> = (E: Entity, Record: EntityRecord<T>) => Promise<EntityRecord<T>>;
 
-export type EntityMethodFn<E, T extends EntityRecord<any>> = (e: E, args?: Record<string, any>) => Promise<EntityRecord<T> | boolean>;
+export type EntityMethodFn<E, T extends EntityRecord<any>> = (e: E, params?: Record<string, any>) => Promise<EntityRecord<T> | boolean>;
 
 // primitive/enums
 export const ZodMethodParam = z.object({

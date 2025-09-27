@@ -137,14 +137,6 @@ export const ZodMethod = z.object({
   returnType: z.string().optional(),
   returnDescription: z.string().optional(),
   code: ZodMethodCode.optional(),
-  // fn: z
-  //   .function()
-  //   .args(z.any(), z.record(z.string(), z.any()).optional())
-  //   .returns(
-  //     z.promise(z.union([z.record(z.string(), z.any()), z.boolean()]))
-  //   )
-  //   .optional(),  
-  // Zod v4: z.function() is no longer a schema; validate presence and type only
   fn: z
     .custom<EntityMethodFn<any, any>>((v) => typeof v === 'function', {
       message: 'fn must be a function',
