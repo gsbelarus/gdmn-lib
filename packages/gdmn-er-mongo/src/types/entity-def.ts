@@ -157,7 +157,7 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
   });
 });
 
-export const ZodEntityDefShape = {
+const ZodEntityDefShape = {
   namespace: z.string().trim().min(2).max(60).optional(),
   name: z.string().trim().min(2).max(60),
   label: z.string().trim().optional(),
@@ -179,18 +179,19 @@ export const ZodEntityDefShape = {
   viewForm: z.string().optional(),
 };
 
-export const ZodEntityDef = z.object(ZodEntityDefShape);
+const ZodEntityDef = z.object(ZodEntityDefShape);
 
-const ZodEntityDefWithId = z.object({
+export const ZodEntityDefWithId = z.object({
   _id: z.instanceof(Types.ObjectId),
   ...ZodEntityDefShape,
 });
 
-const ZodEntityDefPlainWithId = z.object({
+export const ZodEntityDefPlainWithId = z.object({
   _id: z.string(),
   ...ZodEntityDefShape,
 });
 
+//TODO: use the type derived from the zod schema 
 export type EntityDefDocument = {
   _id: string;
   namespace?: string | undefined;
