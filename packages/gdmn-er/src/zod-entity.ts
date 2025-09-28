@@ -16,6 +16,7 @@ import {
   ZodOptions,
   gptReferenceTypes
 } from './er';
+import id from 'zod/v4/locales/id.js';
 
 export const ZodOfTypes = z.union([
   z.enum(ofTypes),
@@ -129,6 +130,7 @@ export const ZodEntityMethods: z.ZodType<EntityMethods> = z.partialRecord(
 );
 
 export const ZodMethod = z.object({
+  id: z.string(),
   name: z.string(),
   namespace: z.string(),
   environment: ZodMethodEnvironment,

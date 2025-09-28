@@ -34,6 +34,7 @@ export type MethodCode = z.infer<typeof ZodMethodCode>;
 
 //TODO: remove unused fields
 export type Method<E = Entity, T = EntityRecord<any>> = {
+  id: string;
   name: string;
   namespace: string;
   environment: MethodEnvironment;
