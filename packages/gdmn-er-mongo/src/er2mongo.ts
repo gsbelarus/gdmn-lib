@@ -143,6 +143,7 @@ function mapAttrType2MongoType(entityName: string, attrName: string, attrType: A
 
 function methodSchema() {
   return new mongoose.Schema({
+    id: { type: String, required: true },
     name: { type: String, required: true },
     namespace: { type: String, required: true },
     environment: { type: String, enum: ['server', 'client', 'both'], required: true },
