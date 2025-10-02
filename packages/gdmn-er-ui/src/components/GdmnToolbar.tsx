@@ -2,7 +2,6 @@ import { Box, IconButton, Menu } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 import React, { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import GdmnSwitcher from './GdmnSwitcher';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export type GdmnToolbarItem =
   | {
@@ -68,6 +67,18 @@ export type GdmnToolbarProps = {
   className?: string,
   style?: CSSProperties;
 };
+
+const MoreVertIcon = ({ size, className, color }: any) => (
+  <svg
+    className={className}
+    width={size ?? 24}
+    height={size ?? 24}
+    viewBox="0 0 24 24"
+    fill={color ?? "currentColor"}
+  >
+    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2m0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2" />
+  </svg>
+);
 
 const itemsGap = 8;
 const moreButtonWidth = 34;
