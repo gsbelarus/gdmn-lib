@@ -1,7 +1,8 @@
-import { Box } from '@mui/material';
+import { Box, IconButton, Menu } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
-import React, { CSSProperties, useEffect, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import GdmnSwitcher from './GdmnSwitcher';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export type GdmnToolbarItem =
   | {
@@ -68,6 +69,9 @@ export type GdmnToolbarProps = {
   style?: CSSProperties;
 };
 
+const itemsGap = 8;
+const moreButtonWidth = 34;
+
 export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, style }: Readonly<GdmnToolbarProps>) {
 
   const theme: GdmnToolbarThemeProps = {
@@ -100,16 +104,146 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
     }
   };
 
-  const [pressed, setPressed] = useState<string | number | undefined>();
-  const [animated, setAnimated] = useState<string | number | undefined>();
-  const [internalLoading, setInternalLoading] = useState<string | number | undefined>();
+  const containerRef = useRef<any>();
+  const contentRef = useRef<any>();
+
+  const [sortedItems, setSortedItems] = useState<{ visible: GdmnToolbarItems, hidden: GdmnToolbarItems; }>({ visible: items, hidden: [] });
+  const [cacheSizes, setCacheSizes] = useState<number[]>([]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoCacheSizes = useMemo(() => cacheSizes, [JSON.stringify(cacheSizes)]);
 
   useEffect(() => {
-    if (pressed || pressed === 0) {
-      const timeout = setTimeout(() => setPressed(undefined), 400);
-      return () => clearTimeout(timeout);
-    }
-  }, [pressed]);
+    if (!contentRef.current || !containerRef.current) return;
+
+    const observer = new ResizeObserver(entries => {
+      const moreButtonIndent = moreButtonWidth + itemsGap;
+
+      if (!contentRef.current || !containerRef.current) return;
+      const visible: GdmnToolbarItems = [];
+      const hidden: GdmnToolbarItems = [];
+      const sizes: number[] = [];
+      let currentWidth = 0;
+
+      items.forEach((item, index) => {
+        const moreButtonIndent = items.length - 1 === index ? 0 : moreButtonWidth + itemsGap;
+        const el = contentRef.current.children[index];
+
+        const width = (el?.id === 'moreButton' ? undefined : el?.offsetWidth) ?? memoCacheSizes[index] ?? 32;
+        sizes.push(width);
+        if ((width + currentWidth + itemsGap + moreButtonIndent) <= containerRef.current.offsetWidth) {
+          visible.push(item);
+        } else {
+          hidden.push(item);
+        }
+        currentWidth += (width + itemsGap);
+      });
+
+      setCacheSizes(sizes);
+      setSortedItems({ visible: visible, hidden: hidden });
+    });
+
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [memoCacheSizes, items]);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenuClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(Boolean(anchorEl));
+  }, [anchorEl]);
+
+  const handleClose = useCallback(() => {
+    setMenuOpen(false);
+    setAnchorEl(null);
+  }, []);
+
+  return (
+    <div ref={containerRef} className='flex-1 relative h-full min-h-[48px]'>
+      <div
+        ref={contentRef}
+        aria-label="toolbar"
+        className={`flex flex-row items-center p-2 min-w-max absolute inset-0 ${className ?? ''}`}
+        style={{ ...style, gap: `${itemsGap}px` }}
+      >
+        {sortedItems.visible.map((item, index) => (
+          <ToolbarItem
+            key={index}
+            item={item}
+            index={index}
+            showLabels={showLabels}
+            theme={theme}
+          />
+        ))}
+        {(sortedItems.hidden && sortedItems.hidden.length > 0) && (
+          <div id='moreButton'>
+            <IconButton
+              id="basic-button"
+              aria-controls={menuOpen ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={menuOpen ? 'true' : undefined}
+              onClick={handleMenuClick}
+              size="small"
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={menuOpen}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              MenuListProps={{
+                disablePadding: true,
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <div
+                aria-label="toolbar"
+                className={`flex flex-row items-center p-2 flex-wrap inset-0 ${className ?? ''}`}
+                style={{ ...style, gap: `${itemsGap}px` }}
+              >
+                {sortedItems.hidden.map((item, index) => (
+                  <ToolbarItem
+                    key={index}
+                    item={item}
+                    index={index}
+                    showLabels={showLabels}
+                    theme={theme}
+                  />
+                ))}
+              </div>
+            </Menu>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface IToolbarItemProps {
+  item: GdmnToolbarItem;
+  index: number;
+  showLabels?: boolean;
+  theme: GdmnToolbarThemeProps;
+}
+
+const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
+  const [internalLoading, setInternalLoading] = useState<string | number | undefined>();
+  const [animated, setAnimated] = useState<string | number | undefined>();
 
   useEffect(() => {
     if (animated || animated === 0) {
@@ -118,178 +252,181 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
     }
   }, [animated]);
 
-  return (
-    <div aria-label="toolbar" className={`flex flex-row items-center gap-2 p-2 ${className ?? ''}`} style={style}>
-      {items.map((item, index) => {
-        const component =
-          item.type === "button" ? (
-            <div
-              className="w-full h-full flex flex-col justify-center items-center gap-1 cursor-pointer"
-            >
-              <div
-                className={
-                  "flex flex-col justify-center items-center" +
-                  ((item.loading || internalLoading === index) ? " animate-spin" : "") +
-                  (item.animated && animated === index ? " animate-ping" : "")
-                }
-              >
-                {item.icon}
-              </div>
-              {showLabels && item.label}
-            </div>
-          ) : item.type === "switcher" ? (
-            <div
-              className="w-full h-full flex flex-col justify-center items-center gap-1"
-            >
-              <div className="flex flex-col justify-center items-center">
-                {item.icon}
-                <GdmnSwitcher
-                  checked={item.checked ?? false}
-                  disabled={item.disabled}
-                  onChange={e => item.onChange?.(e.target.checked)}
-                  size="small"
-                  primaryColor={theme.toggled?.background}
-                />
-              </div>
-              {showLabels && item.label}
-            </div>
-          ) : item.type === "custom" ? (
-            <div className="w-full h-full flex flex-col justify-center items-center gap-1">
-              {item.component}
-            </div>
-          ) : undefined;
+  const [pressed, setPressed] = useState<string | number | undefined>();
 
-        const getStyles = (toggled: boolean, disabled: boolean) => {
-          const stylesFromObject = (options: GdmnToolbarThemeOptions | undefined) => {
-            return {
-              borderColor: options?.border,
-              fill: options?.color,
-              color: options?.color,
-              background: options?.background,
-            };
-          };
+  useEffect(() => {
+    if (pressed || pressed === 0) {
+      const timeout = setTimeout(() => setPressed(undefined), 400);
+      return () => clearTimeout(timeout);
+    }
+  }, [pressed]);
 
-          if (toggled) {
-            if (disabled) {
-              return stylesFromObject(theme.toggled?.disabled);
-            }
-            return {
-              ...stylesFromObject(theme.toggled),
-              '&:hover': {
-                ...stylesFromObject(theme.toggled?.hover)
-              }
-            };
+  const component =
+    item.type === "button" ? (
+      <div
+        className="w-full h-full flex flex-col justify-center items-center gap-1 cursor-pointer"
+      >
+        <div
+          className={
+            "flex flex-col justify-center items-center" +
+            ((item.loading || internalLoading === index) ? " animate-spin" : "") +
+            (item.animated && animated === index ? " animate-ping" : "")
           }
-          if (disabled) {
-            return stylesFromObject(theme.disabled);
-          }
-          return {
-            ...stylesFromObject(theme),
-            '&:hover': {
-              ...stylesFromObject(theme.hover)
-            }
-          };
-        };
+        >
+          {item.icon}
+        </div>
+        {showLabels && item.label}
+      </div>
+    ) : item.type === "switcher" ? (
+      <div
+        className="w-full h-full flex flex-col justify-center items-center gap-1"
+      >
+        <div className="flex flex-col justify-center items-center">
+          {item.icon}
+          <GdmnSwitcher
+            checked={item.checked ?? false}
+            disabled={item.disabled}
+            onChange={e => item.onChange?.(e.target.checked)}
+            size="small"
+            primaryColor={theme.toggled?.background}
+          />
+        </div>
+        {showLabels && item.label}
+      </div>
+    ) : item.type === "custom" ? (
+      <div className="w-full h-full flex flex-col justify-center items-center gap-1">
+        {item.component}
+      </div>
+    ) : undefined;
 
-        let toggled = false;
-        let disabled = false;
-        if (item.type === 'button') {
-          toggled = !!item.toggled;
-          disabled = !!item.disabled;
-        } else if (item.type === 'switcher') {
-          disabled = !!item.disabled;
+  const getStyles = (toggled: boolean, disabled: boolean) => {
+    const stylesFromObject = (options: GdmnToolbarThemeOptions | undefined) => {
+      return {
+        borderColor: options?.border,
+        fill: options?.color,
+        color: options?.color,
+        background: options?.background,
+      };
+    };
+
+    if (toggled) {
+      if (disabled) {
+        return stylesFromObject(theme.toggled?.disabled);
+      }
+      return {
+        ...stylesFromObject(theme.toggled),
+        '&:hover': {
+          ...stylesFromObject(theme.toggled?.hover)
         }
+      };
+    }
+    if (disabled) {
+      return stylesFromObject(theme.disabled);
+    }
+    return {
+      ...stylesFromObject(theme),
+      '&:hover': {
+        ...stylesFromObject(theme.hover)
+      }
+    };
+  };
 
-        switch (item.type) {
-          case "button": {
-            return (
-              <Box
-                key={item.id}
-                sx={getStyles(toggled, disabled)}
-                className={`w-8 h-8 flex justify-center items-center border
+  let toggled = false;
+  let disabled = false;
+  if (item.type === 'button') {
+    toggled = !!item.toggled;
+    disabled = !!item.disabled;
+  } else if (item.type === 'switcher') {
+    disabled = !!item.disabled;
+  }
+
+  switch (item.type) {
+    case "button": {
+      return (
+        <Box
+          key={item.id}
+          sx={getStyles(toggled, disabled)}
+          className={`w-8 h-8 flex justify-center items-center border
                   border-solid rounded ${index === pressed ? 'relative top-[1px] left-[1px]' : 'shadow'}`}
-                onClick={
-                  item.type === "button"
-                    ? (item.disabled || item.loading || !item.onClick
-                      ? undefined
-                      : async () => {
-                        setPressed(index);
-                        if (item.animated) setAnimated(index);
-                        if (item.autoLoading) setInternalLoading(index);
-                        try {
-                          await item.onClick?.();
-                        } finally {
-                          if (item.autoLoading) setInternalLoading(undefined);
-                        }
-                      })
-                    : undefined
-                }
-              >
-                {item.tooltip && index !== pressed && component ? (
-                  <Tooltip
-                    title={item.tooltip}
-                    enterDelay={700}
-                  >
-                    {component}
-                  </Tooltip>
-                ) : (
-                  component
-                )}
-              </Box>
-            );
+          onClick={
+            item.type === "button"
+              ? (item.disabled || item.loading || !item.onClick
+                ? undefined
+                : async () => {
+                  setPressed(index);
+                  if (item.animated) setAnimated(index);
+                  if (item.autoLoading) setInternalLoading(index);
+                  try {
+                    await item.onClick?.();
+                  } finally {
+                    if (item.autoLoading) setInternalLoading(undefined);
+                  }
+                })
+              : undefined
           }
+        >
+          {item.tooltip && index !== pressed && component ? (
+            <Tooltip
+              title={item.tooltip}
+              enterDelay={700}
+            >
+              {component}
+            </Tooltip>
+          ) : (
+            component
+          )}
+        </Box>
+      );
+    }
 
-          case "switcher": {
-            return (
-              <Box
-                key={item.id}
-                sx={getStyles(toggled, disabled)}
-                className="h-8 w-14 flex justify-center items-center rounded-2xl"
-              >
-                {item.tooltip && index !== pressed && component ? (
-                  <Tooltip
-                    title={item.tooltip}
-                    enterDelay={700}
-                  >
-                    {component}
-                  </Tooltip>
-                ) : (
-                  component
-                )}
-              </Box>
-            );
-          }
+    case "switcher": {
+      return (
+        <Box
+          key={item.id}
+          sx={getStyles(toggled, disabled)}
+          className="h-8 w-14 flex justify-center items-center rounded-2xl"
+        >
+          {item.tooltip && index !== pressed && component ? (
+            <Tooltip
+              title={item.tooltip}
+              enterDelay={700}
+            >
+              {component}
+            </Tooltip>
+          ) : (
+            component
+          )}
+        </Box>
+      );
+    }
 
-          case "custom": {
-            return (
-              <Box
-                key={item.id}
-                sx={getStyles(toggled, disabled)}
-                className="h-8 flex justify-center items-center"
-              >
-                {item.tooltip && index !== pressed && component ? (
-                  <Tooltip
-                    title={item.tooltip}
-                    enterDelay={700}
-                  >
-                    {component}
-                  </Tooltip>
-                ) : (
-                  component
-                )}
-              </Box>
-            );
-          }
+    case "custom": {
+      return (
+        <Box
+          key={item.id}
+          sx={getStyles(toggled, disabled)}
+          className="h-8 flex justify-center items-center"
+        >
+          {item.tooltip && index !== pressed && component ? (
+            <Tooltip
+              title={item.tooltip}
+              enterDelay={700}
+            >
+              {component}
+            </Tooltip>
+          ) : (
+            component
+          )}
+        </Box>
+      );
+    }
 
-          default:
-            return (
-              <div
-                key={`separator-${index}`}
-                className="h-full border-0 border-l border-solid border-zinc-500"
-              />
-            );
-        }
-      })}
-    </div>
-  );
+    default:
+      return (
+        <div
+          key={`separator-${index}`}
+          className="h-full border-0 border-l border-solid border-zinc-500"
+        />
+      );
+  }
 };
