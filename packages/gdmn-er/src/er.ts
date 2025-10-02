@@ -117,6 +117,7 @@ export const gptReferenceTypes = [
   'one-to-many',                  // 1:N      |———<
   'one-to-one-or-many',           // 1:1..N   |———<|
   'one-to-zero-or-many',          // 1:0..N   |———○<
+  'many-to-one',                  // N:1      >———|
   'many-to-many',                 // N:N      <———>
   'one-or-many-to-one-or-many',   // 1..N:1..N <|———<|
   'zero-or-many-to-zero-or-many', // 0..N:0..N ○<———○<
