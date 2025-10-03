@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er",
-  "version": "0.14.171",
+  "version": "0.14.172",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,12 +16,12 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "^20.19.18",
+    "@types/node": "^20.19.19",
     "eslint": "^8.57.0",
     "gdmn-eslint-config": "workspace:*",
     "gdmn-tsconfig": "workspace:*",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "publishConfig": {
     "access": "public"
