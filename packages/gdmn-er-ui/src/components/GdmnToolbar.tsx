@@ -176,7 +176,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
   }, []);
 
   return (
-    <div ref={containerRef} className='flex-1 relative h-full min-h-[48px]'>
+    <div ref={containerRef} className='flex-1 relative h-full min-h-[48px] min-w-[50px]'>
       <div
         ref={contentRef}
         aria-label="toolbar"
@@ -192,54 +192,52 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
             theme={theme}
           />
         ))}
-        {(sortedItems.hidden && sortedItems.hidden.length > 0) && (
-          <div id='moreButton'>
-            <IconButton
-              id="basic-button"
-              aria-controls={menuOpen ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={menuOpen ? 'true' : undefined}
-              onClick={handleMenuClick}
-              size="small"
+        <div id='moreButton' style={{ display: sortedItems.hidden && sortedItems.hidden.length > 0 ? undefined : 'none' }}>
+          <IconButton
+            id="basic-button"
+            aria-controls={menuOpen ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={menuOpen ? 'true' : undefined}
+            onClick={handleMenuClick}
+            size="small"
+          >
+            <MoreVertIcon />
+          </IconButton>
+          {sortedItems.hidden && sortedItems.hidden.length && <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={menuOpen}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            MenuListProps={{
+              disablePadding: true,
+              'aria-labelledby': 'basic-button',
+            }}
+          >
+            <div
+              aria-label="toolbar"
+              className={`flex flex-row items-center p-2 flex-wrap inset-0 ${className ?? ''}`}
+              style={{ ...style, gap: `${itemsGap}px` }}
             >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={menuOpen}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              MenuListProps={{
-                disablePadding: true,
-                'aria-labelledby': 'basic-button',
-              }}
-            >
-              <div
-                aria-label="toolbar"
-                className={`flex flex-row items-center p-2 flex-wrap inset-0 ${className ?? ''}`}
-                style={{ ...style, gap: `${itemsGap}px` }}
-              >
-                {sortedItems.hidden.map((item, index) => (
-                  <ToolbarItem
-                    key={index}
-                    item={item}
-                    index={index}
-                    showLabels={showLabels}
-                    theme={theme}
-                  />
-                ))}
-              </div>
-            </Menu>
-          </div>
-        )}
+              {sortedItems.hidden.map((item, index) => (
+                <ToolbarItem
+                  key={index}
+                  item={item}
+                  index={index}
+                  showLabels={showLabels}
+                  theme={theme}
+                />
+              ))}
+            </div>
+          </Menu>}
+        </div>
       </div>
     </div>
   );
