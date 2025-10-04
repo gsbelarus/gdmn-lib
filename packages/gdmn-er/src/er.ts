@@ -49,6 +49,11 @@ export type Method<E = Entity, T = EntityRecord<any>> = {
   fn?: EntityMethodFn<E, T>;
   order: number;
   disabled?: boolean;
+  /**
+   * Indicates if the method is built-in (system).
+   * Such methods cannot be modified or deleted by users.
+   */
+  builtIn?: boolean;
 };
 
 export const simpleAttrTypes = [

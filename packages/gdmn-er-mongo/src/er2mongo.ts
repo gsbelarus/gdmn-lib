@@ -311,6 +311,11 @@ export function entityToEntityDef(e: Entity): TEntityDef {
   return {
     ...sourceEntity,
     name: sourceEntity.name,
-    attributes: attributesArray
+    attributes: attributesArray,
+    methods: methods && new Map(Object
+      .entries(methods)
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => [key, value!.filter(v => !v.builtIn)])
+    ) as TEntityDef['methods'],
   };
 }

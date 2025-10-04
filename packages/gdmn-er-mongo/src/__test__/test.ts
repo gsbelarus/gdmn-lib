@@ -94,6 +94,16 @@ describe('entity2entityDef', () => {
     for (const entity of systemEntities) {
       const e = { ...entity };
 
+      e.methods = e.methods && Object.fromEntries(Object
+        .entries(e.methods)
+        .map(([key, value]) => [key, value && value.filter(v => !v.builtIn)])
+        .filter(([, value]) => value !== undefined && value.length > 0)
+      );
+
+      if (e.methods === undefined) {
+        delete e.methods;
+      }
+
       e.attributes = Object.fromEntries(Object.entries(e.attributes).map(([attrName, attr]) => {
 
         if (!isAttrTypeDef(attr)) {

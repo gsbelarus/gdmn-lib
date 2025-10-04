@@ -41,6 +41,37 @@ export const testEntity: Entity = {
       enum: ['one', 'two', 'three'],
     }
   },
+  methods: {
+    beforeSubmit: [
+      {
+        id: 'sys:logMethod',
+        name: 'logMethod',
+        namespace: 'sys',
+        environment: 'server',
+        description: 'Logs a message to the console',
+        code: {
+          lang: 'js',
+          code: 'console.log("Method logMethod called");'
+        },
+        order: 0
+      }
+    ],
+    afterSubmit: [
+      {
+        id: 'sys:logMethod',
+        name: 'logMethod',
+        namespace: 'sys',
+        environment: 'server',
+        description: 'Logs a message to the console',
+        code: {
+          lang: 'js',
+          code: 'console.log("Method logMethod called");'
+        },
+        order: 0,
+        builtIn: true
+      }
+    ]
+  }
 };
 
 const chatHistoryEntity: Entity = {
