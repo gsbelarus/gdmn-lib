@@ -146,7 +146,7 @@ function methodSchema() {
     id: { type: String, required: true },
     name: { type: String, required: true },
     namespace: { type: String, required: true },
-    environment: { type: String, enum: ['server', 'client', 'both'], required: true },
+    environment: { type: String, enum: ['server', 'client'], required: true },
     description: { type: String },
     params: [{
       name: { type: String, required: true },

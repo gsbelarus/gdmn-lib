@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er",
-  "version": "0.14.172",
+  "version": "0.14.173",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
