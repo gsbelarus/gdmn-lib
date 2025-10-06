@@ -32,28 +32,108 @@ export const ZodMethodCode = z.object({
 
 export type MethodCode = z.infer<typeof ZodMethodCode>;
 
-//TODO: remove unused fields
+export type MethodUIStateHandlerResult = {
+  uiLabel?: string;
+  uiTooltip?: string;
+  uiOrder?: number;
+  uiIcon?: string;
+  uiGroup?: string;
+  disabled?: boolean;
+  hidden?: boolean;
+  toggled?: boolean;
+};
+
 export type Method<E = Entity, T = EntityRecord<any>> = {
+  /**
+   * A unique identifier for the method. Used to reference the method in the system.
+   */
   id: string;
+  /**
+   * A name of the method. Some method names are reserved by the system.
+   * The name of the method defines its type. There can be multiple methods of the same type.
+   * In such cases, the methods will be executed in the order defined by the "order" attribute,
+   * from lowest to highest, and their results will be chained.
+   */
   name: string;
+  /**
+   * A namespace the method belongs to. Methods of the same entity can belong to different namespaces.
+   */
   namespace: string;
+  /**
+   * The environment where the method is executed: 'server' or 'client'.
+   */
   environment: MethodEnvironment;
   /**
-   * A detailed description of what the method does. Also used as a tooltip in the UI.
+   * A detailed description of what the method does. Also used as a tooltip in the UI
+   * if uiTooltip is not specified.
    */
   description?: string;
+  /**
+   * An array of parameters that the method accepts.
+   */
   params?: MethodParam[];
+  /**
+   * The return type of the method. Describes the type of value the method returns.
+   */
   returnType?: string;
+  /**
+   * A detailed description of the return value of the method.
+   */
   returnDescription?: string;
+  /**
+   * The actual code of the method. 
+   */
   code?: MethodCode;
+  /**
+   * Some built-in methods may not have code, as they are implemented directly in the system.
+   */
   fn?: EntityMethodFn<E, T>;
+  /**
+   * An order of the method among other methods of the same type.
+   */
   order: number;
+  /**
+   * Indicates if the method is disabled. Disabled methods will not be executed.
+   */
   disabled?: boolean;
   /**
    * Indicates if the method is built-in (system).
    * Such methods cannot be modified or deleted by users.
    */
   builtIn?: boolean;
+  /**
+   * Indicates if the method is accessible to users via the UI.
+   */
+  showInUI?: boolean;
+  /**
+   * Label for use in the user interface
+   * If not specified, the name attribute will be used as the label
+   */
+  uiLabel?: string;
+  /**
+   * A helpful tooltip for the method. Displayed in the UI when hovering over the method.
+   */
+  uiTooltip?: string;
+  /**
+   * An order of the method in the UI lists.
+   */
+  uiOrder?: number;
+  /**
+   * An icon name to visually represent the method in the UI.
+   */
+  uiIcon?: string;
+  /**
+   * A grouping identifier for the method. Used to categorize methods in the UI.
+   */
+  uiGroup?: string;
+  /**
+   * A custom handler for managing the UI state of the method.
+   * The name of a method that will be called to handle UI state changes.
+   * Such a method should be defined in the entity's methods.
+   * The method should return a Promise that resolves to a value
+   * of type MethodUIStateHandlerResult.
+   */
+  uiStateHandler?: string;
 };
 
 export const simpleAttrTypes = [

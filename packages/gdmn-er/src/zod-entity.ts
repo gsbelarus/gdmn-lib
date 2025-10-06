@@ -146,6 +146,14 @@ export const ZodMethod = z.object({
     .optional(),
   order: z.number(),
   disabled: z.boolean().optional(),
+  builtIn: z.boolean().optional(),
+  showInUI: z.boolean().optional(),
+  uiLabel: z.string().optional(),
+  uiTooltip: z.string().optional(),
+  uiOrder: z.number().optional(),
+  uiIcon: z.string().optional(),
+  uiGroup: z.string().optional(),
+  uiStateHandler: z.string().optional(),
 });
 
 // validator for EntitySchema type
