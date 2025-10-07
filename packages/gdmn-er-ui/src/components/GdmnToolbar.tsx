@@ -181,7 +181,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
         ref={contentRef}
         aria-label="toolbar"
         className={`flex flex-row items-center p-2 min-w-max absolute inset-0 ${className ?? ''}`}
-        style={{ ...style, gap: `${itemsGap}px` }}
+        style={{ ...style }}
       >
         {sortedItems.visible.map((item, index) => (
           <ToolbarItem
@@ -192,7 +192,12 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
             theme={theme}
           />
         ))}
-        <div id='moreButton' style={{ display: sortedItems.hidden && sortedItems.hidden.length > 0 ? undefined : 'none' }}>
+        <div
+          id='moreButton'
+          style={{
+            display: sortedItems.hidden && sortedItems.hidden.length > 0 ? undefined : 'none',
+            marginLeft: sortedItems.visible.length > 0 ? `${itemsGap}px` : undefined
+          }}>
           <IconButton
             id="basic-button"
             aria-controls={menuOpen ? 'basic-menu' : undefined}
@@ -308,6 +313,8 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
       </div>
     ) : undefined;
 
+  const commonStyles = { marginLeft: index !== 0 ? `${itemsGap}px` : undefined };
+
   const getStyles = (toggled: boolean, disabled: boolean) => {
     const stylesFromObject = (options: GdmnToolbarThemeOptions | undefined) => {
       return {
@@ -354,7 +361,7 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
       return (
         <Box
           key={item.id}
-          sx={getStyles(toggled, disabled)}
+          sx={{ ...commonStyles, ...getStyles(toggled, disabled) }}
           className={`w-8 h-8 flex justify-center items-center border
                   border-solid rounded ${index === pressed ? 'relative top-[1px] left-[1px]' : 'shadow'}`}
           onClick={
@@ -392,8 +399,8 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
       return (
         <Box
           key={item.id}
-          sx={getStyles(toggled, disabled)}
-          className="h-8 w-14 flex justify-center items-center rounded-2xl"
+          sx={{ ...commonStyles, ...getStyles(toggled, disabled) }}
+          className={`h-8 w-14 flex justify-center items-center rounded-2xl`}
         >
           {item.tooltip && index !== pressed && component ? (
             <Tooltip
@@ -413,8 +420,8 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
       return (
         <Box
           key={item.id}
-          sx={getStyles(toggled, disabled)}
-          className="h-8 flex justify-center items-center"
+          sx={{ ...commonStyles, ...getStyles(toggled, disabled) }}
+          className={`h-8 flex justify-center items-center`}
         >
           {item.tooltip && index !== pressed && component ? (
             <Tooltip
@@ -434,7 +441,8 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
       return (
         <div
           key={`separator-${index}`}
-          className="h-full border-0 border-l border-solid border-zinc-500"
+          style={commonStyles}
+          className={`h-full border-0 border-l border-solid border-zinc-500`}
         />
       );
   }
