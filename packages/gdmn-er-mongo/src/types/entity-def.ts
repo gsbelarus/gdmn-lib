@@ -1,4 +1,4 @@
-import { DisplayedField, EntityDefMethods, ErdCardinality, gptReferenceTypes, METHOD_TYPES, OfType, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
+import { DisplayedField, EntityDefMethods, ErdCardinality, gptReferenceTypes, OfType, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -112,9 +112,9 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     nonfilterable: z.boolean().optional(),
   }).superRefine((data, ctx) => {
     checkField(
-      (data.type === 'objectid' || data.type === 'entity') && !data.referencesEntity,
+      data.type === 'entity' && !data.referencesEntity,
       ['referencesEntity'],
-      "'referencesEntity' is required when type is 'objectid' or 'entity'",
+      "'referencesEntity' is required when type is 'entity'",
       ctx
     );
 
@@ -126,11 +126,10 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     );
 
     checkField(
-      data.type === 'array' &&
-      (data.of === 'objectid' || data.of === 'entity') &&
+      data.type === 'array' && data.of === 'entity' &&
       !data.referencesEntity,
       ['referencesEntity'],
-      "'referencesEntity' is required when type is 'array' and of is 'objectid' or 'entity'",
+      "'referencesEntity' is required when type is 'array' and of is 'entity'",
       ctx
     );
 
@@ -191,7 +190,7 @@ export const ZodEntityDefPlainWithId = z.object({
   ...ZodEntityDefShape,
 });
 
-//TODO: use the type derived from the zod schema 
+//TODO: use the type derived from the zod schema
 export type EntityDefDocument = {
   _id: string;
   namespace?: string | undefined;
