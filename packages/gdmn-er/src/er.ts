@@ -19,6 +19,13 @@ export const ZodMethodParam = z.object({
 
 export type MethodParam = z.infer<typeof ZodMethodParam>;
 
+export const ZodMethodParamValue = z.object({
+  name: z.string(),
+  value: z.any().optional(),
+});
+
+export type MethodParamValue = z.infer<typeof ZodMethodParamValue>;
+
 export const ZodMethodEnvironment = z.enum(['server', 'client']);
 
 export type MethodEnvironment = z.infer<typeof ZodMethodEnvironment>;

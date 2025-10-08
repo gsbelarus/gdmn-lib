@@ -66,6 +66,7 @@ export type GdmnToolbarProps = {
   theme?: GdmnToolbarThemeProps;
   className?: string,
   style?: CSSProperties;
+  size?: 'small' | 'medium' | 'large';
 };
 
 const MoreVertIcon = ({ size, className, color }: any) => (
@@ -83,7 +84,7 @@ const MoreVertIcon = ({ size, className, color }: any) => (
 const itemsGap = 8;
 const moreButtonWidth = 34;
 
-export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, style }: Readonly<GdmnToolbarProps>) {
+export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, style, size }: Readonly<GdmnToolbarProps>) {
 
   const theme: GdmnToolbarThemeProps = {
     border: propsTheme?.border ?? 'rgb(82 82 91)',
@@ -253,9 +254,10 @@ interface IToolbarItemProps {
   index: number;
   showLabels?: boolean;
   theme: GdmnToolbarThemeProps;
-}
+  size?: 'small' | 'medium' | 'large';
+};
 
-const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
+const ToolbarItem = ({ item, index, showLabels, theme, size }: IToolbarItemProps) => {
   const [internalLoading, setInternalLoading] = useState<string | number | undefined>();
   const [animated, setAnimated] = useState<string | number | undefined>();
 
@@ -356,13 +358,16 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
     disabled = !!item.disabled;
   }
 
+  const height = size === 'small' ? 'h-6' : size === 'large' ? 'h-10' : 'h-8';
+  const width = size === 'small' ? 'w-6' : size === 'large' ? 'w-10' : 'w-8';
+
   switch (item.type) {
     case "button": {
       return (
         <Box
           key={item.id}
           sx={{ ...commonStyles, ...getStyles(toggled, disabled) }}
-          className={`w-8 h-8 flex justify-center items-center border
+          className={`${width} ${height} flex justify-center items-center border
                   border-solid rounded ${index === pressed ? 'relative top-[1px] left-[1px]' : 'shadow'}`}
           onClick={
             item.type === "button"
@@ -400,7 +405,7 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
         <Box
           key={item.id}
           sx={{ ...commonStyles, ...getStyles(toggled, disabled) }}
-          className={`h-8 w-14 flex justify-center items-center rounded-2xl`}
+          className={`${height} w-14 flex justify-center items-center rounded-2xl`}
         >
           {item.tooltip && index !== pressed && component ? (
             <Tooltip
@@ -421,7 +426,7 @@ const ToolbarItem = ({ item, index, showLabels, theme }: IToolbarItemProps) => {
         <Box
           key={item.id}
           sx={{ ...commonStyles, ...getStyles(toggled, disabled) }}
-          className={`h-8 flex justify-center items-center`}
+          className={`${height} flex justify-center items-center`}
         >
           {item.tooltip && index !== pressed && component ? (
             <Tooltip
