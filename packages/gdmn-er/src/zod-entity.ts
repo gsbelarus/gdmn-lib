@@ -136,7 +136,7 @@ export const ZodMethod = z.object({
   environment: ZodMethodEnvironment,
   description: z.string().optional(),
   params: z.array(ZodMethodParam).optional(),
-  returnType: z.string().optional(),
+  returnType: z.array(ZodMethodParam).optional(),
   returnDescription: z.string().optional(),
   code: ZodMethodCode.optional(),
   fn: z

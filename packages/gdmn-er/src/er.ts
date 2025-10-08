@@ -81,8 +81,10 @@ export type Method<E = Entity, T = EntityRecord<any>> = {
   params?: MethodParam[];
   /**
    * The return type of the method. Describes the type of value the method returns.
+   * If specified and not an empty array, the method must return an object with the fields
+   * defined in the returnType array.
    */
-  returnType?: string;
+  returnType?: MethodParam[];
   /**
    * A detailed description of the return value of the method.
    */

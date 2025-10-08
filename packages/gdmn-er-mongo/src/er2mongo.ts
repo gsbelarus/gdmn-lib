@@ -141,6 +141,14 @@ function mapAttrType2MongoType(entityName: string, attrName: string, attrType: A
   }
 }
 
+const methodParamSchemaObject = {
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  required: { type: Boolean, default: false },
+  nullable: { type: Boolean, default: false },
+  default: { type: mongoose.Schema.Types.Mixed },
+};
+
 function methodSchema() {
   return new mongoose.Schema({
     id: { type: String, required: true },
@@ -148,14 +156,8 @@ function methodSchema() {
     namespace: { type: String, required: true },
     environment: { type: String, enum: ['server', 'client'], required: true },
     description: { type: String },
-    params: [{
-      name: { type: String, required: true },
-      type: { type: String, required: true },
-      required: { type: Boolean, default: false },
-      nullable: { type: Boolean, default: false },
-      default: mongoose.Schema.Types.Mixed,
-    }],
-    returnType: { type: String },
+    params: [methodParamSchemaObject],
+    returnType: [methodParamSchemaObject],
     returnDescription: { type: String },
     code: {
       lang: { type: String },

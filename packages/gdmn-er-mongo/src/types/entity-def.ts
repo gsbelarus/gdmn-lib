@@ -16,7 +16,7 @@ const methodSchema = z.object({
   environment: z.enum(['server', 'client']),
   description: z.string().optional(),
   params: z.array(methodParamSchema).optional(),
-  returnType: z.string().optional(),
+  returnType: z.array(methodParamSchema).optional(),
   returnDescription: z.string().optional(),
   code: z.object({ lang: z.string(), code: z.string() }).optional(),
   fn: z.function().optional(),
