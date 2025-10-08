@@ -304,7 +304,7 @@ export const METHOD_TYPES_CLIENT = [
   "afterInsert",
   "beforeDelete",
   "afterDelete",
-  "fieldChange",
+  "beforeMergeObject",
 ] as const;
 
 export const METHOD_TYPES = [
