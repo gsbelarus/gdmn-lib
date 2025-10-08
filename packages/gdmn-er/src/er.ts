@@ -15,6 +15,7 @@ export const ZodMethodParam = z.object({
   required: z.boolean().optional(),
   nullable: z.boolean().optional(),
   default: z.any().optional(),
+  description: z.string().optional(),
 });
 
 export type MethodParam = z.infer<typeof ZodMethodParam>;

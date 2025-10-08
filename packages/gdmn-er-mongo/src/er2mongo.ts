@@ -147,6 +147,7 @@ const methodParamSchemaObject = {
   required: { type: Boolean, default: false },
   nullable: { type: Boolean, default: false },
   default: { type: mongoose.Schema.Types.Mixed },
+  description: { type: String },
 };
 
 function methodSchema() {

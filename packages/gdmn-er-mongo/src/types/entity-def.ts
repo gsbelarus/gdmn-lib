@@ -7,6 +7,8 @@ const methodParamSchema = z.object({
   type: z.string(),
   description: z.string().optional(),
   required: z.boolean().optional(),
+  nullable: z.boolean().optional(),
+  default: z.any().optional(),
 });
 
 const methodSchema = z.object({
