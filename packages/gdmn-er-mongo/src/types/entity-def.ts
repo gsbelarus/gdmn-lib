@@ -121,6 +121,13 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     );
 
     checkField(
+      !!data.referencesEntity && !data.displayedFields,
+      ['displayedFields'],
+      "'displayedFields' is required when referencesEntity is present",
+      ctx
+    );
+
+    checkField(
       data.type === 'array' && !data.of,
       ['of'],
       "'of' is required when type is 'array'",

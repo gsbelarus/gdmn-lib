@@ -3,18 +3,18 @@ import {
   AttrType,
   Entity,
   EntityAttributes,
+  EntityMethodFn,
   EntityMethods,
+  gptReferenceTypes,
   METHOD_TYPES,
   ofTypes,
-  ZodMethodParam,
-  ZodMethodEnvironment,
-  ZodMethodCode,
-  EntityMethodFn,
-  ZodSimpleAttrType,
-  ZodRefFieldProps,
   ZodDisplayedField,
+  ZodMethodCode,
+  ZodMethodEnvironment,
+  ZodMethodParam,
   ZodOptions,
-  gptReferenceTypes
+  ZodRefFieldProps,
+  ZodSimpleAttrType
 } from './er';
 import id from 'zod/v4/locales/id.js';
 
@@ -88,9 +88,16 @@ export const ZodAttrTypeDef = z.object({
   namespace: z.string().optional(),
 }).superRefine((data, ctx) => {
   checkField(
-    ((data.of === 'objectid' && !data.unique) || data.type === 'entity') && !data.referencesEntity,
+    data.type === 'entity' && !data.referencesEntity,
     ['referencesEntity'],
-    "'referencesEntity' is required when type is 'objectid' or 'entity'",
+    "'referencesEntity' is required when type is 'entity'",
+    ctx
+  );
+
+  checkField(
+    !!data.referencesEntity && !data.displayedFields,
+    ['displayedFields'],
+    "'displayedFields' is required when referencesEntity is present",
     ctx
   );
 
@@ -102,11 +109,10 @@ export const ZodAttrTypeDef = z.object({
   );
 
   checkField(
-    data.type === 'array' &&
-    (data.of === 'objectid' || data.of === 'entity') &&
+    data.type === 'array' && data.of === 'entity' &&
     !data.referencesEntity,
     ['referencesEntity'],
-    "'referencesEntity' is required when type is 'array' and of is 'objectid' or 'entity'",
+    "'referencesEntity' is required when type is 'array' and of is 'entity'",
     ctx
   );
 
