@@ -16,7 +16,6 @@ import {
   ZodRefFieldProps,
   ZodSimpleAttrType
 } from './er';
-import id from 'zod/v4/locales/id.js';
 
 export const ZodOfTypes = z.union([
   z.enum(ofTypes),
@@ -95,7 +94,7 @@ export const ZodAttrTypeDef = z.object({
   );
 
   checkField(
-    !!data.referencesEntity && !data.displayedFields,
+    !!data.referencesEntity && (!data.displayedFields || data.displayedFields.length === 0),
     ['displayedFields'],
     "'displayedFields' is required when referencesEntity is present",
     ctx

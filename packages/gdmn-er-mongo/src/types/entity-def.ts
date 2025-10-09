@@ -121,7 +121,7 @@ const ZodEntityDefAttribute: z.ZodSchema<EntityDefAttribute> = z.lazy(() => {
     );
 
     checkField(
-      !!data.referencesEntity && !data.displayedFields,
+      !!data.referencesEntity && (!data.displayedFields || data.displayedFields.length === 0),
       ['displayedFields'],
       "'displayedFields' is required when referencesEntity is present",
       ctx
