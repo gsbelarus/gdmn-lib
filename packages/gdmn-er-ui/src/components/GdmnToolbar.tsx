@@ -230,7 +230,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
             <div
               aria-label="toolbar"
               className={`flex flex-row items-center p-2 flex-wrap inset-0 ${className ?? ''}`}
-              style={{ ...style, gap: `${itemsGap}px` }}
+              style={{ ...style }}
             >
               {sortedItems.hidden.map((item, index) => (
                 <ToolbarItem
@@ -446,7 +446,7 @@ const ToolbarItem = ({ item, index, showLabels, theme, size }: IToolbarItemProps
       return (
         <div
           key={`separator-${index}`}
-          style={commonStyles}
+          style={{ ...commonStyles, minHeight: '32px' }}
           className={`h-full border-0 border-l border-solid border-zinc-500`}
         />
       );
