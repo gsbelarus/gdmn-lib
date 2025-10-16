@@ -144,7 +144,6 @@ export const ZodMethod = z.object({
   returnType: z.array(ZodMethodParam).optional(),
   returnDescription: z.string().optional(),
   code: ZodMethodCode.optional(),
-  prompt: z.string().optional(),
   fn: z
     .custom<EntityMethodFn<any, any>>((v) => typeof v === 'function', {
       message: 'fn must be a function',
