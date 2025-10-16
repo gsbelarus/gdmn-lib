@@ -94,6 +94,10 @@ export type Method<E = Entity, T = EntityRecord<any>> = {
    * The actual code of the method. 
    */
   code?: MethodCode;
+  /** 
+   * A prompt used to generate the code, if the code was generated using AI.
+   */
+  prompt?: string;
   /**
    * Some built-in methods may not have code, as they are implemented directly in the system.
    */
