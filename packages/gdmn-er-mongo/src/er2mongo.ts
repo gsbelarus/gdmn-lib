@@ -156,6 +156,7 @@ function methodSchema() {
     name: { type: String, required: true },
     namespace: { type: String, required: true },
     environment: { type: String, enum: ['server', 'client'], required: true },
+    prompt: { type: String },
     description: { type: String },
     params: [methodParamSchemaObject],
     returnType: [methodParamSchemaObject],

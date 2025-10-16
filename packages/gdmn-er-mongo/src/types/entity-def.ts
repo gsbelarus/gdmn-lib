@@ -21,6 +21,7 @@ const methodSchema = z.object({
   returnType: z.array(methodParamSchema).optional(),
   returnDescription: z.string().optional(),
   code: z.object({ lang: z.string(), code: z.string() }).optional(),
+  prompt: z.string().optional(),
   fn: z.function().optional(),
   order: z.number(),
   disabled: z.boolean().optional(),
