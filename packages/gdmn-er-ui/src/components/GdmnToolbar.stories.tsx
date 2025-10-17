@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { GdmnToolbar, GdmnToolbarThemeProps } from './GdmnToolbar';
+import { GdmnToolbar, GdmnToolbarProps, GdmnToolbarThemeProps } from './GdmnToolbar';
 
-const GdmnToolbarWithTheme = (props: any) => {
+const GdmnToolbarWithTheme = (props: GdmnToolbarProps) => {
   /** Styles from king-pos project */
   const defaultTheme: GdmnToolbarThemeProps = {
     hover: {
@@ -95,3 +95,52 @@ export const Separator = () => {
     />
   );
 }; 
+
+export const Toolbar = () => {
+
+  const [size, setSize] = useState<'small' | 'medium' | 'large'>('medium');
+
+  return (
+    <div>
+      <div className="inline-block text-left">
+        <div className="flex items-center gap-3 mb-2">
+            <div className="form-control">
+              <label className="cursor-pointer flex gap-1">
+                <input type="radio" name="size" className="radio radio-primary" value="small" onChange={() => setSize('small')} />
+                <span className="label-text">Small</span>                
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="cursor-pointer flex gap-1">
+                <input type="radio" name="size" className="radio radio-primary" value="medium" onChange={() => setSize('medium')} />
+                <span className="label-text">Medium</span>                
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="cursor-pointer flex gap-1">
+                <input type="radio" name="size" className="radio radio-primary" value="large" onChange={() => setSize('large')} />
+                <span className="label-text">Large</span>
+              </label>
+            </div>
+
+        </div>
+      </div>
+      
+      <GdmnToolbarWithTheme
+        size={size}
+        items={[
+          { 
+            type: 'button', 
+            id: 'btn1', 
+            label: 'Button', 
+            tooltip: 'Click me!',
+            icon: <SaveIcon />,
+            onClick: () => alert('Clicked!') 
+          },
+          { type: 'separator' },
+          { type: 'button', id: 'btn2', label: 'Button 2', }
+        ]}
+      />
+    </div>
+  );
+};

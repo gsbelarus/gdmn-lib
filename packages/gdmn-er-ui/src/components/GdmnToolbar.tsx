@@ -191,6 +191,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
             index={index}
             showLabels={showLabels}
             theme={theme}
+            size={size}
           />
         ))}
         <div
@@ -239,6 +240,7 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
                   index={index}
                   showLabels={showLabels}
                   theme={theme}
+                  size={size}
                 />
               ))}
             </div>
@@ -446,7 +448,7 @@ const ToolbarItem = ({ item, index, showLabels, theme, size }: IToolbarItemProps
       return (
         <div
           key={`separator-${index}`}
-          style={{ ...commonStyles, minHeight: '32px' }}
+          style={{ ...commonStyles, minHeight: size === 'small' ? 24 : size === 'large' ? 40 : 32 }}
           className={`h-full border-0 border-l border-solid border-zinc-500`}
         />
       );
