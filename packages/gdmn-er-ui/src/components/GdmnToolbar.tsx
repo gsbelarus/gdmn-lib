@@ -67,6 +67,10 @@ export type GdmnToolbarProps = {
   className?: string,
   style?: CSSProperties;
   size?: 'small' | 'medium' | 'large';
+  container?: {
+    className?: string,
+    style?: CSSProperties;
+  }
 };
 
 const MoreVertIcon = ({ size, className, color }: any) => (
@@ -84,7 +88,7 @@ const MoreVertIcon = ({ size, className, color }: any) => (
 const itemsGap = 8;
 const moreButtonWidth = 34;
 
-export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, style, size }: Readonly<GdmnToolbarProps>) {
+export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, style, size, container }: Readonly<GdmnToolbarProps>) {
 
   const theme: GdmnToolbarThemeProps = {
     border: propsTheme?.border ?? 'rgb(82 82 91)',
@@ -177,7 +181,11 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
   }, []);
 
   return (
-    <div ref={containerRef} className='flex-1 relative h-full min-h-[48px] min-w-[50px]'>
+    <div
+      ref={containerRef}
+      className={`flex-1 relative h-full min-h-[48px] min-w-[50px] ${container?.className ?? ''}`}
+      style={{ ...container?.style }}
+    >
       <div
         ref={contentRef}
         aria-label="toolbar"

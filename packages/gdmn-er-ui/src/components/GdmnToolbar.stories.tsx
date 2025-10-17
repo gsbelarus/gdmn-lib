@@ -106,41 +106,42 @@ export const Toolbar = () => {
         <div className="flex items-center gap-3 mb-2">
             <div className="form-control">
               <label className="cursor-pointer flex gap-1">
-                <input type="radio" name="size" className="radio radio-primary" value="small" onChange={() => setSize('small')} />
+                <input type="radio" name="size" className="radio radio-primary" value="small" checked={size === 'small'} onChange={() => setSize('small')} />
                 <span className="label-text">Small</span>                
               </label>
             </div>
             <div className="form-control">
               <label className="cursor-pointer flex gap-1">
-                <input type="radio" name="size" className="radio radio-primary" value="medium" onChange={() => setSize('medium')} />
+                <input type="radio" name="size" className="radio radio-primary" value="medium" checked={size === 'medium'} onChange={() => setSize('medium')} />
                 <span className="label-text">Medium</span>                
               </label>
             </div>
             <div className="form-control">
               <label className="cursor-pointer flex gap-1">
-                <input type="radio" name="size" className="radio radio-primary" value="large" onChange={() => setSize('large')} />
+                <input type="radio" name="size" className="radio radio-primary" value="large" checked={size === 'large'} onChange={() => setSize('large')} />
                 <span className="label-text">Large</span>
               </label>
             </div>
-
         </div>
       </div>
       
-      <GdmnToolbarWithTheme
-        size={size}
-        items={[
-          { 
-            type: 'button', 
-            id: 'btn1', 
-            label: 'Button', 
-            tooltip: 'Click me!',
-            icon: <SaveIcon />,
-            onClick: () => alert('Clicked!') 
-          },
-          { type: 'separator' },
-          { type: 'button', id: 'btn2', label: 'Button 2', }
-        ]}
-      />
+      <div className="border">
+        <GdmnToolbarWithTheme
+          size={size}
+          items={[
+            { 
+              type: 'button', 
+              id: 'btn1', 
+              label: 'Button', 
+              tooltip: 'Click me!',
+              icon: <SaveIcon />,
+              onClick: () => alert('Clicked!') 
+            },
+            { type: 'separator' },
+            { type: 'button', id: 'btn2', label: 'Button 2', }
+          ]}
+        />
+      </div>
     </div>
   );
 };
