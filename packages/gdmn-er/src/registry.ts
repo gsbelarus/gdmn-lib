@@ -151,6 +151,10 @@ export function removeEntity(name: string): boolean {
     deleted = true;
   }
 
+  if (deleted) {
+    updateEntityVersion();
+  }
+
   return deleted;
 };
 
