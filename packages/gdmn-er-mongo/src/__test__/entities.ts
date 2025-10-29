@@ -139,6 +139,7 @@ const commandEntity: Entity = {
     parent: {
       type: 'objectid',
       referencesEntity: 'Command',
+      displayedFields: [{ field: '_id' }],
       default: null,
     },
     namespace: {
@@ -487,12 +488,14 @@ const roleEntity: Entity = {
       index: true,
       required: true,
       referencesEntity: 'Workspace',
+      displayedFields: [{ field: '_id' }],
     },
     organizationId: {
       type: 'objectid',
       index: true,
       required: true,
       referencesEntity: 'Company',
+      displayedFields: [{ field: '_id' }],
     },
     // permissions: {
     //   type: 'entity',
@@ -540,10 +543,12 @@ const userEntity: Entity = {
     lastActiveWorkspace: {
       type: 'objectid',
       referencesEntity: 'Workspace',
+      displayedFields: [{ field: '_id' }],
     },
     lastActiveOrganization: {
       type: 'objectid',
       referencesEntity: 'Company',
+      displayedFields: [{ field: '_id' }],
     },
     createdAt: {
       type: 'timestamp',
@@ -584,11 +589,13 @@ const workspaceEntity: Entity = {
       index: true,
       required: true,
       referencesEntity: 'User',
+      displayedFields: [{ field: '_id' }],
     },
     organizations: {
       type: 'array',
       of: 'objectid',
-      referencesEntity: 'Company'
+      referencesEntity: 'Company',
+      displayedFields: [{ field: '_id' }],
     },
     createdAt: {
       type: 'timestamp',
