@@ -31,7 +31,7 @@ export function convertDefaultValueByType(entityName: string, attrName: string, 
     case 'timestamp':
     case 'date':
     case 'time':
-      if (def === 'now' || def === 'Date.now') return def;
+      if (def === 'now' || def === 'Date.now' || def === 'Date.now()') return def;
       const date = new Date(def);
       if (Number.isNaN(date.getTime())) {
         console.warn(`Invalid date default value ${def} for ${entityName}.${attrName}`);

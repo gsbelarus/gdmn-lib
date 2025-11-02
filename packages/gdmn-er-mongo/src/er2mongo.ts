@@ -41,7 +41,7 @@ function convertDefaultValueForMongoose(entityName: string, attrName: string, ty
     case 'timestamp':
     case 'date':
     case 'time':
-      if (def === 'now' || def === 'Date.now') return Date.now();
+      if (def === 'now' || def === 'Date.now' || def === 'Date.now()') return Date.now();
       const date = new Date(def);
       if (Number.isNaN(date.getTime())) {
         console.warn(`Invalid date default value ${def} for ${entityName}.${attrName}`);
