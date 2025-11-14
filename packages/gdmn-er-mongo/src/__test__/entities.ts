@@ -480,85 +480,79 @@ const roleEntity: Entity = {
   attributes: {
     name: {
       type: 'string',
-      required: true,
+      unique: true,
+      required: true
     },
-    description: 'string',
-    workspaceId: {
-      type: 'objectid',
-      index: true,
-      required: true,
-      referencesEntity: 'Workspace',
-      displayedFields: [{ field: '_id' }],
+    code: {
+      type: 'string',
+      unique: true,
+      required: true
     },
-    organizationId: {
-      type: 'objectid',
-      index: true,
-      required: true,
-      referencesEntity: 'Company',
-      displayedFields: [{ field: '_id' }],
-    },
-    // permissions: {
-    //   type: 'entity',
-    //   entity: permissionEntity,
-    // },
-    createdAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
-    updatedAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
+    description: {
+      type: 'string',
+    }
   },
 };
+
+export enum UserState {
+  Unconfirmed = 'unconfirmed',
+  Active = 'active',
+  Uninitialized = 'uninitialized',
+  Disabled = 'disabled'
+}
 
 const userEntity: Entity = {
   name: 'User',
   namespace: 'sys',
   objectTitle: '$name',
   attributes: {
-    password: {
-      type: 'string',
-      required: true,
-      minlength: 1,
-      nonfilterable: true,
+    createdAt: {
+      type: 'timestamp',
+      required: false,
+      readonly: true,
+      default: 'now',
+      system: true,
+      hidden: true
+    },
+    updatedAt: {
+      type: 'timestamp',
+      required: false,
+      readonly: true,
+      default: 'now',
+      system: true,
+      hidden: true
     },
     name: {
       type: 'string',
+      max: 40,
       required: true
     },
     email: {
       type: 'string',
       required: true,
       unique: true,
-      match: EMAIL_REGEXP.toString(),
+      match: EMAIL_REGEXP.source,
     },
-    isSuperAdmin: {
-      type: 'boolean',
+    password: {
+      type: 'string',
       required: true,
-      default: false,
+      minlength: 8,
+      nonfilterable: true,
     },
-    lastActiveWorkspace: {
-      type: 'objectid',
-      referencesEntity: 'Workspace',
-      displayedFields: [{ field: '_id' }],
-    },
-    lastActiveOrganization: {
-      type: 'objectid',
-      referencesEntity: 'Company',
-      displayedFields: [{ field: '_id' }],
-    },
-    createdAt: {
-      type: 'timestamp',
+    roles: {
+      type: "array",
+      of: "objectid",
+      referencesEntity: roleEntity.name,
+      displayedFields: [{
+        field: 'name',
+        readonly: true
+      }],
       required: true,
-      default: 'now',
     },
-    updatedAt: {
-      type: 'timestamp',
+    state: {
+      type: 'string',
       required: true,
-      default: 'now',
+      enum: Object.values(UserState),
     },
     verificationCode: {
       type: 'string',
@@ -569,56 +563,110 @@ const userEntity: Entity = {
       type: 'timestamp',
       required: false,
       nullable: true
+    },
+    verificationLinkToken: {
+      type: 'string',
+      required: false,
+      nullable: true
+    },
+    verificationLinkExpiresAt: {
+      type: 'timestamp',
+      required: false,
+      nullable: true
     }
   },
 };
+
+export enum WorkSpaceState {
+  Initializing = 'initializing',
+  Active = 'active',
+  Disabled = 'disabled',
+  Deleting = 'deleting'
+}
 
 const workspaceEntity: Entity = {
   name: 'Workspace',
   namespace: 'sys',
   objectTitle: '$name',
   attributes: {
+    domain: {
+      type: 'string',
+      required: false,
+      unique: true,
+    },
     name: {
       type: 'string',
-      required: true,
-      unique: true,
-      trim: true,
+      required: true
     },
+
+    beHost: {
+      type: 'string',
+    },
+    beContainerId: {
+      type: 'string',
+      unique: true,
+    },
+    beURI: {
+      type: 'string',
+      unique: true,
+    },
+
+    dbHost: {
+      type: 'string',
+      required: true,
+    },
+    dbContainerId: {
+      type: 'string',
+      unique: true,
+    },
+    dbURI: {
+      type: 'string',
+      unique: true,
+    },
+    dbName: {
+      type: 'string',
+    },
+
+    state: {
+      type: 'enum',
+      enum: Object.values(WorkSpaceState),
+      required: true,
+    },
+    ownerUserId: {
+      type: 'objectid',
+      referencesEntity: userEntity.name,
+      displayedFields: [{
+        field: 'name',
+        readonly: true
+      }],
+      required: true,
+    },
+    organizationsId: {
+      type: "array",
+      of: "objectid",
+      referencesEntity: companyEntity.name,
+      displayedFields: [{
+        field: 'name',
+        readonly: true
+      }],
+      required: true,
+    },
+
+    dbPort: {
+      type: 'number'
+    },
+    bePort: {
+      type: 'number'
+    },
+
     createdBy: {
       type: 'objectid',
       index: true,
       required: true,
       referencesEntity: 'User',
-      displayedFields: [{ field: '_id' }],
+      displayedFields: [{ field: 'name' }],
+      system: true,
     },
-    organizations: {
-      type: 'array',
-      of: 'objectid',
-      referencesEntity: 'Company',
-      displayedFields: [{ field: '_id' }],
-    },
-    createdAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
-    updatedAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
-    domain: {
-      type: 'string',
-      required: false,
-    },
-    mainPort: {
-      type: 'number',
-      required: false,
-    },
-    dbPort: {
-      type: 'number',
-      required: false,
-    }
   },
 };
 
