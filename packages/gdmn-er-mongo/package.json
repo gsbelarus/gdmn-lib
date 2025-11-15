@@ -1,6 +1,6 @@
 {
   "name": "gdmn-er-mongo",
-  "version": "0.14.194",
+  "version": "0.14.195",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -17,14 +17,14 @@
     "test": "tsx --enable-source-maps --test"
   },
   "devDependencies": {
-    "@types/node": "^20.19.24",
+    "@types/node": "^20.19.25",
     "dotenv": "^17.2.3",
     "eslint": "^8.57.0",
     "gdmn-er": "workspace:*",
     "gdmn-eslint-config": "workspace:*",
     "gdmn-tsconfig": "workspace:*",
     "gdmn-utils": "workspace:*",
-    "tsup": "^8.5.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
@@ -36,7 +36,7 @@
     "url": "https://github.com/gsbelarus/gdmn-lib"
   },
   "dependencies": {
-    "mongoose": "^8.19.2",
+    "mongoose": "^8.19.4",
     "zod": "^4.1.12"
   }
 }
