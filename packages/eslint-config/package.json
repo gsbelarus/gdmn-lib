@@ -8,11 +8,11 @@
     "react-internal.js"
   ],
   "devDependencies": {
-    "@next/eslint-plugin-next": "^14.2.33",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
-    "@vercel/style-guide": "^5.2.0",
-    "eslint-config-prettier": "^9.1.2",
+    "@next/eslint-plugin-next": "^16.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
+    "@vercel/style-guide": "^6.0.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-config-turbo": "^2.6.1",
     "eslint-plugin-only-warn": "^1.1.0",
     "typescript": "^5.9.3"
