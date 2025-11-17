@@ -91,7 +91,7 @@ export type Method<E = Entity, T = EntityRecord<any>> = {
    */
   returnDescription?: string;
   /**
-   * The actual code of the method. 
+   * The actual code of the method.
    */
   code?: MethodCode;
   /**
@@ -395,6 +395,7 @@ export interface Entity {
   states?: string[];
   tools?: any[];
   uiCommands?: EntityUICommand[];
+  systemFields?: boolean;
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
