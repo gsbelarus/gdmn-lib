@@ -193,6 +193,7 @@ export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
         })
       })
     ).optional(),
+    systemFields: z.boolean().optional()
   })
 );
 
