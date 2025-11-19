@@ -1,6 +1,5 @@
-import { Box, IconButton, Menu } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip/Tooltip';
-import React, { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { IconButton, Menu, Box, Tooltip } from '@mui/material';
+import { CSSProperties, useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import GdmnSwitcher from './GdmnSwitcher';
 
 export type GdmnToolbarItem =
@@ -70,7 +69,7 @@ export type GdmnToolbarProps = {
   container?: {
     className?: string,
     style?: CSSProperties;
-  }
+  };
 };
 
 const MoreVertIcon = ({ size, className, color }: any) => (
@@ -120,8 +119,8 @@ export function GdmnToolbar({ items, showLabels, theme: propsTheme, className, s
     }
   };
 
-  const containerRef = useRef<any>();
-  const contentRef = useRef<any>();
+  const containerRef = useRef<any>(null);
+  const contentRef = useRef<any>(null);
 
   const [sortedItems, setSortedItems] = useState<{ visible: GdmnToolbarItems, hidden: GdmnToolbarItems; }>({ visible: items, hidden: [] });
   const [cacheSizes, setCacheSizes] = useState<number[]>([]);

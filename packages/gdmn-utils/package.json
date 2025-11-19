@@ -1,6 +1,6 @@
 {
   "name": "gdmn-utils",
-  "version": "0.14.198",
+  "version": "0.14.199",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,7 +16,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "^20.19.25",
+    "@types/node": "^24.10.1",
     "eslint": "^8.57.0",
     "gdmn-eslint-config": "workspace:*",
     "gdmn-tsconfig": "workspace:*",
