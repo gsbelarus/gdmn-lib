@@ -1,6 +1,7 @@
 import { AttrType, AttrTypeDef, Entity, EntityAttributes, isAttrTypeDef, isEntityAttributes, isEntitySchema, isSimpleAttrType, Options, SimpleAttrType } from 'gdmn-er';
 import { generateMongoDBObjectId, slim } from 'gdmn-utils';
 import mongoose, { SchemaDefinition } from 'mongoose';
+import { normalizeSystemFields } from './def2entity';
 import { EntityDefAttribute, TEntityDef } from './types/entity-def';
 
 function mapSimpleAttrType2MongoType(attrType: SimpleAttrType) {
@@ -139,7 +140,7 @@ function mapAttrType2MongoType(entityName: string, attrName: string, attrType: A
       `mapAttrType2MongoType: Unknown attribute type: ${attrType}`,
     );
   }
-}
+};
 
 const methodParamSchemaObject = {
   name: { type: String, required: true },
@@ -306,10 +307,12 @@ export function entityToEntityDef(e: Entity): TEntityDef {
     parent,
     attributes,
     methods,
+    systemFields,
     ...sourceEntity
   } = e;
 
   const attributesArray = entityAttrToEntityDefAttr(attributes);
+  const normalizedSystemFields = normalizeSystemFields(systemFields);
 
   return {
     ...sourceEntity,
@@ -320,5 +323,6 @@ export function entityToEntityDef(e: Entity): TEntityDef {
       .filter(([, value]) => value !== undefined)
       .map(([key, value]) => [key, value!.filter(v => !v.builtIn)])
     ) as TEntityDef['methods'],
+    ...(normalizedSystemFields !== undefined ? { systemFields: normalizedSystemFields } : {}),
   };
 }

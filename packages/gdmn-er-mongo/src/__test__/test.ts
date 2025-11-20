@@ -1,15 +1,15 @@
-import { after, before, describe, it } from 'node:test';
-import assert from 'node:assert/strict';
-import { entity2schema, entityToEntityDef } from '../er2mongo';
-import { def2entity } from '../def2entity';
-import { EntityDefDocument, TEntityDefPlainWithId, ZodEntityDef } from '../types/entity-def';
-import { isModelRegistered, registerModel, registerModelForEntity, removeModel } from '../registry';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { systemEntities, testEntity } from './entities';
-import { EntityDef } from '../models/entity-def';
-import { Entity, isAttrTypeDef, isEntityRegistered, isSimpleAttrType, registerEntity } from 'gdmn-er';
+import { ALL_SYSTEM_FIELD_NAMES, Entity, SystemFields, isAttrTypeDef, isEntityRegistered, isSimpleAttrType, registerEntity } from 'gdmn-er';
 import { EMAIL_REGEXP } from 'gdmn-utils';
+import mongoose from 'mongoose';
+import assert from 'node:assert/strict';
+import { after, before, describe, it } from 'node:test';
+import { def2entity } from '../def2entity';
+import { entity2schema, entityToEntityDef } from '../er2mongo';
+import { EntityDef } from '../models/entity-def';
+import { isModelRegistered, registerModel, registerModelForEntity, removeModel } from '../registry';
+import { EntityDefDocument, TEntityDefPlainWithId, ZodEntityDef } from '../types/entity-def';
+import { systemEntities, testEntity } from './entities';
 
 // Add a check to ensure EMAIL_REGEXP is properly imported
 if (!EMAIL_REGEXP) {
@@ -162,6 +162,67 @@ describe('entity2entityDef', () => {
         }
       }
     }
+  });
+
+  it('should preserve systemFields across entity and entityDef conversions', () => {
+    const createEntity = (name: string, systemFields: SystemFields): Entity => ({
+      name,
+      namespace: 'sys',
+      attributes: {
+        value: {
+          type: 'string',
+          required: true,
+        },
+      },
+      systemFields,
+    });
+
+    const assertSchemaExcludesSystemFields = (entity: Entity, origin: string) => {
+      const schema = entity2schema(entity);
+      const schemaPaths = Object.keys(schema.paths);
+
+      for (const systemField of ALL_SYSTEM_FIELD_NAMES) {
+        assert(!schemaPaths.includes(systemField), `${origin} should not define schema path for system field "${systemField}"`);
+      }
+    };
+
+    const assertRoundTrip = (entity: Entity, expectedSystemFields: SystemFields | undefined) => {
+      const entityDef = entityToEntityDef(entity);
+      const doc = { _id: `sf-${entity.name}`, ...entityDef } as EntityDefDocument;
+      const restored = def2entity(doc);
+
+      assert.deepEqual(entity.systemFields, expectedSystemFields);
+      assert.deepEqual(entityDef.systemFields, expectedSystemFields);
+      assert.deepEqual(restored.systemFields, expectedSystemFields);
+
+      assertSchemaExcludesSystemFields(entity, `Schema for entity ${entity.name}`);
+      assertSchemaExcludesSystemFields(restored, `Schema for restored entity ${entity.name}`);
+    };
+
+    assertRoundTrip(createEntity('SystemFieldsAll', true), true);
+    assertRoundTrip(createEntity('SystemFieldsDisabled', false), false);
+
+    const selectiveSystemFields: SystemFields = {
+      createdBy: true,
+      updatedAt: false,
+    };
+    assertRoundTrip(createEntity('SystemFieldsSelective', selectiveSystemFields), selectiveSystemFields);
+
+    const entityDefWithMap = {
+      _id: 'system-fields-map',
+      name: 'SystemFieldsFromMap',
+      namespace: 'sys',
+      attributes: [],
+      systemFields: new Map<string, boolean>([
+        ['createdBy', true],
+        ['updatedAt', false],
+        ['invalidKey', true],
+      ]) as unknown as SystemFields,
+    } as EntityDefDocument;
+
+    const restoredFromMap = def2entity(entityDefWithMap);
+    assert.deepEqual(restoredFromMap.systemFields, { createdBy: true, updatedAt: false });
+    assertSchemaExcludesSystemFields(restoredFromMap, 'Schema for entity restored from map-configured system fields');
   });
 
   it('should convert test entity 2 schema and create document', async () => {

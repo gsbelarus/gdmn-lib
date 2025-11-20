@@ -19,7 +19,6 @@ import {
 import { slim } from 'gdmn-utils';
 import { EntityDefAttribute, EntityDefDocument } from './types/entity-def';
 
-
 const collectSystemFieldConfig = (
   entries: Iterable<[unknown, unknown]>,
 ): Partial<Record<SystemFieldName, boolean>> | undefined => {
@@ -55,7 +54,7 @@ const collectSystemFieldConfig = (
  * @param value The input value to normalize (boolean, Map, object, or undefined/null).
  * @returns A SystemFields configuration (boolean or partial record), or undefined if input is not recognized.
  */
-function normalizeSystemFields(value: unknown): SystemFields | undefined {
+export function normalizeSystemFields(value: unknown): SystemFields | undefined {
   if (value === undefined || value === null) {
     return undefined;
   }

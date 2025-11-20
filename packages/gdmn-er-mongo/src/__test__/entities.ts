@@ -109,24 +109,6 @@ const chatHistoryEntity: Entity = {
   },
 };
 
-const userMembershipsEntity: Entity = {
-  name: 'AclRecord',
-  namespace: 'sys',
-  objectTitle: '$name',
-  attributes: {
-    createdAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
-    updatedAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
-  },
-};
-
 const CommandEntityValue = 'entity';
 const CommandFolderValue = 'folder';
 const CommandLinkValue = 'link';
@@ -191,22 +173,6 @@ const companyEntity: Entity = {
       referencesEntity: 'Workspace',
       displayedFields: [{ field: '_id' }],
     },
-    createdBy: {
-      type: 'objectid',
-      required: true,
-      referencesEntity: 'User',
-      displayedFields: [{ field: 'name' }],
-    },
-    createdAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    },
-    updatedAt: {
-      type: 'timestamp',
-      required: true,
-      default: 'now',
-    }
   },
 };
 
@@ -235,42 +201,6 @@ const fileEntity: Entity = {
       type: 'string',
       required: false,
       hidden: true
-    },
-    createdBy: {
-      type: 'objectid',
-      index: true,
-      readonly: true,
-      required: false,
-      referencesEntity: 'User',
-      system: true,
-      displayedFields: [
-        { field: 'name', readonly: true, hidden: true },
-      ],
-    },
-    createdAt: {
-      type: 'timestamp',
-      required: false,
-      readonly: true,
-      default: 'now',
-      system: true,
-    },
-    updatedBy: {
-      type: 'objectid',
-      index: true,
-      readonly: true,
-      required: false,
-      referencesEntity: 'User',
-      system: true,
-      displayedFields: [
-        { field: 'name', readonly: true, hidden: true },
-      ],
-    },
-    updatedAt: {
-      type: 'timestamp',
-      required: false,
-      readonly: true,
-      default: 'now',
-      system: true,
     },
     binaryData: {
       type: 'buffer',
@@ -307,10 +237,6 @@ const goodEntity: Entity = {
   attributes: {
     name: {
       type: 'string',
-      required: true,
-    },
-    disabled: {
-      type: 'number',
       required: true,
     },
     unit: {
@@ -506,22 +432,6 @@ const userEntity: Entity = {
   namespace: 'sys',
   objectTitle: '$name',
   attributes: {
-    createdAt: {
-      type: 'timestamp',
-      required: false,
-      readonly: true,
-      default: 'now',
-      system: true,
-      hidden: true
-    },
-    updatedAt: {
-      type: 'timestamp',
-      required: false,
-      readonly: true,
-      default: 'now',
-      system: true,
-      hidden: true
-    },
     name: {
       type: 'string',
       max: 40,
@@ -658,22 +568,12 @@ const workspaceEntity: Entity = {
     bePort: {
       type: 'number'
     },
-
-    createdBy: {
-      type: 'objectid',
-      index: true,
-      required: true,
-      referencesEntity: 'User',
-      displayedFields: [{ field: 'name' }],
-      system: true,
-    },
   },
 };
 
 export const systemEntities = [
   testEntity,
   chatHistoryEntity,
-  userMembershipsEntity,
   commandEntity,
   companyEntity,
   fileEntity,
