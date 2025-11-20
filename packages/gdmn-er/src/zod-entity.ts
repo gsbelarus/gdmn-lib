@@ -8,14 +8,23 @@ import {
   gptReferenceTypes,
   METHOD_TYPES,
   ofTypes,
+  SystemFields,
   ZodDisplayedField,
   ZodMethodCode,
   ZodMethodEnvironment,
   ZodMethodParam,
   ZodOptions,
   ZodRefFieldProps,
-  ZodSimpleAttrType
+  ZodSimpleAttrType,
+  ZodSystemFieldKeys
 } from './er';
+
+const ZodSystemFieldConfig = z.partialRecord(ZodSystemFieldKeys, z.boolean());
+
+export const ZodSystemFields: z.ZodType<SystemFields> = z.union([
+  z.boolean(),
+  ZodSystemFieldConfig,
+]);
 
 export const ZodOfTypes = z.union([
   z.enum(ofTypes),
@@ -193,7 +202,7 @@ export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
         })
       })
     ).optional(),
-    systemFields: z.boolean().optional()
+    systemFields: ZodSystemFields.optional()
   })
 );
 

@@ -1,4 +1,14 @@
-import { DisplayedField, EntityDefMethods, ErdCardinality, gptReferenceTypes, OfType, ZodDisplayedField, ZodOfTypes } from 'gdmn-er';
+import {
+  DisplayedField,
+  EntityDefMethods,
+  ErdCardinality,
+  gptReferenceTypes,
+  OfType,
+  SystemFields,
+  ZodDisplayedField,
+  ZodOfTypes,
+  ZodSystemFields,
+} from 'gdmn-er';
 import { Types } from "mongoose";
 import { z } from "zod";
 
@@ -185,6 +195,7 @@ const ZodEntityDefShape = {
   abc: z.boolean().optional(),
   dlgForm: z.string().optional(),
   viewForm: z.string().optional(),
+  systemFields: ZodSystemFields.optional(),
 };
 
 export const ZodEntityDef = z.object(ZodEntityDefShape);
@@ -215,6 +226,7 @@ export type EntityDefDocument = {
   abc?: boolean;
   dlgForm?: string;
   viewForm?: string;
+  systemFields?: SystemFields;
 };
 
 export type TEntityDef = z.infer<typeof ZodEntityDef>;

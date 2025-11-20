@@ -350,10 +350,13 @@ export type EntityUICommand = {
 
 export const CORE_SYSTEM_FIELD_NAMES = ['createdBy', 'createdAt', 'updatedBy', 'updatedAt'] as const;
 export const OPTIONAL_SYSTEM_FIELD_NAMES = ['disabled', 'deleted', 'version'] as const;
+export const ALL_SYSTEM_FIELD_NAMES = [...CORE_SYSTEM_FIELD_NAMES, ...OPTIONAL_SYSTEM_FIELD_NAMES] as const;
 
 export type CoreSystemFieldName = typeof CORE_SYSTEM_FIELD_NAMES[number];
 export type OptionalSystemFieldName = typeof OPTIONAL_SYSTEM_FIELD_NAMES[number];
 export type SystemFieldName = CoreSystemFieldName | OptionalSystemFieldName;
+
+export const ZodSystemFieldKeys = z.enum(ALL_SYSTEM_FIELD_NAMES);
 
 /**
  * Controls which system fields are added to an entity.
