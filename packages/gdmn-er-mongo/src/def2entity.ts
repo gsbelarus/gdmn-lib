@@ -239,9 +239,9 @@ export function def2entity(def: EntityDefDocument, useArrays = false): Entity {
 
   const entity: Entity = {
     ...rest,
-    ...(normalizedSystemFields !== undefined ? { systemFields: normalizedSystemFields } : {}),
     attributes: buildAttributes(def.name, attributes, useArrays),
     methods: methods ? convertMethodsToObject(methods) : undefined,
+    ...(normalizedSystemFields !== undefined ? { systemFields: normalizedSystemFields } : {}),
   };
 
   return slim(entity, { deep: true });

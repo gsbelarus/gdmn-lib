@@ -239,6 +239,10 @@ export const entityDef: Entity = {
     viewForm: {
       type: "string",
       required: false
+    },
+    systemFields: {
+      type: ["boolean", "object"],
+      required: false
     }
   },
 };
