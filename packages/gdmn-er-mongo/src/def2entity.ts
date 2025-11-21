@@ -54,25 +54,21 @@ const collectSystemFieldConfig = (
  * @param value The input value to normalize (boolean, Map, object, or undefined/null).
  * @returns A SystemFields configuration (boolean or partial record), or undefined if input is not recognized.
  */
-export function normalizeSystemFields(value: unknown): SystemFields | undefined {
+export function normalizeSystemFields(value: unknown): SystemFields | undefined | null {
   if (value === undefined || value === null) {
-    return undefined;
-  }
-
-  if (typeof value === 'boolean') {
     return value;
   }
 
-  if (value instanceof Map) {
-    return collectSystemFieldConfig(value);
-  }
-
+  // ZodSystemFields: Partial<Record<SystemFieldName, boolean>>
   if (typeof value === 'object') {
-    return collectSystemFieldConfig(
-      Object.entries(value as Record<string, unknown>),
-    );
+    // Accept Map or plain object
+    if (value instanceof Map) {
+      return collectSystemFieldConfig(value);
+    }
+    return collectSystemFieldConfig(Object.entries(value as Record<string, unknown>));
   }
 
+  // If boolean is no longer valid, skip it
   return undefined;
 }
 

@@ -165,7 +165,7 @@ describe('entity2entityDef', () => {
   });
 
   it('should preserve systemFields across entity and entityDef conversions', () => {
-    const createEntity = (name: string, systemFields: SystemFields): Entity => ({
+    const createEntity = (name: string, systemFields?: SystemFields | null): Entity => ({
       name,
       namespace: 'sys',
       attributes: {
@@ -174,40 +174,46 @@ describe('entity2entityDef', () => {
           required: true,
         },
       },
-      systemFields,
+      ...(systemFields !== undefined ? { systemFields } : {}),
     });
 
     const assertSchemaExcludesSystemFields = (entity: Entity, origin: string) => {
       const schema = entity2schema(entity);
       const schemaPaths = Object.keys(schema.paths);
-
       for (const systemField of ALL_SYSTEM_FIELD_NAMES) {
         assert(!schemaPaths.includes(systemField), `${origin} should not define schema path for system field "${systemField}"`);
       }
     };
 
-    const assertRoundTrip = (entity: Entity, expectedSystemFields: SystemFields | undefined) => {
+    const assertRoundTrip = (entity: Entity, expectedSystemFields: SystemFields | undefined | null) => {
       const entityDef = entityToEntityDef(entity);
       const doc = { _id: `sf-${entity.name}`, ...entityDef } as EntityDefDocument;
       const restored = def2entity(doc);
 
-      assert.deepEqual(entity.systemFields, expectedSystemFields);
-      assert.deepEqual(entityDef.systemFields, expectedSystemFields);
-      assert.deepEqual(restored.systemFields, expectedSystemFields);
+      // null и undefined считаем эквивалентными для systemFields
+      const norm = (v: any) => v === null ? undefined : v;
+      assert.deepEqual(norm(entity.systemFields), norm(expectedSystemFields));
+      assert.deepEqual(norm(entityDef.systemFields), norm(expectedSystemFields));
+      assert.deepEqual(norm(restored.systemFields), norm(expectedSystemFields));
 
       assertSchemaExcludesSystemFields(entity, `Schema for entity ${entity.name}`);
       assertSchemaExcludesSystemFields(restored, `Schema for restored entity ${entity.name}`);
     };
 
-    assertRoundTrip(createEntity('SystemFieldsAll', true), true);
-    assertRoundTrip(createEntity('SystemFieldsDisabled', false), false);
+    // systemFields undefined (все системные поля по умолчанию)
+    assertRoundTrip(createEntity('SystemFieldsDefault'), undefined);
 
+    // systemFields null (отключить все системные поля)
+    assertRoundTrip(createEntity('SystemFieldsNone', null), null);
+
+    // systemFields объект (только выбранные поля)
     const selectiveSystemFields: SystemFields = {
       createdBy: true,
       updatedAt: false,
     };
     assertRoundTrip(createEntity('SystemFieldsSelective', selectiveSystemFields), selectiveSystemFields);
 
+    // systemFields как Map
     const entityDefWithMap = {
       _id: 'system-fields-map',
       name: 'SystemFieldsFromMap',

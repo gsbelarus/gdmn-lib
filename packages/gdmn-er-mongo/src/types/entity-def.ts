@@ -195,7 +195,7 @@ const ZodEntityDefShape = {
   abc: z.boolean().optional(),
   dlgForm: z.string().optional(),
   viewForm: z.string().optional(),
-  systemFields: ZodSystemFields.optional(),
+  systemFields: ZodSystemFields.optional().nullable(),
 };
 
 export const ZodEntityDef = z.object(ZodEntityDefShape);

@@ -241,8 +241,9 @@ export const entityDef: Entity = {
       required: false
     },
     systemFields: {
-      type: ["boolean", "object"],
-      required: false
+      type: "map",
+      required: false,
+      nullable: true
     }
   },
 };

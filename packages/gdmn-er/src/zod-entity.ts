@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  ALL_SYSTEM_FIELD_NAMES,
   AttrType,
   Entity,
   EntityAttributes,
@@ -15,22 +16,18 @@ import {
   ZodMethodParam,
   ZodOptions,
   ZodRefFieldProps,
-  ZodSimpleAttrType,
-  ZodSystemFieldKeys
+  ZodSimpleAttrType
 } from './er';
 
+export const ZodSystemFieldKeys = z.enum(ALL_SYSTEM_FIELD_NAMES);
 const ZodSystemFieldConfig = z.partialRecord(ZodSystemFieldKeys, z.boolean());
 
-export const ZodSystemFields: z.ZodType<SystemFields> = z.union([
-  z.boolean(),
-  ZodSystemFieldConfig,
-]);
+export const ZodSystemFields: z.ZodType<SystemFields> = ZodSystemFieldConfig;
 
 export const ZodOfTypes = z.union([
   z.enum(ofTypes),
   z.lazy(() => ZodEntityAttributes)
 ]);
-
 
 // forward-declare for recursion
 export const ZodAttrType: z.ZodType<AttrType> = z.lazy(() =>
@@ -202,7 +199,7 @@ export const ZodEntity: z.ZodType<Entity> = z.lazy(() =>
         })
       })
     ).optional(),
-    systemFields: ZodSystemFields.optional()
+    systemFields: ZodSystemFields.optional().nullable()
   })
 );
 

@@ -356,27 +356,28 @@ export type CoreSystemFieldName = typeof CORE_SYSTEM_FIELD_NAMES[number];
 export type OptionalSystemFieldName = typeof OPTIONAL_SYSTEM_FIELD_NAMES[number];
 export type SystemFieldName = CoreSystemFieldName | OptionalSystemFieldName;
 
-export const ZodSystemFieldKeys = z.enum(ALL_SYSTEM_FIELD_NAMES);
-
 /**
- * Controls which system fields are added to an entity.
+ * Controls which system fields are enabled for an entity.
  *
- * - `false`: No system fields will be added.
- * - `true`: All available system fields will be added with default settings.
- * - `Partial<Record<SystemFieldName, boolean>>`: Add only selected system fields (by name, with true/false flags).
+ * - `undefined`: use all system fields by default (default behavior).
+ * - `null`: disable all system fields.
+ * - `Partial<Record<SystemFieldName, boolean>>`: enable only selected system fields (key is field name, value is true/false).
  *
- * If value is `undefined` or `true`, returns empty config (all optional fields included).
+ * Examples:
+ *   - undefined → all fields enabled
+ *   - null → no fields enabled
+ *   - { createdBy: true, updatedAt: false } → only selected fields
  *
  * Supported system fields:
- *   - `createdBy`: User who created the record
- *   - `createdAt`: Timestamp when the record was created
- *   - `updatedBy`: User who last updated the record
- *   - `updatedAt`: Timestamp when the record was last updated
- *   - `disabled`: Indicates if the record is disabled
- *   - `deleted`: Indicates if the record is soft-deleted
- *   - `version`: Version number for optimistic locking
+ *   - `createdBy`: user who created the record
+ *   - `createdAt`: timestamp when the record was created
+ *   - `updatedBy`: user who last updated the record
+ *   - `updatedAt`: timestamp when the record was last updated
+ *   - `disabled`: indicates if the record is disabled
+ *   - `deleted`: indicates if the record is soft-deleted
+ *   - `version`: version number for optimistic locking
  */
-export type SystemFields = false | true | Partial<Record<SystemFieldName, boolean>>;
+export type SystemFields = undefined | null | Partial<Record<SystemFieldName, boolean>>;
 
 export interface Entity {
   /**
@@ -425,7 +426,7 @@ export interface Entity {
   states?: string[];
   tools?: any[];
   uiCommands?: EntityUICommand[];
-  systemFields?: SystemFields;
+  systemFields?: SystemFields | null;
 };
 
 export function isEntitySchema(attrType: AttrType): attrType is EntitySchema {
