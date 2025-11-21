@@ -42,17 +42,15 @@ const collectSystemFieldConfig = (
 };
 
 /**
- * Normalizes the input value to a SystemFields configuration.
+ * Converts the input value to SystemFields type.
  *
- * Accepts the following input types:
- * - `boolean`: Returns the boolean value directly.
- * - `Map`: Interprets keys as system field names and values as booleans; returns a partial record of enabled/disabled fields.
- * - `object`: Interprets object entries as system field names and booleans; returns a partial record of enabled/disabled fields.
- * - `undefined` or `null`: Returns `undefined`.
- * For any other type, returns `undefined`.
+ * SystemFields type:
+ *   - undefined: all system fields are enabled (default)
+ *   - null: all system fields are disabled
+ *   - Partial<Record<SystemFieldName, boolean>>: only selected fields are enabled
  *
- * @param value The input value to normalize (boolean, Map, object, or undefined/null).
- * @returns A SystemFields configuration (boolean or partial record), or undefined if input is not recognized.
+ * @param value Any value
+ * @returns SystemFields | undefined | null
  */
 export function normalizeSystemFields(value: unknown): SystemFields | undefined | null {
   if (value === undefined || value === null) {
