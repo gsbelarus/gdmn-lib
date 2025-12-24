@@ -46,7 +46,7 @@ export function slim<T extends {}>(
       (removeFalse && typeof value === 'boolean' && !value);
   };
 
-  const processed = new Set<any>();
+  const processed = new WeakSet<any>();
 
   const processValue = (value: any): any => {
     if (!deep || typeof value !== 'object' || value === null) {
