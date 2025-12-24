@@ -46,19 +46,27 @@ export function slim<T extends {}>(
       (removeFalse && typeof value === 'boolean' && !value);
   };
 
+  const processed = new Set<any>();
+
   const processValue = (value: any): any => {
     if (!deep || typeof value !== 'object' || value === null) {
       return value;
     }
 
+    if (processed.has(value)) {
+      return value;
+    }
+
+    processed.add(value);
+
     if (Array.isArray(value)) {
-      return value.map(processValue).filter(item => !shouldRemove(item));
+      return value.filter(item => !shouldRemove(item)).map(processValue);
     }
 
     return Object.fromEntries(
       Object.entries(value)
-        .map(([key, val]) => [key, processValue(val)])
         .filter(([key, val]) => !shouldRemove(val) && !stripFields?.includes(key))
+        .map(([key, val]) => [key, processValue(val)])
     );
   };
 
