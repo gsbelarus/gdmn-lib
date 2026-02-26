@@ -17,26 +17,137 @@ export function convertBytes(bytes: number): string {
 };
 
 /**
- * Creates a new object by removing properties from the given object based on provided criteria.
+ * Configuration for {@link slim}.
+ *
+ * The options combine value-based cleanup (nulls, empty containers, etc.)
+ * with optional recursive processing and field stripping rules.
+ */
+type StripFieldsOptions = {
+  /**
+   * Enables recursive processing for nested objects and arrays.
+   *
+   * When `true`, `slim` traverses all nested values and applies both
+   * value-removal options and `stripFields` rules at every visited level.
+   * When `false` or omitted, only root-level value cleanup is applied.
+   */
+  deep?: boolean;
+  /**
+   * Removes properties whose value is `null`.
+   */
+  removeNulls?: boolean;
+  /**
+   * Removes properties whose value is an empty plain object (`{}`).
+   */
+  removeEmptyObjects?: boolean;
+  /**
+   * Removes properties whose value is an empty array (`[]`).
+   */
+  removeEmptyArrays?: boolean;
+  /**
+   * Removes properties whose value is an empty string (`''`).
+   */
+  removeEmptyStrings?: boolean;
+  /**
+   * Removes properties whose value is `false`.
+   */
+  removeFalse?: boolean;
+  /**
+   * List of field names/paths to remove.
+   *
+   * Supported formats:
+   * - `"field"`: strip this field name at all nesting levels.
+   * - `".field"`: strip this field only at the root object level.
+   * - `".a.b.c"`: strip `c` only when its parent path is exactly `a.b` from root.
+   *
+   * Notes for relative paths (`.a.b.c`):
+   * - Matching is path-based and exact.
+   * - If any segment resolves to an array of objects, the next path segment is
+   *   evaluated for each object item.
+   *
+   * Examples:
+   * - `.attributes` removes the root `attributes` field only.
+   * - `.attributes.index` removes `index` from root `attributes` object,
+   *   or from each object inside root `attributes` array.
+   */
+  stripFields?: string[];
+};
+
+/**
+ * Creates a cleaned copy of an object by removing properties that match
+ * configured predicates and path rules.
+ *
+ * Behavior summary:
+ * - Always removes `undefined` values.
+ * - Optionally removes `null`, empty strings, empty arrays/objects, and `false`.
+ * - Optionally strips fields by name/path via `stripFields`.
+ * - Can run shallow (root only) or deep (recursive) depending on `deep`.
+ *
+ * In deep mode:
+ * - Arrays are processed item-by-item.
+ * - Objects are rebuilt from filtered entries.
+ * - Circular references are guarded with `WeakSet` to prevent infinite recursion.
  *
  * @typeParam T - The type of the object to process.
  * @param obj - The source object to slim.
- * @param options - Configuration object for slimming behavior.
- * @returns A new object of type T containing only the properties that passed the filters.
+ * @param options - Cleanup and stripping options (see {@link StripFieldsOptions}).
+ * @returns A new object of type `T` containing only properties that pass filters.
+ *
+ * @example
+ * ```ts
+ * slim(data, {
+ *   deep: true,
+ *   removeNulls: true,
+ *   removeEmptyStrings: true,
+ *   stripFields: ['password', '.meta', '.attributes.index']
+ * });
+ * ```
  */
 export function slim<T extends {}>(
   obj: T,
-  options: {
-    deep?: boolean;
-    removeNulls?: boolean;
-    removeEmptyObjects?: boolean;
-    removeEmptyArrays?: boolean;
-    removeEmptyStrings?: boolean;
-    removeFalse?: boolean;
-    stripFields?: string[];
-  } = {}
+  options: StripFieldsOptions = {}
 ): T {
   const { deep, removeNulls, removeEmptyObjects, removeEmptyArrays, removeEmptyStrings, removeFalse, stripFields } = options;
+  const normalizedStripFields = stripFields ?? [];
+  const globalStripFields = new Set(
+    normalizedStripFields.filter(field => field && !field.startsWith('.'))
+  );
+  const rootStripFields = new Set(
+    normalizedStripFields
+      .filter(field => field.startsWith('.') && !field.slice(1).includes('.'))
+      .map(field => field.slice(1))
+      .filter(Boolean)
+  );
+  const relativeStripPaths = normalizedStripFields
+    .filter(field => field.startsWith('.') && field.slice(1).includes('.'))
+    .map(field => field.slice(1).split('.').filter(Boolean))
+    .filter(path => path.length > 1);
+
+  const pathEquals = (left: string[], right: string[]): boolean => {
+    if (left.length !== right.length) {
+      return false;
+    }
+    return left.every((part, idx) => part === right[idx]);
+  };
+
+  const shouldStripField = (fieldName: string, parentPath: string[]): boolean => {
+    if (globalStripFields.has(fieldName)) {
+      return true;
+    }
+
+    if (parentPath.length === 0 && rootStripFields.has(fieldName)) {
+      return true;
+    }
+
+    return relativeStripPaths.some(path => {
+      const last = path[path.length - 1];
+      if (last !== fieldName) {
+        return false;
+      }
+
+      return pathEquals(path.slice(0, -1), parentPath);
+    });
+  };
+
   const shouldRemove = (value: any): boolean => {
     return value === undefined ||
       (removeNulls && value === null) ||
@@ -48,7 +159,7 @@ export function slim<T extends {}>(
 
   const processed = new WeakSet<any>();
 
-  const processValue = (value: any): any => {
+  const processValue = (value: any, path: string[] = []): any => {
     if (!deep || typeof value !== 'object' || value === null) {
       return value;
     }
@@ -60,13 +171,13 @@ export function slim<T extends {}>(
     processed.add(value);
 
     if (Array.isArray(value)) {
-      return value.filter(item => !shouldRemove(item)).map(processValue);
+      return value.filter(item => !shouldRemove(item)).map(item => processValue(item, path));
     }
 
     return Object.fromEntries(
       Object.entries(value)
-        .filter(([key, val]) => !shouldRemove(val) && !stripFields?.includes(key))
-        .map(([key, val]) => [key, processValue(val)])
+        .filter(([key, val]) => !shouldRemove(val) && !shouldStripField(key, path))
+        .map(([key, val]) => [key, processValue(val, [...path, key])])
     );
   };
 

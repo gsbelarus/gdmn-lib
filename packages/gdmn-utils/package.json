@@ -1,6 +1,6 @@
 {
   "name": "gdmn-utils",
-  "version": "0.14.209",
+  "version": "0.14.210",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -13,11 +13,12 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
     "lint": "eslint \"src/**/*.ts*\"",
+    "test": "node --test test/**/*.test.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "eslint": "^9.39.2",
+    "@types/node": "^25.3.1",
+    "eslint": "^10.0.2",
     "gdmn-eslint-config": "workspace:*",
     "gdmn-tsconfig": "workspace:*",
     "tsup": "^8.5.1",

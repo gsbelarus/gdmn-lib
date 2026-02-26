@@ -22,3 +22,17 @@ DB_NAME=unit-testing
 ```
 
 Fill in the values for your MongoDB instance.
+
+# Testing
+
+Run all tests across the monorepo:
+
+```bash
+pnpm turbo test
+```
+
+Run only `gdmn-utils` tests:
+
+```bash
+pnpm --filter gdmn-utils test
+```
