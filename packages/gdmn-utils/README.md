@@ -169,3 +169,40 @@ console.log(num); // Outputs: 3.14
 
 - Functions `uint8ArrayToBase64` and `base64ToUint8Array` throw an error if the environment lacks support for the necessary encoding or decoding functions.
 
+## `slim`
+
+Creates a cleaned copy of an object by removing values and/or fields based on options.
+
+### Supported `stripFields` formats
+
+- `"field"` — strip this field name at all nesting levels.
+- `".field"` — strip this field only at the root level.
+- `".a.b.c"` — strip `c` only when parent path is exactly `a.b` from root.
+- `".a.*.c"` — `*` matches one nesting step (each object key or each array item).
+
+### Wildcard example
+
+```ts
+const source = {
+	attributes: {
+		first: { required: true, keep: 'A' },
+		second: { required: false, keep: 'B' }
+	}
+};
+
+const result = slim(source, {
+	deep: true,
+	stripFields: ['.attributes.*.required']
+});
+
+// result:
+// {
+//   attributes: {
+//     first: { keep: 'A' },
+//     second: { keep: 'B' }
+//   }
+// }
+```
+
+When multiple deep paths are provided (for example `['.attributes.*.required', '.attributes.*.index']`), they are processed together during traversal.
+

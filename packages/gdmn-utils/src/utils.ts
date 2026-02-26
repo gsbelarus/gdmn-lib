@@ -58,9 +58,11 @@ type StripFieldsOptions = {
    * - `"field"`: strip this field name at all nesting levels.
    * - `".field"`: strip this field only at the root object level.
    * - `".a.b.c"`: strip `c` only when its parent path is exactly `a.b` from root.
+   * - `".a.*.c"`: `*` matches each nested object key or array item at that level.
    *
    * Notes for relative paths (`.a.b.c`):
    * - Matching is path-based and exact.
+   * - `*` in path segments acts as a wildcard for one nesting step.
    * - If any segment resolves to an array of objects, the next path segment is
    *   evaluated for each object item.
    *
@@ -68,6 +70,8 @@ type StripFieldsOptions = {
    * - `.attributes` removes the root `attributes` field only.
    * - `.attributes.index` removes `index` from root `attributes` object,
    *   or from each object inside root `attributes` array.
+   * - `.attributes.*.required` removes `required` from each object directly
+   *   nested under root `attributes`.
    */
   stripFields?: string[];
 };
@@ -122,30 +126,90 @@ export function slim<T extends {}>(
     .map(field => field.slice(1).split('.').filter(Boolean))
     .filter(path => path.length > 1);
 
-  const pathEquals = (left: string[], right: string[]): boolean => {
-    if (left.length !== right.length) {
-      return false;
-    }
-    return left.every((part, idx) => part === right[idx]);
+  type RelativeMatcherNode = {
+    children: Map<string, RelativeMatcherNode>;
+    wildcardChild?: RelativeMatcherNode;
+    stripFieldNames: Set<string>;
+    stripAnyField: boolean;
   };
 
-  const shouldStripField = (fieldName: string, parentPath: string[]): boolean => {
+  const createRelativeMatcherNode = (): RelativeMatcherNode => ({
+    children: new Map<string, RelativeMatcherNode>(),
+    wildcardChild: undefined,
+    stripFieldNames: new Set<string>(),
+    stripAnyField: false,
+  });
+
+  const relativeMatcherRoot = createRelativeMatcherNode();
+
+  for (const path of relativeStripPaths) {
+    let node = relativeMatcherRoot;
+    for (let idx = 0; idx < path.length - 1; idx++) {
+      const segment = path[idx];
+      if (segment === '*') {
+        if (!node.wildcardChild) {
+          node.wildcardChild = createRelativeMatcherNode();
+        }
+        node = node.wildcardChild;
+        continue;
+      }
+
+      let next = node.children.get(segment);
+      if (!next) {
+        next = createRelativeMatcherNode();
+        node.children.set(segment, next);
+      }
+      node = next;
+    }
+
+    const stripField = path[path.length - 1];
+    if (stripField === '*') {
+      node.stripAnyField = true;
+    } else {
+      node.stripFieldNames.add(stripField);
+    }
+  }
+
+  const transitionRelativeMatcherStates = (
+    states: Set<RelativeMatcherNode>,
+    segment: string
+  ): Set<RelativeMatcherNode> => {
+    const nextStates = new Set<RelativeMatcherNode>();
+
+    for (const state of states) {
+      if (segment === '*') {
+        nextStates.add(state);
+      }
+
+      const directChild = state.children.get(segment);
+      if (directChild) {
+        nextStates.add(directChild);
+      }
+
+      if (state.wildcardChild) {
+        nextStates.add(state.wildcardChild);
+      }
+    }
+
+    return nextStates;
+  };
+
+  const shouldStripField = (fieldName: string, parentMatcherStates: Set<RelativeMatcherNode>): boolean => {
     if (globalStripFields.has(fieldName)) {
       return true;
     }
 
-    if (parentPath.length === 0 && rootStripFields.has(fieldName)) {
+    if (parentMatcherStates.has(relativeMatcherRoot) && rootStripFields.has(fieldName)) {
       return true;
     }
 
-    return relativeStripPaths.some(path => {
-      const last = path[path.length - 1];
-      if (last !== fieldName) {
-        return false;
+    for (const state of parentMatcherStates) {
+      if (state.stripAnyField || state.stripFieldNames.has(fieldName)) {
+        return true;
       }
+    }
 
-      return pathEquals(path.slice(0, -1), parentPath);
-    });
+    return false;
   };
 
   const shouldRemove = (value: any): boolean => {
@@ -159,7 +223,7 @@ export function slim<T extends {}>(
 
   const processed = new WeakSet<any>();
 
-  const processValue = (value: any, path: string[] = []): any => {
+  const processValue = (value: any, parentMatcherStates: Set<RelativeMatcherNode>): any => {
     if (!deep || typeof value !== 'object' || value === null) {
       return value;
     }
@@ -171,18 +235,22 @@ export function slim<T extends {}>(
     processed.add(value);
 
     if (Array.isArray(value)) {
-      return value.filter(item => !shouldRemove(item)).map(item => processValue(item, path));
+      const itemMatcherStates = transitionRelativeMatcherStates(parentMatcherStates, '*');
+      return value.filter(item => !shouldRemove(item)).map(item => processValue(item, itemMatcherStates));
     }
 
     return Object.fromEntries(
       Object.entries(value)
-        .filter(([key, val]) => !shouldRemove(val) && !shouldStripField(key, path))
-        .map(([key, val]) => [key, processValue(val, [...path, key])])
+        .filter(([key, val]) => !shouldRemove(val) && !shouldStripField(key, parentMatcherStates))
+        .map(([key, val]) => {
+          const childMatcherStates = transitionRelativeMatcherStates(parentMatcherStates, key);
+          return [key, processValue(val, childMatcherStates)];
+        })
     );
   };
 
   if (deep) {
-    return processValue(obj) as T;
+    return processValue(obj, new Set([relativeMatcherRoot])) as T;
   }
 
   return Object.fromEntries(

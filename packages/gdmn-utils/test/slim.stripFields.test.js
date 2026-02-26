@@ -78,3 +78,78 @@ test('stripFields: .attributes.index strips index from each object in root attri
     attributes: [{ keep: 'a' }, { keep: 'b' }, { keep: 'c' }],
   });
 });
+
+test('stripFields: .attributes.*.required strips required from each nested object in root attributes object', () => {
+  const source = {
+    attributes: {
+      first: { required: true, keep: 'a' },
+      second: { required: false, keep: 'b' },
+    },
+    nested: {
+      attributes: {
+        third: { required: true, keep: 'c' },
+      },
+    },
+  };
+
+  const result = slim(source, {
+    deep: true,
+    stripFields: ['.attributes.*.required'],
+  });
+
+  assert.deepEqual(result, {
+    attributes: {
+      first: { keep: 'a' },
+      second: { keep: 'b' },
+    },
+    nested: {
+      attributes: {
+        third: { required: true, keep: 'c' },
+      },
+    },
+  });
+});
+
+test('stripFields: .attributes.*.required strips required from each object in root attributes array', () => {
+  const source = {
+    attributes: [
+      { required: true, keep: 'x' },
+      { required: false, keep: 'y' },
+      { keep: 'z' },
+    ],
+  };
+
+  const result = slim(source, {
+    deep: true,
+    stripFields: ['.attributes.*.required'],
+  });
+
+  assert.deepEqual(result, {
+    attributes: [
+      { keep: 'x' },
+      { keep: 'y' },
+      { keep: 'z' },
+    ],
+  });
+});
+
+test('stripFields: multiple deep rules are applied together in one traversal result', () => {
+  const source = {
+    attributes: {
+      first: { required: true, index: 1, keep: 'a' },
+      second: { required: false, index: 2, keep: 'b' },
+    },
+  };
+
+  const result = slim(source, {
+    deep: true,
+    stripFields: ['.attributes.*.required', '.attributes.*.index'],
+  });
+
+  assert.deepEqual(result, {
+    attributes: {
+      first: { keep: 'a' },
+      second: { keep: 'b' },
+    },
+  });
+});
